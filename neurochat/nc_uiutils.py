@@ -6,7 +6,7 @@ This module implements utility functions and classes for NeuroChaT software
 
 """
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 
 try:
     xlt_from_utf8 = QtCore.QString.fromUtf8
@@ -78,6 +78,7 @@ class NLogBox(QtWidgets.QTextEdit):
             color = "blue"
         msg = '<font color=' + color + '>' + msg[msg.find(":")+1:] + '</font><br>'
         self.insertHtml(msg)
+        self.moveCursor(QtGui.QTextCursor.End)
         
     def get_text(self):        
         """
