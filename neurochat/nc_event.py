@@ -27,7 +27,7 @@ class NEvent(NBase):
     """
     This data class is the placeholder for the dataset that contains information
     about external events or stimulus.
-    Events are stored as names and tags. Each tag is a number reprsenting particular event.
+    Events are stored as names and tags. Each tag is a number representing particular event.
     
     """
     

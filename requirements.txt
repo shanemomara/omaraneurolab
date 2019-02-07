@@ -8,3 +8,4 @@ scipy==1.2.0
 scikit_learn==0.20.2
 PyYAML==3.13
 xlrd
+openpyxl

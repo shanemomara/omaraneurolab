@@ -1248,7 +1248,7 @@ def loc_auto_corr(locAuto_data):
     ax = fig1.gca()
     pc = ax.pcolormesh(locAuto_data['xshift'], locAuto_data['yshift'], np.ma.array(locAuto_data['corrMap'], \
                     mask=np.isnan(locAuto_data['corrMap'])), cmap=c_map, rasterized=True)
-    ax.set_title('Spatial correlation of firing intesnity map)')
+    ax.set_title('Spatial correlation of firing intensity map)')
     ax.set_xlabel('X-lag')
     ax.set_ylabel('Y-lag')
     ax.set_aspect('equal')
