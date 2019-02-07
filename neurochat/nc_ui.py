@@ -79,7 +79,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         layer_6_1.addWidget(self.mode_box)
 
         layer_6_2 = QtWidgets.QVBoxLayout()
-        self.unit_label = add_label(text="Unti No", obj_name="unitLabel")
+        self.unit_label = add_label(text="Unit No", obj_name="unitLabel")
         self.unit_no_box = add_combo_box(obj_name="unitNoBox")
         self.unit_no_box.addItems([str(i) for i in list(range(256))])
 #        self.unit_no_box.setEditable(True)
@@ -1408,7 +1408,7 @@ class UiResults(QtWidgets.QDialog):
     def setup_ui(self):
         """
         Sets up the GUI elements of the widget and their behaviour. Clicking on the
-        'Exporr Results' button calls the NeuroChaT_Ui.export_results() method.
+        'Export Results' button calls the NeuroChaT_Ui.export_results() method.
         
         See also
         --------
