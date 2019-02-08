@@ -6,3 +6,6 @@
 
 #Compiled files
 *.pyc
+
+# Notebook checkpoints
+notebooks/.ipynb_checkpoints/
