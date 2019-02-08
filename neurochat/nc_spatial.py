@@ -1313,7 +1313,7 @@ class NSpatial(NAbstract):
     def place(self, ftimes, **kwargs):
         """
         Calculates the two-dimensional firing rate of the unit with respect to
-        the location of the animal in the environment. This is calle Firing map.
+        the location of the animal in the environment. This is called Firing map.
         
         Specificity indices are measured to assess the quality of location-specific firing of the unit.
         
@@ -1345,6 +1345,10 @@ class NSpatial(NAbstract):
 
 #        xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
 #        yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
+
+        # Update the border to match the requested pixel size
+        self.set_border(self.calc_border(pixel=pixel))
+
         xedges = self._xbound
         yedges = self._ybound
 
