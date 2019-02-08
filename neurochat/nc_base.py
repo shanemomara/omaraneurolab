@@ -687,7 +687,7 @@ class NBase(NAbstract):
         
         if isinstance(spike, str):
             name = spike
-            spike = self.get_spikes_by_name(name)
+            spike = self.get_spike(name)
         i = self.del_node(spike)
     
         return i
@@ -710,7 +710,7 @@ class NBase(NAbstract):
         i = 0
         if isinstance(lfp, str):
             name = lfp
-            lfp = self.get_lfp_by_name(name)
+            lfp = self.get_lfp(name)
         i = self.del_node(lfp)
     
         return i
