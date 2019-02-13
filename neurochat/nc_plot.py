@@ -1030,6 +1030,41 @@ def loc_firing(place_data):
 
     return fig
 
+# Created by Sean Martin: 13/02/2019
+def loc_place_field(place_data, centroid):
+    """
+    Plots the analysis results of locational correlation to spike-rate along with 
+    the centroid of the place field.
+    
+    Parameters
+    ----------
+    place_data : dict
+        Graphical data from the unit firing to head-directional correlation
+    centroid : ndarray
+        The centroid of the place field
+        
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+        Spike-plot and firing rate map in two subplots respectively
+        
+    """
+    fig = plt.figure()
+    
+    ax = loc_spike(place_data, ax=fig.add_subplot(121))
+    ax.plot([centroid[0]], [centroid[1]], 'gX')
+    ax.set_xlabel('XLoc')    
+    ax.set_ylabel('YLoc')
+    
+    
+    ax = loc_rate(place_data, ax=fig.add_subplot(122))
+    ax.plot([centroid[0]], [centroid[1]], 'gX')
+    ax.set_xlabel('XLoc')
+    ax.set_ylabel('YLoc')
+#    fig.colorbar(cax)
+
+    return fig
+
 def loc_spike_time_lapse(place_data):
     """
     Plots the analysis outcome of locational time-lapse analysis

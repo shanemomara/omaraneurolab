@@ -824,6 +824,34 @@ class NData():
         
         return gdata
     
+    # Created by Sean Martin: 13/02/2019
+    def place_field(self, **kwargs):
+        """
+        Analysis of place cell firing characteristics
+        
+        Delegates to NSpatial().place_field()
+        
+        Parameters
+        ----------
+        **kwargs
+            Keyword arguments
+ 
+        Returns
+        -------
+        ndarray
+            Centroid of the place field
+    
+        See also
+        --------
+        nc_spatial.NSpatial().place_field()
+
+        """
+
+        gdata = self.spatial.place_field(self.spike.get_unit_stamp(), **kwargs)
+        self.update_results(self.spatial.get_results())
+        
+        return gdata
+
     def loc_time_lapse(self, **kwargs):
         """
         Time-lapse firing proeprties of the unit with respect to location

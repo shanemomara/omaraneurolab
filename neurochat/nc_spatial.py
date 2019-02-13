@@ -1397,6 +1397,38 @@ class NSpatial(NAbstract):
         graph_data['spikeLoc'] = spikeLoc
 
         return graph_data
+    
+    # Created by Sean Martin: 13/02/2019
+    def place_field(self, ftimes, **kwargs):
+        """
+        Finds the location of the spike events for the current unit
+        by getting the position at the last captured time before the firing time.
+        Then averages these positions to get the centroid of the place field.
+                
+        Parameters
+        ----------
+        ftimes : ndarray
+            Timestamps of the spiking activity of a unit
+        **kwargs
+            Keyword arguments
+ 
+        Returns
+        -------
+        ndarray
+            The centroid of the place field
+        """
+
+        _results = oDict()
+        update = kwargs.get('update', True)
+        lim = kwargs.get('range', [0, self.get_duration()])
+        spikeLoc = self.get_event_loc(ftimes, **kwargs)[1]
+        centroid = np.average(spikeLoc, axis=1)
+        if update:
+            _results['Place field Centroid x'] = centroid[0]
+            _results['Place field Centroid y'] = centroid[1]
+            self.update_result(_results)
+        return centroid
+        
 
     def loc_time_lapse(self, ftimes, **kwargs):
         """

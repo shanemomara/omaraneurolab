@@ -12,7 +12,7 @@ of the NeuroChaT software.
 import sys
 from PyQt5 import QtWidgets
 
-sys.path.insert(1, 'C:\\Users\\Raju\\Google Drive\\NeuroChaT Py\\neurochat\\')
+sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
 
 from neurochat.nc_ui import NeuroChaT_Ui
 
