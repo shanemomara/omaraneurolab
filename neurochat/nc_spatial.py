@@ -1421,7 +1421,20 @@ class NSpatial(NAbstract):
         _results = oDict()
         update = kwargs.get('update', True)
         lim = kwargs.get('range', [0, self.get_duration()])
+        remove_outliers = kwargs.get('remove_outliers', False)
+        threshold = kwargs.get('z_threshold', 3)
+
         spikeLoc = self.get_event_loc(ftimes, **kwargs)[1]
+        # TODO replace this simple place field definition with something more paper based
+        if remove_outliers:
+            z_scores = sc.stats.zscore(spikeLoc, axis=1)
+            # Filter out locations with x or y outside of 3 std devs.
+            filter_array = np.logical_and((abs(z_scores[0]) < threshold).astype(bool), (abs(z_scores[1]) < threshold).astype(bool))
+            print(filter_array.shape)
+            print(spikeLoc[0].shape)
+            spikeLoc[0] = spikeLoc[0][filter_array]
+            spikeLoc[1] = spikeLoc[1][filter_array]
+
         centroid = np.average(spikeLoc, axis=1)
         if update:
             _results['Place field Centroid x'] = centroid[0]
