@@ -709,6 +709,40 @@ def rot_2d(x, theta):
     
     return scipy.ndimage.interpolation.rotate(x, theta, reshape=False, mode='constant', cval=np.min(x))
 
+# Created by Sean Martin 14/02/2019
+def angle_between_points(a, b, c):
+    """
+    Returns the angle between the lines ab and bc, <abc
+    
+    Parameters
+    ----------
+    a : ndarray
+        The first point
+    b : ndarray 
+        The second point
+    c : the last point
+        
+    Returns
+    -------
+    float
+        The angle in degrees
+    
+    """
+    ba = a - b
+    bc = c - b
+
+    length_ba = np.linalg.norm(ba)
+    length_bc = np.linalg.norm(bc)
+
+    if length_bc != 0 and length_ba != 0:
+        cosine_angle = np.dot(ba, bc) / (length_ba * length_bc)
+        angle = np.arccos(cosine_angle)
+    else:
+        logging.error("Angle between points: Two points are the same, can't measure angle")
+        angle = np.NAN
+
+    return np.degrees(angle)
+
 def smooth_1d(x, filttype='b', filtsize=5, **kwargs):
     """
     Filters a 1D array or signal.
