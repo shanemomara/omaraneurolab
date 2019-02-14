@@ -1341,7 +1341,7 @@ class NSpatial(NAbstract):
         filttype, filtsize = kwargs.get('filter', ['b', 5])
         lim = kwargs.get('range', [0, self.get_duration()])
         brAdjust = kwargs.get('brAdjust', True)
-#        thresh = kwargs.get('fieldThresh', 0.2)
+        thresh = kwargs.get('fieldThresh', 0.2)
 
 #        xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
 #        yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
@@ -1375,9 +1375,12 @@ class NSpatial(NAbstract):
                 back_rate = np.mean(fmap[np.logical_and(nfmap >= 0.2, nfmap < 0.4)])
                 fmap -= back_rate
                 fmap[fmap < 0] = 0
-#        pfield = self.placeField(fmap, thresh)
+        pfield = NSpatial.placeMap(fmap, thresh)
 
-        smoothMap = smooth_2d(fmap, filttype, filtsize)
+        if filttype is not None:
+            smoothMap = smooth_2d(fmap, filttype, filtsize)
+        else :
+            smoothMap = fmap
 
         if update:
             _results['Spatial Skaggs'] = self.skaggs_info(fmap, tmap)
@@ -1395,6 +1398,7 @@ class NSpatial(NAbstract):
         graph_data['xedges'] = xedges
         graph_data['yedges'] = yedges
         graph_data['spikeLoc'] = spikeLoc
+        graph_data['placeField'] = pfield
 
         return graph_data
     
@@ -1430,8 +1434,6 @@ class NSpatial(NAbstract):
             z_scores = sc.stats.zscore(spikeLoc, axis=1)
             # Filter out locations with x or y outside of 3 std devs.
             filter_array = np.logical_and((abs(z_scores[0]) < threshold).astype(bool), (abs(z_scores[1]) < threshold).astype(bool))
-            print(filter_array.shape)
-            print(spikeLoc[0].shape)
             spikeLoc[0] = spikeLoc[0][filter_array]
             spikeLoc[1] = spikeLoc[1][filter_array]
 
@@ -1903,77 +1905,87 @@ class NSpatial(NAbstract):
 
         return graph_data
 
-#    @staticmethod
-#    def placeMap(pmap, thresh = 0.2):
-#
-#        def alongColumn(pfield, ptag, J, I):
-#            Ji = J
-#            Ii = I
-#            rows=[]
-#            while J+1 < ptag.shape[0]:
-#                if not pfield[J+1, I] or ptag[J+1, I]:
-#                    break
-#                else:
-#                    ptag[J+1, I] = ptag[J, I]
-#                    rows.append(J+1)
-#                    J += 1
-#            J = Ji
-#            while J-1 >0:
-#                if not pfield[J-1, I] or ptag[J-1, I]:
-#                    break
-#                else:
-#                    ptag[J-1, I] = ptag[J, I]
-#                    rows.append(J-1)
-#                    J-=1
-##            rows = find(ptag[:, I] == ptag[Ji, Ii])
-#            for J in rows:
-#                if J!= Ji:
-#                    ptag = alongRows(pfield, ptag, J, Ii)
-#            return ptag
-#
-#        def alongRows(pfield, ptag, J, I):
-#            Ji = J
-#            Ii = I
-#            columns=[]
-#            while I+1<= ptag.shape[1]:
-#                if not pfield[J, I+1] or ptag[J, I+1]:
-#                    break
-#                else:
-#                    ptag[J, I+1] = ptag[J, I]
-#                    columns.append(I+1)
-#                    I += 1
-#            I = Ii
-#            while I-1 >=0:
-#                if not pfield[J, I-1] or ptag[J, I-1]:
-#                    break
-#                else:
-#                    ptag[J, I-1] = ptag[J, I]
-#                    columns.append(I-1)
-#                I-=1
-##            columns = find(ptag[J, ] == ptag[Ji, Ii])
-#            for I in columns:
-#                if I!= Ii:
-#                    ptag = alongColumn(pfield, ptag, J, I)
-#            return ptag
-#        # Finding the place map firing field:
-#        # Rules: 1. spikes in bin 2. The bin shares at least a side with other bins which contain spikes
-#        pmap = pmap/pmap.max()
-#        pmap = pmap > thresh
-#        pfield = np.zeros(np.add(pmap.shape,2))
-#        pfield[1:-1, 1:-1] = pmap
-#
-#        pfield[1:-1, 1:-1] = np.logical_and(pmap, np.logical_or(np.logical_or(pfield[0:-2, 1:-1], pfield[2:, 1:-1]), \
-#                            np.logical_or(pfield[1:-1, 0:-2], pfield[1:-1, 2:]))) # shifted and tested for neighboring pixel spike occupation
-#        # tags start at 2; Will be renumbered based on sizes of the fields
-#        group = 2
-#        ptag = np.zeros(pfield.shape, dtype = int)
-#
-#        J, I = find2d(pfield, 1)
-#        J = J[0]
-#        I = I[0]
-#        ptag[J, I] = group
-#
-#        ptag = alongColumn(pfield, ptag, J, I)
+    @staticmethod
+    def placeMap(pmap, thresh = 0.2):
+
+        def alongColumn(pfield, ptag, J, I):
+            Ji = J
+            Ii = I
+            rows=[]
+            while J+1 < ptag.shape[0]:
+                if not pfield[J+1, I] or ptag[J+1, I]:
+                    break
+                else:
+                    ptag[J+1, I] = ptag[J, I]
+                    rows.append(J+1)
+                    J += 1
+            J = Ji
+            while J-1 >0:
+                if not pfield[J-1, I] or ptag[J-1, I]:
+                    break
+                else:
+                    ptag[J-1, I] = ptag[J, I]
+                    rows.append(J-1)
+                    J-=1
+    #            rows = find(ptag[:, I] == ptag[Ji, Ii])
+            for J in rows:
+                if J!= Ji:
+                    ptag = alongRows(pfield, ptag, J, Ii)
+            return ptag
+
+        def alongRows(pfield, ptag, J, I):
+            Ji = J
+            Ii = I
+            columns=[]
+            while I+1<= ptag.shape[1]:
+                if not pfield[J, I+1] or ptag[J, I+1]:
+                    break
+                else:
+                    ptag[J, I+1] = ptag[J, I]
+                    columns.append(I+1)
+                    I += 1
+            I = Ii
+            while I-1 >=0:
+                if not pfield[J, I-1] or ptag[J, I-1]:
+                    break
+                else:
+                    ptag[J, I-1] = ptag[J, I]
+                    columns.append(I-1)
+                I-=1
+    #            columns = find(ptag[J, ] == ptag[Ji, Ii])
+            for I in columns:
+                if I!= Ii:
+                    ptag = alongColumn(pfield, ptag, J, I)
+            return ptag
+        
+        # Finding the place map firing field:
+        # Rules: 1. spikes in bin 
+        # 2. The bin shares at least a side with other bins which contain spikes
+
+        pmap = pmap/pmap.max()
+        pmap = pmap > thresh
+        pfield = np.zeros(np.add(pmap.shape,2))
+        pfield[1:-1, 1:-1] = pmap
+
+        has_neighbour_horizontal = np.logical_or(pfield[0:-2, 1:-1], pfield[2:, 1:-1])
+        has_neighbour_vertical = np.logical_or(pfield[1:-1, 0:-2], pfield[1:-1, 2:])
+        # shifted and tested for neighboring pixel spike occupation
+        pfield[1:-1, 1:-1] = np.logical_and(
+            pmap, np.logical_or(has_neighbour_horizontal, has_neighbour_vertical))
+        # tags start at 1; Will be renumbered based on sizes of the fields
+        group = 1
+        ptag = np.zeros(pfield.shape, dtype = int)
+
+        # Find the first non zero entry of the pfield
+        J, I = find2d(pfield, 1)
+        J = J[0]
+        I = I[0]
+        ptag[J, I] = group
+
+        # Split the place map up into a set of tagged groups
+        ptag = alongColumn(pfield, ptag, J, I)
+
+        return ptag[1:-1, 1:-1]
 
     def get_event_loc(self, ftimes, **kwargs):
         """

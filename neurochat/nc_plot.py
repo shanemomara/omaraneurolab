@@ -1030,8 +1030,85 @@ def loc_firing(place_data):
 
     return fig
 
+# Created by Sean Martin: 14/02/2019
+def loc_firing_and_place(place_data):
+    """
+    Plots the analysis results of locational correlation to spike-rate with a place map
+    
+    Parameters
+    ----------
+    place_data : dict
+        Graphical data from the unit firing to head-directional correlation
+        
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+        Spike-plot and firing rate map and place field in three subplots respectively
+        
+    """
+    fig = plt.figure()
+    
+    ax = loc_spike(place_data, ax=fig.add_subplot(131))
+    ax.set_xlabel('XLoc')    
+    ax.set_ylabel('YLoc')
+    
+    ax = loc_rate(place_data, ax=fig.add_subplot(132))
+    ax.set_xlabel('XLoc')
+    ax.set_ylabel('YLoc')
+
+    ax = loc_place_field(place_data, ax=fig.add_subplot(133))
+    ax.set_xlabel('XLoc')
+    ax.set_ylabel('YLoc')
+#    fig.colorbar(cax)
+
+    return fig
+
 # Created by Sean Martin: 13/02/2019
-def loc_place_field(place_data, centroid):
+def loc_place_field(place_data, ax=None):
+    """
+    Plots the location of the place field(s) of the unit.
+    
+    Parameters
+    ----------
+    place_data : dict
+        Graphical data from the correlation of unit firing to location of the animal
+    ax : matplotlib.pyplot.axis
+        Axis object. If specified, the figure is plotted in this axis.
+        
+    Returns
+    -------
+    ax : matplotlib.pyplot.Axis
+        Axis of the spike-plot
+        
+    """
+    
+    # spatial place field
+    if not ax:
+        plt.figure()
+        ax = plt.gca()
+    clist = [(0.0, 0.0, 1.0),\
+            (0.0, 1.0, 0.5),\
+            (0.9, 1.0, 0.0),\
+            (1.0, 0.75, 0.0),\
+            (0.9, 0.0, 0.0)]
+    c_map = mcol.ListedColormap(clist)
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes('right', size='3%', pad=0.05) 
+    mask = (place_data['placeField'] == 0)
+    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'], 
+                        np.ma.array(place_data['placeField'], mask=mask), 
+                        cmap=c_map, rasterized=True)
+    ax.set_ylim([0, place_data['yedges'].max()])
+    ax.set_xlim([0, place_data['xedges'].max()])
+    ax.set_aspect('equal')
+    ax.invert_yaxis()
+    plt.colorbar(pmap, cax=cax, orientation='vertical')
+#        plt.autoscale(enable=True, axis='both', tight=True)
+    return ax
+
+# Created by Sean Martin: 13/02/2019
+def loc_place_centroid(place_data, centroid):
     """
     Plots the analysis results of locational correlation to spike-rate along with 
     the centroid of the place field.
