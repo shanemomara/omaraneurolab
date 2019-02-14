@@ -14,7 +14,7 @@ from collections import OrderedDict as oDict
 
 from neurochat.nc_utils import chop_edges, corr_coeff, extrema,\
             find, find2d, find_chunk, histogram, histogram2d, \
-            linfit, residual_stat, rot_2d, smooth_1d, smooth_2d
+            linfit, residual_stat, rot_2d, smooth_1d, smooth_2d, centre_of_mass
 
 from neurochat.nc_base import NAbstract
 from neurochat.nc_circular import CircStat
@@ -1347,7 +1347,7 @@ class NSpatial(NAbstract):
 #        yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
 
         # Update the border to match the requested pixel size
-        self.set_border(self.calc_border(pixel=pixel))
+        self.set_border(self.calc_border(**kwargs))
 
         xedges = self._xbound
         yedges = self._ybound
@@ -1375,17 +1375,23 @@ class NSpatial(NAbstract):
                 back_rate = np.mean(fmap[np.logical_and(nfmap >= 0.2, nfmap < 0.4)])
                 fmap -= back_rate
                 fmap[fmap < 0] = 0
-        pfield = NSpatial.placeMap(fmap, thresh)
 
         if filttype is not None:
             smoothMap = smooth_2d(fmap, filttype, filtsize)
         else :
             smoothMap = fmap
-
+        
+        # TODO could separately smooth the place field map
+        pfield = NSpatial.place_field(fmap, thresh)
+        centroid = NSpatial.place_field_centroid(pfield, fmap)
+        print(centroid * 3 + (3 / 2))
+        
         if update:
             _results['Spatial Skaggs'] = self.skaggs_info(fmap, tmap)
             _results['Spatial Sparsity'] = self.spatial_sparsity(fmap, tmap)
             _results['Spatial Coherence'] = np.corrcoef(fmap[tmap != 0].flatten(), smoothMap[tmap != 0].flatten())[0, 1]
+            _results['Place field Centroid x'] = centroid[0]
+            _results['Place field Centroid y'] = centroid[1]
             self.update_result(_results)
 
         smoothMap[tmap == 0] = None
@@ -1399,15 +1405,14 @@ class NSpatial(NAbstract):
         graph_data['yedges'] = yedges
         graph_data['spikeLoc'] = spikeLoc
         graph_data['placeField'] = pfield
+        graph_data['centroid'] = centroid
 
         return graph_data
     
     # Created by Sean Martin: 13/02/2019
-    def place_field(self, ftimes, **kwargs):
+    def place_field_centroid_zscore(self, ftimes, **kwargs):
         """
-        Finds the location of the spike events for the current unit
-        by getting the position at the last captured time before the firing time.
-        Then averages these positions to get the centroid of the place field.
+        Finds the centroid of the place using the z-score of the normal distribution.
                 
         Parameters
         ----------
@@ -1429,7 +1434,7 @@ class NSpatial(NAbstract):
         threshold = kwargs.get('z_threshold', 3)
 
         spikeLoc = self.get_event_loc(ftimes, **kwargs)[1]
-        # TODO replace this simple place field definition with something more paper based
+        
         if remove_outliers:
             z_scores = sc.stats.zscore(spikeLoc, axis=1)
             # Filter out locations with x or y outside of 3 std devs.
@@ -1906,7 +1911,7 @@ class NSpatial(NAbstract):
         return graph_data
 
     @staticmethod
-    def placeMap(pmap, thresh = 0.2):
+    def place_field(pmap, thresh = 0.2):
 
         def alongColumn(pfield, ptag, J, I):
             Ji = J
@@ -1972,6 +1977,8 @@ class NSpatial(NAbstract):
         # shifted and tested for neighboring pixel spike occupation
         pfield[1:-1, 1:-1] = np.logical_and(
             pmap, np.logical_or(has_neighbour_horizontal, has_neighbour_vertical))
+        
+        # TODO expand could get size of field as I go
         # tags start at 1; Will be renumbered based on sizes of the fields
         group = 1
         ptag = np.zeros(pfield.shape, dtype = int)
@@ -1987,6 +1994,31 @@ class NSpatial(NAbstract):
 
         return ptag[1:-1, 1:-1]
 
+    @staticmethod
+    def place_field_centroid(pfield, fmap, **kwargs):
+        """
+        Calculate the centroids of the place fields
+    
+        Parameters
+        ----------
+        pfield : ndarray
+            Input place field consisting of a map of groups
+        fmap : ndarray
+            Input firing map
+        **kwargs :
+            Keyword arguments
+    
+        Returns
+        -------
+        ndarray
+            A list of co-ordinates for each place field group
+        """
+        # For each group, get the list of co-ordinates from the pfield
+        co_ords = np.array(np.where(pfield == 1))
+        weights = fmap[co_ords[0], co_ords[1]]
+        return centre_of_mass(co_ords, weights, axis=1)
+           
+      
     def get_event_loc(self, ftimes, **kwargs):
         """
         Calculates location of the event from its timestamps.

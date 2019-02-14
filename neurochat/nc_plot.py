@@ -1054,11 +1054,11 @@ def loc_firing_and_place(place_data):
     
     ax = loc_rate(place_data, ax=fig.add_subplot(132))
     ax.set_xlabel('XLoc')
-    ax.set_ylabel('YLoc')
+    #ax.set_ylabel('YLoc')
 
     ax = loc_place_field(place_data, ax=fig.add_subplot(133))
     ax.set_xlabel('XLoc')
-    ax.set_ylabel('YLoc')
+    #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
 
     return fig
