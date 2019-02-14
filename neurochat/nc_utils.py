@@ -743,6 +743,37 @@ def angle_between_points(a, b, c):
 
     return np.degrees(angle)
 
+def centre_of_mass(co_ords, weights, axis=0):
+    """
+    Calculates the co-ordinate centre of mass for a system of particles with co ords and weights
+
+    Parameters
+    ----------
+    co_ords : ndarray
+        Array of co-ordinate positions, assumed to have co_ords.shape[axis] co-ordinates
+    weights : ndarray
+        Array of corresponding weights
+    axis : int, default 0
+        The axis along which the co-ordinates are specified, expected 0 or 1
+
+    Returns
+    -------
+    ndarray
+        Co-ordinate of the centre of mass
+    """
+    shape = co_ords.shape
+    if axis == 0:
+        weighted = np.multiply(
+            co_ords, 
+            np.repeat(weights, shape[1]).reshape(shape))
+    elif axis == 1:
+        weighted = np.multiply(
+            co_ords, 
+            np.tile(weights, shape[0]).reshape(shape)) 
+    else:
+        logging.error("centre_of_mass: Expected axis to be 0 or 1")
+    return np.sum(weighted, axis=axis) / np.sum(weights)
+    
 def smooth_1d(x, filttype='b', filtsize=5, **kwargs):
     """
     Filters a 1D array or signal.
