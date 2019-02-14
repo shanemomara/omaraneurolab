@@ -1216,6 +1216,67 @@ class NeuroChaT(QtCore.QThread):
             logging.info('Verification process completed!')
         else:
             logging.error('Excel  file does not exist!')
+    
+    def angle_calculation(self, excel_file=None):
+        """
+        Takes a list of unit specifications and finds the angle between the place field centroids
+        The results of the analysis are written back to the input Excel file.
+    
+        Parameters
+        ----------
+        excel_file : str
+            Name of the excel file that contains data specifications
+    
+        Returns
+        -------
+        None
+        """
+    
+        info = {'spat': [], 'spike': [], 'unit': []}
+        if os.path.exists(excel_file):
+            excel_info = pd.read_excel(excel_file)
+            # excel list: directory| position_file| spike file| unit_no
+            for row in excel_info.itertuples():
+                spike_file = row[1]+ os.sep+ row[3]
+                unit_no = int(row[4])
+                spat_file = row[1] + os.sep+ row[2] + '.txt'
+                if self.get_data_format() == 'NWB':
+                
+                    hdf_name = row[1] + os.sep+ row[3]+ '.hdf5'
+                    spike_file = hdf_name+ '/processing/Shank'+ '/'+ row[4]
+                info['spat'].append(spat_file)
+                info['spike'].append(spike_file)
+                info['unit'].append(unit_no)
+            n_comparison = excel_info.shape[0]
+            if (n_comparison % 3 != 0) :
+                logging.error("angle_calculation: Can't compute the angle for a number of units not divisible by 3")
+                return
+
+            excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
+            excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
+            excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units // 3)))
+
+            if info['spike']:
+                for i, spike_file in enumerate(info['spike']):
+
+                    logging.info('Computing place field for unit: '+ str(i+ 1))
+                    if os.path.exists(spike_file):
+                        self.ndata.set_spike_file(spike_file)
+                        self.ndata.load_spike()
+                        units = self.ndata.get_unit_list()
+
+                    # Open the position file if it exists
+                    if os.path.exists(spike_f)
+                        if info['unit'][i] in units:
+                            # Get the centroid and save the info to excel file and local copy
+                            excel_info.loc[i, 'BC'] = np.max(bc)
+                            excel_info.loc[i, 'Dh'] = np.min(dh)
+                    # if i+ 1 % 3 == 0 then spit out the angle
+            
+            excel_info.to_excel(excel_file)
+            logging.info('Angle calculation completed!')
+        else:
+            logging.error('Excel  file does not exist!')
 
     def cluster_evaluate(self, excel_file=None):
         """
