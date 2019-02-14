@@ -825,9 +825,9 @@ class NData():
         return gdata
     
     # Created by Sean Martin: 13/02/2019
-    def place_field(self, **kwargs):
+    def place_field_centroid_zscore(self, **kwargs):
         """
-        Analysis of place cell firing characteristics
+        Calculates a very simple centroid of place field
         
         Delegates to NSpatial().place_field()
         
@@ -847,7 +847,7 @@ class NData():
 
         """
 
-        gdata = self.spatial.place_field(self.spike.get_unit_stamp(), **kwargs)
+        gdata = self.spatial.place_field_centroid_zscore(self.spike.get_unit_stamp(), **kwargs)
         self.update_results(self.spatial.get_results())
         
         return gdata

@@ -1381,10 +1381,13 @@ class NSpatial(NAbstract):
         else :
             smoothMap = fmap
         
-        # TODO could separately smooth the place field map
+        # Could also smooth the place field map
         pfield = NSpatial.place_field(fmap, thresh)
         centroid = NSpatial.place_field_centroid(pfield, fmap)
-        print(centroid * 3 + (3 / 2))
+        #centroid is currently in co-ordinates, convert to pixels
+        centroid = centroid * pixel + (pixel * 0.5)
+        #flip x and y
+        centroid = centroid[::-1]
         
         if update:
             _results['Spatial Skaggs'] = self.skaggs_info(fmap, tmap)
@@ -1430,8 +1433,8 @@ class NSpatial(NAbstract):
         _results = oDict()
         update = kwargs.get('update', True)
         lim = kwargs.get('range', [0, self.get_duration()])
-        remove_outliers = kwargs.get('remove_outliers', False)
-        threshold = kwargs.get('z_threshold', 3)
+        remove_outliers = kwargs.get('remove_outliers', True)
+        threshold = kwargs.get('z_threshold', 2)
 
         spikeLoc = self.get_event_loc(ftimes, **kwargs)[1]
         
