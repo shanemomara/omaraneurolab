@@ -1342,6 +1342,8 @@ class NSpatial(NAbstract):
         lim = kwargs.get('range', [0, self.get_duration()])
         brAdjust = kwargs.get('brAdjust', True)
         thresh = kwargs.get('fieldThresh', 0.2)
+        required_neighbours = kwargs.get('minPlaceFieldNeighbours', 9)
+        smooth_place = kwargs.get('smoothPlace', False)
 
 #        xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
 #        yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
@@ -1381,9 +1383,13 @@ class NSpatial(NAbstract):
         else :
             smoothMap = fmap
         
-        # Could also smooth the place field map
-        pfield = NSpatial.place_field(fmap, thresh)
-        centroid = NSpatial.place_field_centroid(pfield, fmap)
+        # Could make a seperate place field smoothing map
+        if smooth_place:
+            pmap = smoothMap
+        else:
+            pmap = fmap
+        pfield, largest_group = NSpatial.place_field(pmap, thresh, required_neighbours)
+        centroid = NSpatial.place_field_centroid(pfield, pmap, largest_group)
         #centroid is currently in co-ordinates, convert to pixels
         centroid = centroid * pixel + (pixel * 0.5)
         #flip x and y
@@ -1914,7 +1920,7 @@ class NSpatial(NAbstract):
         return graph_data
 
     @staticmethod
-    def place_field(pmap, thresh = 0.2):
+    def place_field(pmap, thresh=0.2, required_neighbours=9):
 
         def alongColumn(pfield, ptag, J, I):
             Ji = J
@@ -1987,20 +1993,35 @@ class NSpatial(NAbstract):
         ptag = np.zeros(pfield.shape, dtype = int)
 
         # Find the first non zero entry of the pfield
-        J, I = find2d(pfield, 1)
-        J = J[0]
-        I = I[0]
-        ptag[J, I] = group
+        J, I = find2d(pfield)
+        
+        #Group all the neighbouring pixels
+        for (j, i) in zip(J, I): 
+            if ptag[j, i] == 0:
+                ptag[j, i] = group
+                group = group + 1
+                # Tag all neighbours as being of the same group
+                ptag = alongColumn(pfield, ptag, j, i)
+        
+        ptag = ptag[1:-1, 1:-1]
+        uniques, counts = np.unique(ptag[ptag > 0], return_counts=True)
+        max_count, largest_group_num = 0, 0
+        for unique, count in zip(uniques, counts):
+            # Don't consider groups that are small
+            if count < required_neighbours:
+                ptag[ptag == unique] = 0
+            # Define the largest group to be the one with the largest area
+            # Could also be the one with largest weight
+            elif count > max_count:
+                max_count = count
+                largest_group_num = unique
 
-        # Split the place map up into a set of tagged groups
-        ptag = alongColumn(pfield, ptag, J, I)
-
-        return ptag[1:-1, 1:-1]
+        return ptag, largest_group_num
 
     @staticmethod
-    def place_field_centroid(pfield, fmap, **kwargs):
+    def place_field_centroid(pfield, fmap, group_num, **kwargs):
         """
-        Calculate the centroids of the place fields
+        Calculate the centroid of a place field
     
         Parameters
         ----------
@@ -2008,6 +2029,8 @@ class NSpatial(NAbstract):
             Input place field consisting of a map of groups
         fmap : ndarray
             Input firing map
+        group_num : int
+            The group to get the centroid for
         **kwargs :
             Keyword arguments
     
@@ -2017,7 +2040,7 @@ class NSpatial(NAbstract):
             A list of co-ordinates for each place field group
         """
         # For each group, get the list of co-ordinates from the pfield
-        co_ords = np.array(np.where(pfield == 1))
+        co_ords = np.array(np.where(pfield == group_num))
         weights = fmap[co_ords[0], co_ords[1]]
         return centre_of_mass(co_ords, weights, axis=1)
            
