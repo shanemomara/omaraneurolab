@@ -14,7 +14,7 @@ import pandas as pd
 
 from PyQt5 import QtCore
 
-from neurochat.nc_utils import NLog
+from neurochat.nc_utils import NLog, angle_between_points
 from neurochat.nc_data import NData
 from neurochat.nc_hdf import Nhdf
 from neurochat.nc_clust import NClust
@@ -1232,7 +1232,7 @@ class NeuroChaT(QtCore.QThread):
         None
         """
     
-        info = {'spat': [], 'spike': [], 'unit': []}
+        info = {'spat': [], 'spike': [], 'unit': [], 'centroid': []}
         if os.path.exists(excel_file):
             excel_info = pd.read_excel(excel_file)
             # excel list: directory| position_file| spike file| unit_no
@@ -1247,36 +1247,52 @@ class NeuroChaT(QtCore.QThread):
                 info['spat'].append(spat_file)
                 info['spike'].append(spike_file)
                 info['unit'].append(unit_no)
-            n_comparison = excel_info.shape[0]
-            if (n_comparison % 3 != 0) :
-                logging.error("angle_calculation: Can't compute the angle for a number of units not divisible by 3")
+            n_units = excel_info.shape[0]
+            if (n_units % 3 != 0) :
+                logging.error("angle_calculation: Can't compute the angle for a number of units not divisible by 3, given " + str(n_units))
                 return
 
             excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
             excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
-            excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units // 3)))
+            excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units)))
 
             if info['spike']:
                 for i, spike_file in enumerate(info['spike']):
-
                     logging.info('Computing place field for unit: '+ str(i+ 1))
                     if os.path.exists(spike_file):
                         self.ndata.set_spike_file(spike_file)
                         self.ndata.load_spike()
                         units = self.ndata.get_unit_list()
+                    else:
+                        logging.error('No existing file for spike file number '+ str(i+ 1) + " with name " + spike_file)
+                        return
 
                     # Open the position file if it exists
-                    if os.path.exists(spike_f)
+                    if os.path.exists(info['spat'][i]):
                         if info['unit'][i] in units:
                             # Get the centroid and save the info to excel file and local copy
-                            excel_info.loc[i, 'BC'] = np.max(bc)
-                            excel_info.loc[i, 'Dh'] = np.min(dh)
-                    # if i+ 1 % 3 == 0 then spit out the angle
+                            centroid = self.ndata.place()['centroid']
+                            info['centroid'].append(centroid)
+                            excel_info.loc[i, "CentroidX"] = centroid[0]
+                            excel_info.loc[i, "CentroidY"] = centroid[1]
+                        else:
+                            logging.error('No existing unit for file number '+ str(i+ 1) + " with unit value " + info['unit'][i])
+                            logging.info("Existing units are " + str(units))
+                            return
+                    else:
+                        logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i] + ".txt")
+                        return
+                    if (i + 1) % 3 == 0: #then spit out the angle
+                        first_centroid = info['centroid'][i - 2]
+                        second_centroid = info['centroid'][i - 1]
+                        angle = angle_between_points(first_centroid, second_centroid, centroid)
+                        excel_info.loc[i, "AngleInDegrees"] = angle
+
             
             excel_info.to_excel(excel_file)
             logging.info('Angle calculation completed!')
         else:
-            logging.error('Excel  file does not exist!')
+            logging.error('Excel file does not exist!')
 
     def cluster_evaluate(self, excel_file=None):
         """
