@@ -1231,7 +1231,13 @@ class NeuroChaT(QtCore.QThread):
         -------
         None
         """
-    
+        params= self.get_params_by_analysis('loc_rate')
+
+        if params['loc_rate_filter'] == 'Gaussian':
+            filttype = 'g'
+        else:
+            filttype = 'b'
+
         info = {'spat': [], 'spike': [], 'unit': [], 'centroid': []}
         if os.path.exists(excel_file):
             excel_info = pd.read_excel(excel_file, index_col=None)
@@ -1241,7 +1247,10 @@ class NeuroChaT(QtCore.QThread):
             for row in excel_info.itertuples():
                 spike_file = row[1]+ os.sep+ row[3]
                 unit_no = int(row[4])
-                spat_file = row[1] + os.sep+ row[2] + '.txt'
+                if row[2][-4:] == '.txt':
+                    spat_file = row[1] + os.sep+ row[2]
+                else:
+                    spat_file = row[1] + os.sep+ row[2] + '.txt'
                 if self.get_data_format() == 'NWB':
                 
                     hdf_name = row[1] + os.sep+ row[3]+ '.hdf5'
@@ -1284,13 +1293,17 @@ class NeuroChaT(QtCore.QThread):
                         self.ndata.set_spatial_file(spat_file)
                         self.ndata.load_spatial()
                         # Get the centroid and save the info to excel file and local copy
-                        place_data = self.ndata.place()
+                        place_data = self.ndata.place(
+                              pixel=params['loc_pixel_size'],
+                              chop_bound=params['loc_chop_bound'],
+                              filter=[filttype, params['loc_rate_kern_len']],
+                              brAdjust=True, update=True)
                         centroid = place_data['centroid']
                         info['centroid'].append(centroid)
                         excel_info.loc[i, "CentroidX"] = centroid[0]
                         excel_info.loc[i, "CentroidY"] = centroid[1]
                     else:
-                        logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i] + ".txt")
+                        logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i])
                         return
                     if (i + 1) % 3 == 0: #then spit out the angle
                         first_centroid = info['centroid'][i - 2]

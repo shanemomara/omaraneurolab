@@ -206,6 +206,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.merge_act.triggered.connect(self.merge_output)
         self.accumulate_act.triggered.connect(self.accumulate_output)
 
+        self.angle_act.triggered.connect(self.angle_calculation)
 
         self.verify_units_act.triggered.connect(self.verify_units)
         self.evaluate_act.triggered.connect(self.cluster_evaluate)
@@ -229,6 +230,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.file_menu = self.menubar.addMenu('&File')
         self.settings_menu = self.menubar.addMenu('&Settings')
         self.utilities_menu = self.menubar.addMenu('&Utilities')
+        self.experimental_menu = self.menubar.addMenu('&Experimental')
         self.help_menu = self.menubar.addMenu('&Help')
 
         self.setMenuBar(self.menubar)
@@ -268,6 +270,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         self.utilities_menu.addSeparator()
 
+        self.angle_act = self.experimental_menu.addAction("Centroid Angle Calculation")
+        self.angle_act.setStatusTip("Select an excel file which specifies files in the order of: directory | position_file | spike_file | unit_no")
+                
         self.verify_units_act = self.utilities_menu.addAction("Verify units")
         self.evaluate_act = self.utilities_menu.addAction("Evaluate clustering")
         self.compare_units_act = self.utilities_menu.addAction("Compare single units")
@@ -1014,6 +1019,30 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         print('Create an excel read warpper from PANDAS')
         print(excel_data)
 
+
+    def angle_calculation(self):
+        """
+        Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
+        and verifies the unit using the NeuroChaT().verify_units() method.
+        
+        See also
+        --------
+        NeuroChaT().angle_calculation()
+        
+        """
+        excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
+        'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
+        if not excel_file:
+            logging.warning("No excel file selected! Verification of units is unsuccessful!")
+        else:
+            self._get_config()
+            logging.info("New excel file added: "+ \
+                                        excel_file.rstrip("\n\r").split(os.sep)[-1])
+            
+            pdf_name = excel_file[:excel_file.find(".")] + "_output.pdf"
+            self._control.open_pdf(pdf_name)
+            self._control.angle_calculation(excel_file)
+            self._control.close_pdf()
 
     def verify_units(self):
         """
