@@ -1058,6 +1058,7 @@ def loc_firing_and_place(place_data):
 
     ax = loc_place_field(place_data, ax=fig.add_subplot(133))
     ax.set_xlabel('XLoc')
+    plt.subplots_adjust(wspace=0.5)
     #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
 
@@ -1103,6 +1104,8 @@ def loc_place_field(place_data, ax=None):
     ax.set_xlim([0, place_data['xedges'].max()])
     ax.set_aspect('equal')
     ax.invert_yaxis()
+    centroid = place_data['centroid']
+    ax.plot([centroid[0]], [centroid[1]], 'gX')
     plt.colorbar(pmap, cax=cax, orientation='vertical')
 #        plt.autoscale(enable=True, axis='both', tight=True)
     return ax

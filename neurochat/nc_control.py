@@ -1217,7 +1217,7 @@ class NeuroChaT(QtCore.QThread):
         else:
             logging.error('Excel  file does not exist!')
     
-    def angle_calculation(self, excel_file=None):
+    def angle_calculation(self, excel_file=None, should_plot=True):
         """
         Takes a list of unit specifications and finds the angle between the place field centroids
         The results of the analysis are written back to the input Excel file.
@@ -1234,7 +1234,9 @@ class NeuroChaT(QtCore.QThread):
     
         info = {'spat': [], 'spike': [], 'unit': [], 'centroid': []}
         if os.path.exists(excel_file):
-            excel_info = pd.read_excel(excel_file)
+            excel_info = pd.read_excel(excel_file, index_col=None)
+            if excel_info.shape[1] > 5:
+                excel_info = excel_info.iloc[:, 1:]
             # excel list: directory| position_file| spike file| unit_no
             for row in excel_info.itertuples():
                 spike_file = row[1]+ os.sep+ row[3]
@@ -1255,7 +1257,8 @@ class NeuroChaT(QtCore.QThread):
             excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
             excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
             excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units)))
-
+            
+            figs = []
             if info['spike']:
                 for i, spike_file in enumerate(info['spike']):
                     logging.info('Computing place field for unit: '+ str(i+ 1) + ' with value ' + str(info['unit'][i]))
@@ -1281,7 +1284,8 @@ class NeuroChaT(QtCore.QThread):
                         self.ndata.set_spatial_file(spat_file)
                         self.ndata.load_spatial()
                         # Get the centroid and save the info to excel file and local copy
-                        centroid = self.ndata.place()['centroid']
+                        place_data = self.ndata.place()
+                        centroid = place_data['centroid']
                         info['centroid'].append(centroid)
                         excel_info.loc[i, "CentroidX"] = centroid[0]
                         excel_info.loc[i, "CentroidY"] = centroid[1]
@@ -1293,7 +1297,11 @@ class NeuroChaT(QtCore.QThread):
                         second_centroid = info['centroid'][i - 1]
                         angle = angle_between_points(first_centroid, second_centroid, centroid)
                         excel_info.loc[i, "AngleInDegrees"] = angle
-
+                    if should_plot:
+                        fig = nc_plot.loc_firing_and_place(place_data)
+                        figs.append(fig)
+            if should_plot:
+                self.close_fig(figs)
             
             excel_info.to_excel(excel_file)
             logging.info('Angle calculation completed!')
