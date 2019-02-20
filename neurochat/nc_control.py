@@ -1297,6 +1297,7 @@ class NeuroChaT(QtCore.QThread):
                               pixel=params['loc_pixel_size'],
                               chop_bound=params['loc_chop_bound'],
                               filter=[filttype, params['loc_rate_kern_len']],
+                              fieldThresh=params['loc_field_thresh'],
                               brAdjust=True, update=True)
                         centroid = place_data['centroid']
                         info['centroid'].append(centroid)

@@ -2116,6 +2116,9 @@ class UiParameters(QtWidgets.QDialog):
         self.loc_chop_bound = add_spin_box(min_val=3, max_val=20, obj_name="loc_chop_bound")
         self.loc_chop_bound.setValue(5)
 
+        self.loc_field_thresh = add_double_spin_box(min_val=0, max_val=1, obj_name="loc_field_thresh")
+        self.loc_field_thresh.setValue(0.2)
+        self.loc_field_thresh.setSingleStep(0.01)
 #        self.locAngVelCutoff = add_spin_box(min_val=0, 100, "locAngVelCutoff")
 #        self.locAngVelCutoff.setValue(30)
 #        self.locAngVelCutoff.setSingleStep(5)
@@ -2124,6 +2127,7 @@ class UiParameters(QtWidgets.QDialog):
         box_layout.addRow("Pixel Size", self.loc_pixel_size, "cm [range: 1-100]")
         box_layout.addRow("Bound for Chopping Edges", self.loc_chop_bound, "pixels [range: 3-20]")
 #        box_layout.addRow("Angular Velocity Cutoff", self.locAngVelCutoff, "deg/sec [range: 0-100, step: 5]")
+        box_layout.addRow("Place field threshold", self.loc_field_thresh, "ratio [range: 0-1, step: 0.01]")
 
         self.loc_rate_gb1.setLayout(box_layout)
 
@@ -2142,7 +2146,7 @@ class UiParameters(QtWidgets.QDialog):
         box_layout.addRow("Smoothing Filter", self.loc_rate_filter, "")
         box_layout.addRow("Spike Rate Pixels/Sigma", self.loc_rate_kern_len, \
         "[range: 1-11]\n\r Box: odds")
-
+    
         self.loc_rate_gb2.setLayout(box_layout)
 
         layout = QtWidgets.QVBoxLayout()
