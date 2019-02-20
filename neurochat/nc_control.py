@@ -1258,7 +1258,7 @@ class NeuroChaT(QtCore.QThread):
 
             if info['spike']:
                 for i, spike_file in enumerate(info['spike']):
-                    logging.info('Computing place field for unit: '+ str(i+ 1))
+                    logging.info('Computing place field for unit: '+ str(i+ 1) + ' with value ' + str(info['unit'][i]))
                     if os.path.exists(spike_file):
                         self.ndata.set_spike_file(spike_file)
                         self.ndata.load_spike()
@@ -1266,19 +1266,25 @@ class NeuroChaT(QtCore.QThread):
                     else:
                         logging.error('No existing file for spike file number '+ str(i+ 1) + " with name " + spike_file)
                         return
+                    
+                    unit_num = info['unit'][i]
+                    if unit_num in units:
+                        self.ndata.set_unit_no(unit_num)
+                    else:
+                        logging.error('No existing unit for file number '+ str(i+ 1) + " with unit value " + info['unit'][i])
+                        logging.info("Existing units are " + str(units))
+                        return
 
                     # Open the position file if it exists
-                    if os.path.exists(info['spat'][i]):
-                        if info['unit'][i] in units:
-                            # Get the centroid and save the info to excel file and local copy
-                            centroid = self.ndata.place()['centroid']
-                            info['centroid'].append(centroid)
-                            excel_info.loc[i, "CentroidX"] = centroid[0]
-                            excel_info.loc[i, "CentroidY"] = centroid[1]
-                        else:
-                            logging.error('No existing unit for file number '+ str(i+ 1) + " with unit value " + info['unit'][i])
-                            logging.info("Existing units are " + str(units))
-                            return
+                    spat_file = info['spat'][i]
+                    if os.path.exists(spat_file):
+                        self.ndata.set_spatial_file(spat_file)
+                        self.ndata.load_spatial()
+                        # Get the centroid and save the info to excel file and local copy
+                        centroid = self.ndata.place()['centroid']
+                        info['centroid'].append(centroid)
+                        excel_info.loc[i, "CentroidX"] = centroid[0]
+                        excel_info.loc[i, "CentroidY"] = centroid[1]
                     else:
                         logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i] + ".txt")
                         return
