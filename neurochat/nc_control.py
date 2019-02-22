@@ -1303,6 +1303,7 @@ class NeuroChaT(QtCore.QThread):
                               chop_bound=params['loc_chop_bound'],
                               filter=[filttype, params['loc_rate_kern_len']],
                               fieldThresh=params['loc_field_thresh'],
+                              smoothPlace=params['loc_field_smooth'],
                               brAdjust=True, update=True)
                         centroid = place_data['centroid']
                         info['centroid'].append(centroid)
@@ -1317,7 +1318,7 @@ class NeuroChaT(QtCore.QThread):
                         angle = angle_between_points(first_centroid, second_centroid, centroid)
                         excel_info.loc[i, "AngleInDegrees"] = angle
                     if should_plot:
-                        fig = nc_plot.loc_firing_and_place(place_data)
+                        fig = nc_plot.loc_firing_and_place(place_data, smooth=params['loc_field_smooth'])
                         figs.append(fig)
             if should_plot:
                 self.close_fig(figs)
