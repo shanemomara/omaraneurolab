@@ -109,8 +109,6 @@ def wave_property(wave_data, plots=[2, 2]):
         ax[i].plot(wave_data['Mean wave'][:, i]-wave_data['Std wave'][:, i],\
           color='green', linestyle='dashed')
 
-    plt.show()
-
     return fig1
 
 def isi(isi_data):
@@ -962,7 +960,7 @@ def loc_spike(place_data, ax=None):
 #        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
-def loc_rate(place_data, ax=None):
+def loc_rate(place_data, ax=None, smooth=True):
     """
     Plots location vs spike rate
     
@@ -992,8 +990,12 @@ def loc_rate(place_data, ax=None):
     
     divider = make_axes_locatable(ax)
     cax = divider.append_axes('right', size='3%', pad=0.05) 
-    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'], np.ma.array(place_data['smoothMap'], \
-                    mask=np.isnan(place_data['smoothMap'])), cmap=c_map, rasterized=True)
+    if smooth:
+        fmap = place_data['smoothMap']
+    else:
+        fmap = place_data['firingMap']
+    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'], np.ma.array(fmap, \
+                        mask=np.isnan(fmap)), cmap=c_map, rasterized=True)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
     ax.set_aspect('equal')
@@ -1031,7 +1033,7 @@ def loc_firing(place_data):
     return fig
 
 # Created by Sean Martin: 14/02/2019
-def loc_firing_and_place(place_data):
+def loc_firing_and_place(place_data, smooth=False):
     """
     Plots the analysis results of locational correlation to spike-rate with a place map
     
@@ -1052,7 +1054,7 @@ def loc_firing_and_place(place_data):
     ax.set_xlabel('XLoc')    
     ax.set_ylabel('YLoc')
     
-    ax = loc_rate(place_data, ax=fig.add_subplot(132))
+    ax = loc_rate(place_data, ax=fig.add_subplot(132), smooth=smooth)
     ax.set_xlabel('XLoc')
     #ax.set_ylabel('YLoc')
 

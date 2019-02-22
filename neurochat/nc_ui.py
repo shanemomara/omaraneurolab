@@ -885,6 +885,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         #Get selected function from functioWidget
         for checkbox in self.function_widget.findChildren(QtWidgets.QCheckBox):
             self._control.set_analysis(checkbox.objectName(), checkbox.isChecked())
+           
+        for checkbox in self._param_ui.findChildren(QtWidgets.QCheckBox):
+            self._control.set_param(checkbox.objectName(), checkbox.isChecked())
 
         for spinbox in self._param_ui.findChildren(QtWidgets.QSpinBox):
             self._control.set_param(spinbox.objectName(), spinbox.value())
@@ -2116,9 +2119,12 @@ class UiParameters(QtWidgets.QDialog):
         self.loc_chop_bound = add_spin_box(min_val=3, max_val=20, obj_name="loc_chop_bound")
         self.loc_chop_bound.setValue(5)
 
-        self.loc_field_thresh = add_double_spin_box(min_val=0, max_val=1, obj_name="loc_field_thresh")
-        self.loc_field_thresh.setValue(0.2)
+        self.loc_field_thresh = add_double_spin_box(min_val=0.0, max_val=1.0, obj_name="loc_field_thresh")
+        self.loc_field_thresh.setValue(0.20)
         self.loc_field_thresh.setSingleStep(0.01)
+
+        self.loc_field_smooth = add_check_box(obj_name='loc_field_smooth')
+        self.loc_field_smooth.setChecked(False)
 #        self.locAngVelCutoff = add_spin_box(min_val=0, 100, "locAngVelCutoff")
 #        self.locAngVelCutoff.setValue(30)
 #        self.locAngVelCutoff.setSingleStep(5)
@@ -2128,6 +2134,7 @@ class UiParameters(QtWidgets.QDialog):
         box_layout.addRow("Bound for Chopping Edges", self.loc_chop_bound, "pixels [range: 3-20]")
 #        box_layout.addRow("Angular Velocity Cutoff", self.locAngVelCutoff, "deg/sec [range: 0-100, step: 5]")
         box_layout.addRow("Place field threshold", self.loc_field_thresh, "ratio [range: 0-1, step: 0.01]")
+        box_layout.addRow("Smooth firing map before centroid calculation", self.loc_field_smooth, "True or False")
 
         self.loc_rate_gb1.setLayout(box_layout)
 

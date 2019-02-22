@@ -624,12 +624,17 @@ class NeuroChaT(QtCore.QThread):
                 else:
                     filttype = 'b'
 
-                place_data = self.place(pixel=params['loc_pixel_size'], \
-                              chop_bound=params['loc_chop_bound'],\
-                              filter=[filttype, params['loc_rate_kern_len']],\
+                place_data = self.ndata.place(
+                              pixel=params['loc_pixel_size'],
+                              chop_bound=params['loc_chop_bound'],
+                              filter=[filttype, params['loc_rate_kern_len']],
+                              fieldThresh=params['loc_field_thresh'],
+                              smoothPlace=params['loc_field_smooth'],
                               brAdjust=True, update=True)
-                fig = nc_plot.loc_firing(place_data)
-                self.close_fig(fig)
+                fig1 = nc_plot.loc_firing(place_data)
+                self.close_fig(fig1)
+                fig2 = nc_plot.loc_firing_and_place(place_data, smooth=params['loc_field_smooth'])
+                self.close_fig(fig2)
                 self.plot_data_to_hdf(name=name+ '/loc_rate/', graph_data=place_data)
 
             except:

@@ -1388,6 +1388,8 @@ class NSpatial(NAbstract):
             pmap = smoothMap
         else:
             pmap = fmap
+        
+        pmap[tmap == 0] = None
         pfield, largest_group = NSpatial.place_field(pmap, thresh, required_neighbours)
         centroid = NSpatial.place_field_centroid(pfield, pmap, largest_group)
         #centroid is currently in co-ordinates, convert to pixels
@@ -1409,6 +1411,7 @@ class NSpatial(NAbstract):
         graph_data['posY'] = posY
         graph_data['fmap'] = fmap
         graph_data['smoothMap'] = smoothMap
+        graph_data['firingMap'] = fmap
         graph_data['tmap'] = tmap
         graph_data['xedges'] = xedges
         graph_data['yedges'] = yedges
@@ -1976,6 +1979,8 @@ class NSpatial(NAbstract):
         # Rules: 1. spikes in bin 
         # 2. The bin shares at least a side with other bins which contain spikes
 
+        where_are_NaNs = np.isnan(pmap)
+        pmap[where_are_NaNs] = 0
         pmap = pmap/pmap.max()
         pmap = pmap > thresh
         pfield = np.zeros(np.add(pmap.shape,2))
@@ -2284,8 +2289,8 @@ class NSpatial(NAbstract):
                 elif xsh < 0:
                     map1XInd = np.arange(lenx + xsh)
                     map2XInd = np.arange(-xsh, lenx)
-                map1 = fmap[np.meshgrid(map1YInd, map1XInd)]
-                map2 = fmap[np.meshgrid(map2YInd, map2XInd)]
+                map1 = fmap[tuple(np.meshgrid(map1YInd, map1XInd))]
+                map2 = fmap[tuple(np.meshgrid(map2YInd, map2XInd))]
                 if map1.size < minPixel:
                     corrMap[J, I] = -1
                 else:
