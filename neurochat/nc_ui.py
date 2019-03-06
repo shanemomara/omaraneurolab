@@ -230,7 +230,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.file_menu = self.menubar.addMenu('&File')
         self.settings_menu = self.menubar.addMenu('&Settings')
         self.utilities_menu = self.menubar.addMenu('&Utilities')
-        self.experimental_menu = self.menubar.addMenu('&Experimental')
+        #self.experimental_menu = self.menubar.addMenu('&Experimental')
         self.help_menu = self.menubar.addMenu('&Help')
 
         self.setMenuBar(self.menubar)
@@ -269,15 +269,17 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.accumulate_act = self.utilities_menu.addAction("Accumulate output PS/PDF")
 
         self.utilities_menu.addSeparator()
-
-        self.angle_act = self.experimental_menu.addAction("Centroid Angle Calculation")
-        self.angle_act.setStatusTip("Select an excel file which specifies files in the order of: directory | position_file | spike_file | unit_no")
-                
+        
         self.verify_units_act = self.utilities_menu.addAction("Verify units")
         self.evaluate_act = self.utilities_menu.addAction("Evaluate clustering")
         self.compare_units_act = self.utilities_menu.addAction("Compare single units")
         self.convert_files_act = self.utilities_menu.addAction("Convert to NWB format")
 
+        self.utilities_menu.addSeparator()
+
+        self.angle_act = self.utilities_menu.addAction("Centroid Angle Calculation")
+        self.angle_act.setStatusTip("Select an excel file which specifies files in the order of: directory | position_file | spike_file | unit_no")
+        
         self.view_help_act = self.help_menu.addAction("NeuroChaT documentation")
         self.view_help_act.setShortcut(QtGui.QKeySequence("F1"))
         self.tutorial_act = self.help_menu.addAction("NeuroChaT tutorial")
