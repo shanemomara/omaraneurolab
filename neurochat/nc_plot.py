@@ -80,7 +80,7 @@ def set_backend(backend):
     if backend:
         plt.switch_backend(backend)
 
-def wave_property(wave_data, plots=[2, 2]): #hi
+def wave_property(wave_data, plots=[2, 2]):
     """
     Plots mean +/-std of waveforms in electrode groups 
     
