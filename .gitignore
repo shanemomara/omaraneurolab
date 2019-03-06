@@ -10,3 +10,6 @@
 # Notebook checkpoints
 notebooks/.ipynb_checkpoints/
 notebooks/Tests.ipynb
+
+# Undeletable file
+how-cfg-g
