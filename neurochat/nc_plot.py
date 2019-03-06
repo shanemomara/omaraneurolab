@@ -23,7 +23,7 @@ def scatterplot_matrix(_data, names=[], **kwargs):
     diagonal subplots labeled with "names".  Additional keyword arguments are
     passed on to matplotlib's "plot" command. Returns the matplotlib figure
     object containg the subplot grid."""
-    numvars, num_data = _data.shape
+    numvars, _ = _data.shape
     fig, axs = plt.subplots(nrows=numvars, ncols=numvars, figsize=(8, 8))
     fig.subplots_adjust(hspace=0.05, wspace=0.05)
 
@@ -833,7 +833,7 @@ def hd_spike_time_lapse(hd_data):
     keys = list(hd_data.keys())
     nkey = len(keys)
     nfig = int(np.ceil(nkey/4))
-    for n in range(nfig):
+    for _ in range(nfig):
         f, ax = plt.subplots(2, 2, subplot_kw=dict(projection='polar'))
         fig.append(f)
         axs.extend(list(ax.flatten()))
@@ -868,7 +868,7 @@ def hd_rate_time_lapse(hd_data):
     keys = list(hd_data.keys())
     nkey = len(keys)
     nfig = int(np.ceil(nkey/4))
-    for n in range(nfig):
+    for _ in range(nfig):
         f, ax = plt.subplots(2, 2, subplot_kw=dict(projection='polar'))
         fig.append(f)
         axs.extend(list(ax.flatten()))
@@ -1169,7 +1169,7 @@ def loc_spike_time_lapse(place_data):
     keys = list(place_data.keys())
     nkey = len(keys)
     nfig = int(np.ceil(nkey/4))
-    for n in range(nfig):
+    for _ in range(nfig):
         f, ax = plt.subplots(2, 2, sharex='col', sharey='row')
         fig.append(f)
         axs.extend(list(ax.flatten()))
@@ -1204,7 +1204,7 @@ def loc_rate_time_lapse(place_data):
     keys = list(place_data.keys())
     nkey = len(keys)
     nfig = int(np.ceil(nkey/4))
-    for n in range(nfig):
+    for _ in range(nfig):
         f, ax = plt.subplots(2, 2, sharex='col', sharey='row')
         fig.append(f)
         axs.extend(list(ax.flatten()))
