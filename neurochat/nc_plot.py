@@ -219,6 +219,7 @@ def isi_corr(isi_corr_data, ax=None):
     ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(isi_corr_data['isiCorrBins'].min()))+ 'ms)')
     ax.set_xlabel('Time (ms)')
     ax.set_ylabel('Counts')
+    ax.tick_params(width=1.5)
 
     return ax
 
