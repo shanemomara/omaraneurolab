@@ -215,7 +215,7 @@ def isi_corr(isi_corr_data, ax=None):
     bin_centres = [(all_bins[i+1] + all_bins[i]) / 2 for i in range(len(all_bins) - 1)]
     ax.bar(bin_centres, isi_corr_data['isiCorr'],
            width=widths, linewidth=line_width, color='darkblue', 
-           edgecolor='black', rasterized=True, align='center')
+           edgecolor='black', rasterized=True, align='center', antialiased=True)
     ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(isi_corr_data['isiCorrBins'].min()))+ 'ms)')
     ax.set_xlabel('Time (ms)')
     ax.set_ylabel('Counts')
