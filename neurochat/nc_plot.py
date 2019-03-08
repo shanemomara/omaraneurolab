@@ -205,7 +205,7 @@ def isi_corr(isi_corr_data, ax=None):
         
     """
     if not ax:
-        fig = plt.figure()
+        plt.figure()
         ax = plt.gca()
     
     ax.bar(isi_corr_data['isiCorrBins'], isi_corr_data['isiCorr'],\
