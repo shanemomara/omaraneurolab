@@ -649,6 +649,7 @@ class NSpike(NBase):
 
         _corr = self.psth(_unit_stamp, **kwargs)
         graph_data['isiCorrBins'] = _corr['bins']
+        graph_data['isiAllCorrBins'] = _corr['all_bins']
         center = find(_corr['bins'] == 0, 1, 'first')[0]
         graph_data['isiCorr'] = _corr['psth']
         graph_data['isiCorr'][center] = graph_data['isiCorr'][center] \
@@ -691,6 +692,9 @@ class NSpike(NBase):
 
         graph_data['psth'] = hist_count
         graph_data['bins'] = 1000*edges[:-1]
+
+        # Included in case the last point is needed
+        graph_data['all_bins'] = 1000*edges
 
         return graph_data
 
