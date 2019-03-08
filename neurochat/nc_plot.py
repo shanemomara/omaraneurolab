@@ -189,7 +189,7 @@ def isi(isi_data):
 
     return fig1, fig2, fig3
 
-def isi_corr(isi_corr_data):
+def isi_corr(isi_corr_data, ax=None):
     """
     Plots ISI correlation.
     
@@ -204,16 +204,17 @@ def isi_corr(isi_corr_data):
         ISI correlation histogram
         
     """
+    if not ax:
+        fig = plt.figure()
+        ax = plt.gca()
     
-    fig1 = plt.figure()
-    ax = plt.gca()
     ax.bar(isi_corr_data['isiCorrBins'], isi_corr_data['isiCorr'],\
            color='darkblue', edgecolor='darkblue', rasterized=True)
     ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(isi_corr_data['isiCorrBins'].min()))+ 'ms)')
     ax.set_xlabel('Time (ms)')
     ax.set_ylabel('Counts')
 
-    return fig1
+    return ax
 
 def theta_cell(plot_data):
     """
