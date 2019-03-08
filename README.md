@@ -4,8 +4,9 @@ An analysis toolset for Neuroscience
 # TODO
 1. Look at calc_border_distance. Seems to fail for very large pixel values.
 2. Don't crash, print error messages instead, when:
-    - An Excel file is open that need to write to.
-    - When loading a spike and there is no cut file.
+    - An Excel file is open that need to write to. (PermissionError).
+    - When loading a spike and there is no cut file. (IOError)
+    - When trying to save to a pdf which is already open (PermissionError).
 3. Show firing map plots in centimetres instead of in pixels.
 4. Print a message if you try to set to a non existant unit number.
 5. Set the open dir for files to self.path = Qt.Core.QFileInfo(excel_file).path() - write an open file function in ui and just update this.
