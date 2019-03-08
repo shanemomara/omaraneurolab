@@ -955,6 +955,8 @@ def loc_spike(place_data, ax=None):
                s=2, marker='.', color=RED, zorder=2)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
+    #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
+    #ax.set_aspect(asp)
     ax.set_aspect('equal')
     ax.invert_yaxis()
 #        plt.autoscale(enable=True, axis='both', tight=True)
@@ -998,9 +1000,11 @@ def loc_rate(place_data, ax=None, smooth=True):
                         mask=np.isnan(fmap)), cmap=c_map, rasterized=True)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
+    #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
+    #ax.set_aspect(asp)
     ax.set_aspect('equal')
     ax.invert_yaxis()
-    plt.colorbar(pmap, cax=cax, orientation='vertical')
+    plt.colorbar(pmap, cax=cax, orientation='vertical', use_gridspec=True)
 #        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
@@ -1027,9 +1031,9 @@ def loc_firing(place_data):
     
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
     ax.set_xlabel('XLoc')
-    ax.set_ylabel('YLoc')
+    #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
-
+    plt.tight_layout()
     return fig
 
 # Created by Sean Martin: 14/02/2019
@@ -1050,20 +1054,21 @@ def loc_firing_and_place(place_data, smooth=False):
     """
     fig = plt.figure()
     
-    ax = loc_spike(place_data, ax=fig.add_subplot(131))
-    ax.set_xlabel('XLoc')    
-    ax.set_ylabel('YLoc')
+    ax1 = loc_spike(place_data, ax=fig.add_subplot(131))
+    ax1.set_xlabel('XLoc')    
+    ax1.set_ylabel('YLoc')
     
-    ax = loc_rate(place_data, ax=fig.add_subplot(132), smooth=smooth)
-    ax.set_xlabel('XLoc')
+    ax2 = loc_rate(place_data, ax=fig.add_subplot(132, sharey=ax1), smooth=smooth)
+    ax2.set_xlabel('XLoc')
     #ax.set_ylabel('YLoc')
 
-    ax = loc_place_field(place_data, ax=fig.add_subplot(133))
-    ax.set_xlabel('XLoc')
-    plt.subplots_adjust(wspace=0.5)
+    ax3 = loc_place_field(place_data, ax=fig.add_subplot(133, sharey=ax1))
+    ax3.set_xlabel('XLoc')
+    #plt.subplots_adjust(wspace=0.7)
     #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
 
+    plt.tight_layout(pad=0.7)
     return fig
 
 # Created by Sean Martin: 13/02/2019
@@ -1108,7 +1113,7 @@ def loc_place_field(place_data, ax=None):
     ax.invert_yaxis()
     centroid = place_data['centroid']
     ax.plot([centroid[0]], [centroid[1]], 'gX')
-    plt.colorbar(pmap, cax=cax, orientation='vertical')
+    plt.colorbar(pmap, cax=cax, orientation='vertical', use_gridspec=True)
 #        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
@@ -1144,7 +1149,7 @@ def loc_place_centroid(place_data, centroid):
     ax.set_xlabel('XLoc')
     ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
-
+    plt.tight_layout()
     return fig
 
 def loc_spike_time_lapse(place_data):
