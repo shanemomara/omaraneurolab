@@ -1027,11 +1027,11 @@ def loc_firing(place_data):
     fig = plt.figure()
     
     ax = loc_spike(place_data, ax=fig.add_subplot(121))
-    ax.set_xlabel('XLoc')    
-    ax.set_ylabel('YLoc')
+    ax.set_xlabel('cm')    
+    ax.set_ylabel('cm')
     
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
-    ax.set_xlabel('XLoc')
+    ax.set_xlabel('cm')
     #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
     plt.tight_layout()
@@ -1056,15 +1056,15 @@ def loc_firing_and_place(place_data, smooth=False):
     fig = plt.figure()
     
     ax1 = loc_spike(place_data, ax=fig.add_subplot(131))
-    ax1.set_xlabel('XLoc')    
-    ax1.set_ylabel('YLoc')
+    ax1.set_xlabel('cm')    
+    ax1.set_ylabel('cm')
     
     ax2 = loc_rate(place_data, ax=fig.add_subplot(132, sharey=ax1), smooth=smooth)
-    ax2.set_xlabel('XLoc')
+    ax2.set_xlabel('cm')
     #ax.set_ylabel('YLoc')
 
     ax3 = loc_place_field(place_data, ax=fig.add_subplot(133, sharey=ax1))
-    ax3.set_xlabel('XLoc')
+    ax3.set_xlabel('cm')
     #plt.subplots_adjust(wspace=0.7)
     #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
@@ -1141,14 +1141,14 @@ def loc_place_centroid(place_data, centroid):
     
     ax = loc_spike(place_data, ax=fig.add_subplot(121))
     ax.plot([centroid[0]], [centroid[1]], 'gX')
-    ax.set_xlabel('XLoc')    
-    ax.set_ylabel('YLoc')
+    ax.set_xlabel('cm')    
+    ax.set_ylabel('cm')
     
     
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
     ax.plot([centroid[0]], [centroid[1]], 'gX')
-    ax.set_xlabel('XLoc')
-    ax.set_ylabel('YLoc')
+    ax.set_xlabel('cm')
+    ax.set_ylabel('cm')
 #    fig.colorbar(cax)
     plt.tight_layout()
     return fig
