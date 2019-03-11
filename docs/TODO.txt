@@ -3,4 +3,4 @@ Don't crash on loading if there is no cut file. (Extension - don't crash, print 
 Show firing map plots in centimetres instead of in pixels, would also likely help with calc_border_distance.
 Print a message if you try to set to a non existant unit number.
 Set the open dir for files to self.path = Qt.Core.QFileInfo(excel_file).path() - write an open file function in ui and just update this.
-Change Yloc and Xloc for centimetres
+Change Yloc and Xloc for centimetres - DONE
