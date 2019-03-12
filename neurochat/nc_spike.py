@@ -1596,13 +1596,19 @@ class NSpike(NBase):
                             np.add(chan_wave[:, j], sample_value, out=chan_wave[:, j])
                         np.putmask(chan_wave[:, j], chan_wave[:, j] > max_ADC_count, chan_wave[:, j]- max_byte_value)
                     spike_wave['ch'+ str(i+1)] = chan_wave*AD_bit_uvolts[i]
-            with open(cut_file, 'r') as f_cut:
-                while True:
-                    line = f_cut.readline()
-                    if line == '':
-                        break
-                    if line.startswith('Exact_cut'):
-                        unit_ID = np.fromfile(f_cut, dtype='uint8', sep=' ')
+            try:
+                with open(cut_file, 'r') as f_cut:
+                    while True:
+                        line = f_cut.readline()
+                        if line == '':
+                            break
+                        if line.startswith('Exact_cut'):
+                            unit_ID = np.fromfile(f_cut, dtype='uint8', sep=' ')
+            except FileNotFoundError:
+                logging.error(
+                    "No cut file found for spike file {} please make one at {}".format(
+                        file_name, cut_file))
+                return
             self._set_timestamp(spike_time)
             self._set_waveform(spike_wave)
             self.set_unit_tags(unit_ID)
