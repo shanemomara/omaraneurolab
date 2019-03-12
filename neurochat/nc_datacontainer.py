@@ -26,7 +26,7 @@ from neurochat.nc_data import NData
 # Loading from excel file
 
 class NDataContainer():
-    def __init__(self):
+    def __init__(self, share_positions=False):
         """
         Bulk load nData objects
 
@@ -40,6 +40,7 @@ class NDataContainer():
         self._units = []
         self._container = []
         self._unit_count = 0
+        self._share_positions = share_positions
 
     class EFileType(Enum):
         Spike = 1
@@ -81,10 +82,16 @@ class NDataContainer():
             print("units are {}".format(data.get_unit_list()))
 
     def add_files(self, f_type, descriptors):
+        if isinstance(descriptors, list):
+            descriptors = (descriptors, None, None)
         filenames, _, _ = descriptors
         if not isinstance(f_type, self.EFileType):
             logging.error("Parameter f_type in add files must be of EFileType")
             return
+
+        if f_type.name == "Position" and self._share_positions and len(filenames) == 1:
+            for _ in range(len(self.get_file_dict()["Spike"]) - 1):
+                filenames.append(filenames[0])
 
         # Ensure lists are empty or of equal size    
         for l in descriptors:
@@ -130,19 +137,28 @@ class NDataContainer():
             for idx, _ in enumerate(vals):
                 if idx >= self.get_num_data():
                     self.add_data(NData())
-            
+
             for idx, descriptor in enumerate(vals):
-                self._load(
-                    self.get_data(idx), key, descriptor)
+                self._load(idx, key, descriptor)
 
     def add_files_from_excel(self, file_loc):
         pass
 
-    def _load(self, ndata, key, descriptor):
+    def _load(self, idx, key, descriptor):
+        ndata = self.get_data(idx)
         key_fn_pairs = {
             "Spike" : [
                 getattr(ndata, "set_spike_file"), 
-                getattr(ndata, "set_spike_name")]
+                getattr(ndata, "set_spike_name"),
+                getattr(ndata, "load_spike")],
+            "Position": [
+                getattr(ndata, "set_spatial_file"), 
+                getattr(ndata, "set_spatial_name"),
+                getattr(ndata, "load_spatial")],
+            "LFP": [
+                getattr(ndata, "set_lfp_file"),
+                getattr(ndata, "set_lfp_name"),
+                getattr(ndata, "load_lfp")],
         }
 
         filename, objectname, system = descriptor
@@ -153,10 +169,18 @@ class NDataContainer():
         if system is not None:
             ndata.set_system(system)
 
+        if key == "Position" and self._share_positions:
+            if idx == 0:
+                key_fn_pairs[key][0](filename)
+                key_fn_pairs[key][2]()
+            else:
+                ndata.spatial = self.get_data(0).spatial
+            return
+
         if filename is not None:
             key_fn_pairs[key][0](filename)
-            ndata.load_spike()
-
+            key_fn_pairs[key][2]()
+        
     def __repr__(self):
         string = "NData Container Object with {} objects:\nFiles are {}\nUnits are \n{}".format(
             self.get_num_data(), self.get_file_dict(), self.get_units())
@@ -168,6 +192,9 @@ class NDataContainer():
         result.set_unit_no(self.get_units(data_index)[unit_index])
         return result
 
+    def __len__(self):
+        return sum(self._unit_count)
+
     def _count_num_units(self):
         counts = []
         for unit_list in self.get_units():
@@ -176,7 +203,7 @@ class NDataContainer():
 
     def _index_to_data_pos(self, index):
         counts = self._unit_count
-        if index >= sum(counts):
+        if index >= len(self):
             raise IndexError
         else:
             running_sum, running_idx = 0, 0
