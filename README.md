@@ -7,7 +7,6 @@ A fork of an analysis toolset for Neuroscience.
     - An Excel file is open that need to write to. (PermissionError).
     - When loading a spike and there is no cut file. (IOError)
     - When trying to save to a pdf which is already open (PermissionError).
-3. Show firing map legend in centimetres instead of XLoc and YLoc.
 4. Print a message if you try to set to a non existant unit number.
 5. Set the open dir for files to self.path = Qt.Core.QFileInfo(excel_file).path() - write an open file function in ui and just update this.
 7. Related to the below, create a set class.
