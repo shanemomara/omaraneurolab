@@ -26,23 +26,20 @@ from neurochat.nc_data import NData
 # Loading from excel file
 
 class NDataContainer():
-    def __init__(self, load_on_fly=True):
+    def __init__(self):
         """
-        Parameters
-        ----------
-        LoadOnFly : Bool
-            If True, load files as they are used and maintain one Ndata object
-            Otherwise load in bulk and store many NData objects.
+        Bulk load nData objects
 
         Attributes
         ----------
-        container : List
-        file_names : List
-        
+        _container : List
+        _file_names_dict : Dict
+        _units : List
         """
-        self._load_on_fly = load_on_fly
         self._file_names_dict = {}
+        self._units = []
         self._container = []
+        self._unit_count = 0
 
     class EFileType(Enum):
         Spike = 1
@@ -56,6 +53,22 @@ class NDataContainer():
     def get_file_dict(self):
         return self._file_names_dict
 
+    def get_units(self, index=None):
+        if index is None:
+            return self._units
+        if index >= self.get_num_data():
+            logging.error("Input index to get_data out of range")
+            return
+        return self._units[index]
+
+    def get_data(self, index=None):
+        if index is None:
+            return self._container
+        if index >= self.get_num_data():
+            logging.error("Input index to get_data out of range")
+            return
+        return self._container[index]
+
     def add_data(self, data):
         if isinstance(data, NData):
             self._container.append(data)
@@ -63,11 +76,9 @@ class NDataContainer():
             logging.error("Adding incorrect object to data container")
             return
 
-    def get_data(self, index):
-        if index >= self.get_num_data():
-            logging.error("Input index to get_data out of range")
-            return
-        return self._container[index]
+    def list_all_units(self):
+        for data in self._container:
+            print("units are {}".format(data.get_unit_list()))
 
     def add_files(self, f_type, descriptors):
         filenames, _, _ = descriptors
@@ -93,6 +104,39 @@ class NDataContainer():
                     description.append(None)
             self._file_names_dict.setdefault(
                 f_type.name, []).append(description)
+    
+    def set_units(self, units='all'):
+        self._units = []
+        if units == 'all':
+            for data in self.get_data():
+                self._units.append(data.get_unit_list())
+        elif isinstance(units, list):
+            for unit in units:
+                if isinstance(unit, int):
+                    self._units.append([unit])
+                elif isinstance(unit, list):
+                    self._units.append(unit)
+                else:
+                    logging.error(
+                        "Unrecognised type {} passed to set units".format(type(unit)))
+
+        else:
+            logging.error(
+                "Unrecognised type {} passed to set units".format(type(units)))
+        self._unit_count = self._count_num_units()
+
+    def load_all_data(self):
+        for key, vals in self.get_file_dict().items():
+            for idx, _ in enumerate(vals):
+                if idx >= self.get_num_data():
+                    self.add_data(NData())
+            
+            for idx, descriptor in enumerate(vals):
+                self._load(
+                    self.get_data(idx), key, descriptor)
+
+    def add_files_from_excel(self, file_loc):
+        pass
 
     def _load(self, ndata, key, descriptor):
         key_fn_pairs = {
@@ -113,15 +157,35 @@ class NDataContainer():
             key_fn_pairs[key][0](filename)
             ndata.load_spike()
 
-    def load_all_data(self):
-        for key, vals in self.get_file_dict().items():
-            for idx, _ in enumerate(vals):
-                if idx >= self.get_num_data():
-                    self.add_data(NData())
-            
-            for idx, descriptor in enumerate(vals):
-                self._load(
-                    self.get_data(idx), key, descriptor)
+    def __repr__(self):
+        string = "NData Container Object with {} objects:\nFiles are {}\nUnits are \n{}".format(
+            self.get_num_data(), self.get_file_dict(), self.get_units())
+        return string
 
-    def add_files_from_excel(self, file_loc):
-        pass
+    def __getitem__(self, index):
+        data_index, unit_index = self._index_to_data_pos(index)
+        result = self.get_data(data_index)
+        result.set_unit_no(self.get_units(data_index)[unit_index])
+        return result
+
+    def _count_num_units(self):
+        counts = []
+        for unit_list in self.get_units():
+            counts.append(len(unit_list))
+        return counts
+
+    def _index_to_data_pos(self, index):
+        counts = self._unit_count
+        if index >= sum(counts):
+            raise IndexError
+        else:
+            running_sum, running_idx = 0, 0
+            for count in counts:
+                if index < (running_sum + count):
+                    return running_idx, (index - running_sum)
+                else:
+                    running_sum += count
+                    running_idx += 1
+
+                
+        
