@@ -26,7 +26,7 @@ from neurochat.nc_data import NData
 # Loading from excel file
 
 class NDataContainer():
-    def __init__(self, share_positions=False):
+    def __init__(self, share_positions=False, load_on_fly=False):
         """
         Bulk load nData objects
 
@@ -41,6 +41,8 @@ class NDataContainer():
         self._container = []
         self._unit_count = 0
         self._share_positions = share_positions
+        self._load_on_fly = load_on_fly
+        self._last_data_pt = (1, None)
 
     class EFileType(Enum):
         Spike = 1
@@ -57,7 +59,7 @@ class NDataContainer():
     def get_units(self, index=None):
         if index is None:
             return self._units
-        if index >= self.get_num_data():
+        if index >= self.get_num_data() and (not self._load_on_fly):
             logging.error("Input index to get_data out of range")
             return
         return self._units[index]
@@ -132,20 +134,30 @@ class NDataContainer():
                 "Unrecognised type {} passed to set units".format(type(units)))
         self._unit_count = self._count_num_units()
 
-    def load_all_data(self):
+    def setup(self):
+        if self._load_on_fly:
+            self._last_data_pt = (1, None)
+        else:
+            self._load_all_data()
+
+    def add_files_from_excel(self, file_loc):
+        pass
+
+    # Methods from here on should be for private class use
+    def _load_all_data(self):
+        if self._load_on_fly:
+            logging.error("Don't load all the data in container if loading on the fly")
         for key, vals in self.get_file_dict().items():
             for idx, _ in enumerate(vals):
                 if idx >= self.get_num_data():
                     self.add_data(NData())
 
             for idx, descriptor in enumerate(vals):
-                self._load(idx, key, descriptor)
+                self._load(key, descriptor, idx=idx)
 
-    def add_files_from_excel(self, file_loc):
-        pass
-
-    def _load(self, idx, key, descriptor):
-        ndata = self.get_data(idx)
+    def _load(self, key, descriptor, idx=None, ndata=None):
+        if ndata is None:
+            ndata = self.get_data(idx)
         key_fn_pairs = {
             "Spike" : [
                 getattr(ndata, "set_spike_file"), 
@@ -169,10 +181,9 @@ class NDataContainer():
         if system is not None:
             ndata.set_system(system)
 
-        if key == "Position" and self._share_positions:
-            if idx == 0:
-                key_fn_pairs[key][0](filename)
-                key_fn_pairs[key][2]()
+        if key == "Position" and self._share_positions and idx !=0:
+            if self._load_on_fly:
+                ndata.spatial = self._last_data_pt[1].spatial
             else:
                 ndata.spatial = self.get_data(0).spatial
             return
@@ -186,9 +197,20 @@ class NDataContainer():
             self.get_num_data(), self.get_file_dict(), self.get_units())
         return string
 
+    # TODO test on the fly loading and cache last result
     def __getitem__(self, index):
         data_index, unit_index = self._index_to_data_pos(index)
-        result = self.get_data(data_index)
+        if self._load_on_fly:
+            if data_index == self._last_data_pt[0]:
+                result = self._last_data_pt[1]
+            else:
+                result = NData()
+                for key, vals in self.get_file_dict().items():
+                    descriptor = vals[data_index]
+                    self._load(key, descriptor, idx=data_index, ndata=result)
+                self._last_data_pt = (data_index, result)
+        else:  
+            result = self.get_data(data_index)
         result.set_unit_no(self.get_units(data_index)[unit_index])
         return result
 
