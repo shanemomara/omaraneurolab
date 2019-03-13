@@ -80,8 +80,15 @@ class NDataContainer():
             return
 
     def list_all_units(self):
-        for data in self._container:
-            print("units are {}".format(data.get_unit_list()))
+        if self._load_on_fly:
+                for key, vals in self.get_file_dict().items():
+                    for descriptor in vals:
+                        result = NData()
+                        self._load(key, descriptor, ndata=result)
+                        print("units are {}".format(result.get_unit_list()))
+        else:
+            for data in self._container:
+                print("units are {}".format(data.get_unit_list()))
 
     def add_files(self, f_type, descriptors):
         if isinstance(descriptors, list):
@@ -117,8 +124,15 @@ class NDataContainer():
     def set_units(self, units='all'):
         self._units = []
         if units == 'all':
-            for data in self.get_data():
-                self._units.append(data.get_unit_list())
+            if self._load_on_fly:
+                for key, vals in self.get_file_dict().items():
+                    for descriptor in vals:
+                        result = NData()
+                        self._load(key, descriptor, ndata=result)
+                        self._units.append(result.get_unit_list())
+            else:
+                for data in self.get_data():
+                    self._units.append(data.get_unit_list())
         elif isinstance(units, list):
             for unit in units:
                 if isinstance(unit, int):
