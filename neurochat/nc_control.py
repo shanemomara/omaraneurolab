@@ -171,8 +171,15 @@ class NeuroChaT(QtCore.QThread):
             directory = os.sep.join(words[:-1])
             if os.path.exists(directory):
                 self._pdf_file = filename # Current PDF file being handled
-                self.pdf = PdfPages(self._pdf_file)
-                self.save_to_file = True
+                try:
+                    self.pdf = PdfPages(self._pdf_file)
+                    self.save_to_file = True
+                except PermissionError:
+                    logging.error(
+                        "Please close PDF with name {} before writing to it".format(
+                            self._pdf_file))
+                    self.save_to_file = False
+                    self._pdf_file = None
             else:
                 self.save_to_file = False
                 self._pdf_file = None
@@ -221,14 +228,20 @@ class NeuroChaT(QtCore.QThread):
             for f in fig:
                 if isinstance(f, matplotlib.figure.Figure):
                     if self.save_to_file:
-                        self.pdf.savefig(f, dpi=400)
+                        try:
+                            self.pdf.savefig(f, dpi=400)
+                        except PermissionError:
+                            logging.error("Please close pdf before saving output to it")
 #                        self.pdf.savefig(f)
                     plt.close(f)
                 else:
                     logging.error('Invalid matplotlib.figure instance')
         elif isinstance(fig, matplotlib.figure.Figure):
             if self.save_to_file:
-                self.pdf.savefig(fig)
+                try:
+                    self.pdf.savefig(fig)
+                except PermissionError:
+                    logging.error("Please close pdf before saving output to it")
             plt.close(fig)
         else:
             logging.error('Invalid matplotlib.figure instance')
@@ -1323,8 +1336,12 @@ class NeuroChaT(QtCore.QThread):
             if should_plot:
                 self.close_fig(figs)
             
-            excel_info.to_excel(excel_file)
-            logging.info('Angle calculation completed!')
+            try:
+                excel_info.to_excel(excel_file)
+            except PermissionError:
+                logging.warning("Please close the excel file to write the result back to it")
+
+            logging.info('Angle calculation completed! Value was {}'.format(angle))
         else:
             logging.error('Excel file does not exist!')
 
