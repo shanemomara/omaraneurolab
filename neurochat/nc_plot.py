@@ -6,13 +6,16 @@ This module implements plotting functions for NeuroChaT analyses.
 """
 
 import itertools
+import math
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcol
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.lines import Line2D
+from matplotlib.patches import Arc
 
-from neurochat.nc_utils import find
+from neurochat.nc_utils import find, angle_between_points
 
 BLUE = '#1f77b4'
 RED = '#d62728'
@@ -61,43 +64,43 @@ def scatterplot_matrix(_data, names=[], **kwargs):
 def set_backend(backend):
     """
     Sets the  backend of Matplotlib
-    
+
     Parameters
     ----------
     backend : str
         The new backend for Matplotlib
-    
+
     Returns
     -------
     None
-    
+
     See also
     --------
     matplotlib.pyplot.switch_backend()
-    
+
     """
-    
+
     if backend:
         plt.switch_backend(backend)
 
 def wave_property(wave_data, plots=[2, 2]):
     """
-    Plots mean +/-std of waveforms in electrode groups 
-    
+    Plots mean +/-std of waveforms in electrode groups
+
     Parameters
     ----------
     wave_data : dict
         Graphical data from the Waveform analysis
     plots : list
         Subplot shape. [2, 2] for tetrode setup
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Matlab figure object
-    
+
     """
-    
+
     # Wave property analysis
     fig1, ax = plt.subplots(plots[0], plots[1])
     ax = ax.flatten()
@@ -115,12 +118,12 @@ def isi(isi_data):
     """
     Plots Interspike interval histogram and scatter plots of interval-before
     vs interval-after.
-    
+
     Parameters
     ----------
     isi_data : dict
         Graphical data from the ISI analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -129,9 +132,9 @@ def isi(isi_data):
         Scatter plot of ISI-before vs ISI-after in loglog scale
     fig3 : matplotlib.pyplot.Figure
         2D histogram of the ISI-before vs ISI-after in log-log scale
-        
+
     """
-    
+
     # Plot ISI
     # histogram
     fig1 = plt.figure()
@@ -192,53 +195,53 @@ def isi(isi_data):
 def isi_corr(isi_corr_data, ax=None):
     """
     Plots ISI correlation.
-    
+
     Parameters
     ----------
     isi_corr_data : dict
         Graphical data from the ISI correlation
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         ISI correlation histogram
-        
+
     """
     if not ax:
-        plt.figure()
+        fig1 = plt.figure()
         ax = plt.gca()
-    
+
     show_edges = False
     line_width = 1 if show_edges else 0
     all_bins = isi_corr_data['isiAllCorrBins']
     widths = [abs(all_bins[i+1] - all_bins[i]) for i in range(len(all_bins) - 1)]
     bin_centres = [(all_bins[i+1] + all_bins[i]) / 2 for i in range(len(all_bins) - 1)]
     ax.bar(bin_centres, isi_corr_data['isiCorr'],
-           width=widths, linewidth=line_width, color='darkblue', 
+           width=widths, linewidth=line_width, color='darkblue',
            edgecolor='black', rasterized=True, align='center', antialiased=True)
     ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(isi_corr_data['isiCorrBins'].min()))+ 'ms)')
     ax.set_xlabel('Time (ms)')
     ax.set_ylabel('Counts')
     ax.tick_params(width=1.5)
 
-    return ax
+    return fig1
 
 def theta_cell(plot_data):
     """
     Plots theta-modulated cell and theta-skipping cell analysis data
-    
+
     Parameters
     ----------
     plot_data : dict
         Graphical data from the theta-modulated cell and theta skipping cell analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         ISI correlation histogram superimposed with fitted sinusoidal curve.
-        
+
     """
-    
+
     fig1 = plt.figure()
     ax = plt.gca()
     ax.bar(plot_data['isiCorrBins'], plot_data['isiCorr'],\
@@ -253,20 +256,20 @@ def theta_cell(plot_data):
 def lfp_spectrum(plot_data):
     """
     Plots LFP spectrum analysis data
-    
+
     Parameters
     ----------
     plot_data : dict
         Graphical data from the ISI correlation
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Line plot of LFP spectrum using Welch's method
-        
+
     """
-    
-    
+
+
     fig1 = plt.figure()
     ax = plt.gca()
     ax.plot(plot_data['f'], plot_data['Pxx'], linewidth=2)
@@ -280,19 +283,19 @@ def lfp_spectrum(plot_data):
 def lfp_spectrum_tr(plot_data):
     """
     Plots time-resolved LFP spectrum analysis data
-    
+
     Parameters
     ----------
     plot_data : dict
         Graphical data from the ISI correlation
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         3D plot of short-term FFT of the LFP signal
-        
+
     """
-    
+
     fig1 = plt.figure()
     ax = plt.gca()
     c_map = plt.cm.jet
@@ -305,15 +308,15 @@ def lfp_spectrum_tr(plot_data):
 
     return fig1
 
-def plv(plv_data):    
+def plv(plv_data):
     """
     Plots the analysis results of Phase-locking value (PLV)
-    
+
     Parameters
     ----------
     plv_data : dict
         Graphical data from the PLV analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -321,9 +324,9 @@ def plv(plv_data):
     fig2 : matplotlib.pyplot.Figure
         Plot of FFT of STA (fSTA), average power spectrum of spike-triggered LFP signals (STP),
         spike-field coherence and PLV in four subplots
-        
+
     """
-    
+
     f = plv_data['f']
     t = plv_data['t']
     STA = plv_data['STA']
@@ -371,12 +374,12 @@ def plv(plv_data):
 def plv_tr(plv_data):
     """
     Plots the analysis results of time-resolved Phase-locking value (PLV)
-    
+
     Parameters
     ----------
     plv_data : dict
         Graphical data from the time-resolved PLV analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -385,7 +388,7 @@ def plv_tr(plv_data):
         Plot of STP
     fig3 : matplotlib.pyplot.Figure
         Plot of SFC
-        
+
     """
 
     offset = plv_data['offset']
@@ -427,12 +430,12 @@ def plv_tr(plv_data):
 def plv_bs(plv_data):
     """
     Plots the analysis results of bootstrapped Phase-locking value (PLV)
-    
+
     Parameters
     ----------
     plv_data : dict
         Graphical data from the time-resolved PLV analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -441,7 +444,7 @@ def plv_bs(plv_data):
         Plot of STP
     fig3 : matplotlib.pyplot.Figure
         Plot of SFC
-        
+
     """
     f = plv_data['f']
     t = plv_data['t']
@@ -512,12 +515,12 @@ def plv_bs(plv_data):
 def spike_phase(phase_data):
     """
     Plots the analysis results of spike-LFP phase locking
-    
+
     Parameters
     ----------
     phase_data : dict
         Graphical data from the spike-LFP phase locking analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -526,7 +529,7 @@ def spike_phase(phase_data):
         Phase distribution in circular plot
     fig3 : matplotlib.pyplot.Figure
         Phase-raster in one subplot, phase histogram in another
-        
+
     """
     phBins = phase_data['phBins']
     phCount = phase_data['phCount']
@@ -574,19 +577,19 @@ def spike_phase(phase_data):
 def speed(speed_data):
     """
     Plots the speed of the animal vs spike rate
-    
+
     Parameters
     ----------
     speed_data : dict
         Graphical data from the unit firing to speed correlation
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Scatter plot of speed vs spike-rate superimposed with fitted rate
-        
+
     """
-    
+
     ## Speed analysis
     fig1 = plt.figure()
     ax = plt.gca()
@@ -602,19 +605,19 @@ def speed(speed_data):
 def angular_velocity(angVel_data):
     """
     Plots the angular head velocity of the animal vs spike rate
-    
+
     Parameters
     ----------
     angVel_data : dict
         Graphical data from the unit firing to angular head velocity correlation
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Scatter plot of angular velocity vs spike-rate superimposed with fitted rate
-        
+
     """
-    
+
     ## Angular velocity analysis
     fig1 = plt.figure()
     ax = plt.gca()
@@ -632,19 +635,19 @@ def angular_velocity(angVel_data):
 def multiple_regression(mra_data):
     """
     Plots the results of multiple regression analysis.
-    
+
     Parameters
     ----------
     mra_data : dict
         Graphical data from multiple regression analysis
-    
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Bar plot of multiple regression results
-        
+
     """
-    
+
     varOrder = ['Total', 'Loc', 'HD', 'Speed', 'Ang Vel', 'Dist Border']
     fig1 = plt.figure()
     ax = plt.gca()
@@ -661,21 +664,21 @@ def multiple_regression(mra_data):
 def hd_rate(hd_data, ax=None):
     """
     Plots head direction vs spike rate
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from the unit firing to head-direction correlation
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-    
+
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the polar plot of head-direction vs spike-rate.
-        
+
     """
-    
+
     if not ax:
         plt.figure()
         ax = plt.gca(polar=True)
@@ -691,21 +694,21 @@ def hd_rate(hd_data, ax=None):
 def hd_spike(hd_data, ax=None):
     """
     Plots the head-direction of the animal at the time of spiking-events in polar scatter plot.
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from the unit firing to head-direction correlation
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-        
+
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the polar plot of head-direction during spiking events.
-        
+
     """
-    
+
     if not ax:
         plt.figure()
         ax = plt.gca(polar=True)
@@ -720,21 +723,21 @@ def hd_spike(hd_data, ax=None):
 def hd_firing(hd_data):
     """
     Plots the analysis results of head directional correlation to spike-rate
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from the unit firing to head-directional correlation
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Polar plot of head-direction during spiking-events
     fig2 : matplotlib.pyplot.Figure
         Polar plot of head-direction vs spike-rate. Predicted firing rate is also plotted.
-        
+
     """
-    
+
     fig1 = plt.figure()
     hd_spike(hd_data, ax=plt.gca(polar=True))
 
@@ -751,20 +754,20 @@ def hd_rate_ccw(hd_data):
     """
     Plots the analysis results of head directional correlation to spike-rate
     but split into counterclockwise and clockwise head-movements.
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from the unit firing to head-direction correlation
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Polar plot of head-direction vs spike-rate in  clockwise and counterclockwise
         head movements
-        
+
     """
-    
+
     fig1 = plt.figure()
     ax = plt.gca(polar=True)
     ax.plot(np.radians(hd_data['bins']), hd_data['hdRateCW'], color=BLUE)
@@ -777,21 +780,21 @@ def hd_rate_ccw(hd_data):
 def hd_shuffle(hd_shuffle_data):
     """
     Plots the analysis outcome of head directional shuffling analysis
-    
+
     Parameters
     ----------
     hd_shuffle_data : dict
         Graphical data from head-directional shuffling anlaysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Distribution of Rayleigh Z statistics
     fig2 : matplotlib.pyplot.Figure
         Distribution of Von Mises concentration parameter Kapppa
-        
+
     """
-    
+
     fig1 = plt.figure()
     ax = plt.gca()
     ax.bar(hd_shuffle_data['raylZEdges'], hd_shuffle_data['raylZCount'],\
@@ -821,20 +824,20 @@ def hd_shuffle(hd_shuffle_data):
 def hd_spike_time_lapse(hd_data):
     """
     Plots the analysis outcome of head directional time-lapse analysis
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from head-directional time-lapsed anlaysis
-        
+
     Returns
     -------
     fig : list of matplotlib.pyplot.Figure
         Time-lapsed spike-plots
-        
+
     """
 
-    
+
     keys = [key[1] for key in list(enumerate(hd_data.keys()))]
     fig = []
     axs = []
@@ -857,19 +860,19 @@ def hd_spike_time_lapse(hd_data):
 def hd_rate_time_lapse(hd_data):
     """
     Plots the analysis outcome of head directional time-lapse analysis
-    
+
     Parameters
     ----------
     hd_data : dict
         Graphical data from head-directional time-lapsed anlaysis
-        
+
     Returns
     -------
     fig : list of matplotlib.pyplot.Figure
         Time-lapsed head-drectional firing rate plot
-        
+
     """
-    
+
     keys = [key[1] for key in list(enumerate(hd_data.keys()))]
     fig = []
     axs = []
@@ -891,12 +894,12 @@ def hd_rate_time_lapse(hd_data):
 def hd_time_shift(hd_shift_data):
     """
     Plots the analysis outcome of head directional time-shift analysis
-    
+
     Parameters
     ----------
     hd_shift_data : dict
         Graphical data from head-directional time-shift anlaysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -904,9 +907,9 @@ def hd_time_shift(hd_shift_data):
     fig2 : matplotlib.pyplot.Figure
         Peak firing rate of head directional firing in shifted time of spiking events
     fig3 : matplotlib.pyplot.Figure
-        Skaggs information content of head directional firing in shifted time of spiking events        
+        Skaggs information content of head directional firing in shifted time of spiking events
     """
-    
+
     fig1 = plt.figure()
     ax = plt.gca()
     ax.plot(hd_shift_data['shiftTime'], hd_shift_data['skaggs'],\
@@ -937,22 +940,21 @@ def hd_time_shift(hd_shift_data):
 def loc_spike(place_data, ax=None):
     """
     Plots the location of spiking-events (spike-plot) along with the trace of animal in the enviroment.
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the correlation of unit firing to location of the animal
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-        
+
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the spike-plot
-        
+
     """
 
-    
     # spatial firing map
     if not ax:
         plt.figure()
@@ -973,21 +975,21 @@ def loc_spike(place_data, ax=None):
 def loc_rate(place_data, ax=None, smooth=True):
     """
     Plots location vs spike rate
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the unit firing to locational correlation
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-    
+
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the firing rate map
-        
+
     """
-    
+
     if not ax:
         plt.figure()
         ax = plt.gca()
@@ -997,9 +999,9 @@ def loc_rate(place_data, ax=None, smooth=True):
             (1.0, 0.75, 0.0),\
             (0.9, 0.0, 0.0)]
     c_map = mcol.ListedColormap(clist)
-    
+
     divider = make_axes_locatable(ax)
-    cax = divider.append_axes('right', size='3%', pad=0.05) 
+    cax = divider.append_axes('right', size='3%', pad=0.05)
     if smooth:
         fmap = place_data['smoothMap']
     else:
@@ -1019,24 +1021,24 @@ def loc_rate(place_data, ax=None, smooth=True):
 def loc_firing(place_data):
     """
     Plots the analysis results of locational correlation to spike-rate
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the unit firing to head-directional correlation
-        
+
     Returns
     -------
     fig : matplotlib.pyplot.Figure
         Spike-plot and firing rate map in two subplots respectively
-        
+
     """
     fig = plt.figure()
-    
+
     ax = loc_spike(place_data, ax=fig.add_subplot(121))
-    ax.set_xlabel('cm')    
+    ax.set_xlabel('cm')
     ax.set_ylabel('cm')
-    
+
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
     ax.set_xlabel('cm')
     #ax.set_ylabel('YLoc')
@@ -1045,27 +1047,27 @@ def loc_firing(place_data):
     return fig
 
 # Created by Sean Martin: 14/02/2019
-def loc_firing_and_place(place_data, smooth=False):
+def loc_firing_and_place(place_data, smooth=True):
     """
     Plots the analysis results of locational correlation to spike-rate with a place map
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the unit firing to head-directional correlation
-        
+
     Returns
     -------
     fig : matplotlib.pyplot.Figure
         Spike-plot and firing rate map and place field in three subplots respectively
-        
+
     """
     fig = plt.figure()
-    
+
     ax1 = loc_spike(place_data, ax=fig.add_subplot(131))
-    ax1.set_xlabel('cm')    
+    ax1.set_xlabel('cm')
     ax1.set_ylabel('cm')
-    
+
     ax2 = loc_rate(place_data, ax=fig.add_subplot(132, sharey=ax1), smooth=smooth)
     ax2.set_xlabel('cm')
     #ax.set_ylabel('YLoc')
@@ -1083,25 +1085,23 @@ def loc_firing_and_place(place_data, smooth=False):
 def loc_place_field(place_data, ax=None):
     """
     Plots the location of the place field(s) of the unit.
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the correlation of unit firing to location of the animal
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-        
+
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the spike-plot
-        
+
     """
-    
+
     # spatial place field
-    if not ax:
-        plt.figure()
-        ax = plt.gca()
+    ax, _ = _make_ax_if_none(ax)
     clist = [(0.0, 0.0, 1.0),\
             (0.0, 1.0, 0.5),\
             (0.9, 1.0, 0.0),\
@@ -1110,10 +1110,10 @@ def loc_place_field(place_data, ax=None):
     c_map = mcol.ListedColormap(clist)
 
     divider = make_axes_locatable(ax)
-    cax = divider.append_axes('right', size='3%', pad=0.05) 
+    cax = divider.append_axes('right', size='3%', pad=0.05)
     mask = (place_data['placeField'] == 0)
-    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'], 
-                        np.ma.array(place_data['placeField'], mask=mask), 
+    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'],
+                        np.ma.array(place_data['placeField'], mask=mask),
                         cmap=c_map, rasterized=True)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
@@ -1128,30 +1128,30 @@ def loc_place_field(place_data, ax=None):
 # Created by Sean Martin: 13/02/2019
 def loc_place_centroid(place_data, centroid):
     """
-    Plots the analysis results of locational correlation to spike-rate along with 
+    Plots the analysis results of locational correlation to spike-rate along with
     the centroid of the place field.
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from the unit firing to head-directional correlation
     centroid : ndarray
         The centroid of the place field
-        
+
     Returns
     -------
     fig : matplotlib.pyplot.Figure
         Spike-plot and firing rate map in two subplots respectively
-        
+
     """
     fig = plt.figure()
-    
+
     ax = loc_spike(place_data, ax=fig.add_subplot(121))
     ax.plot([centroid[0]], [centroid[1]], 'gX')
-    ax.set_xlabel('cm')    
+    ax.set_xlabel('cm')
     ax.set_ylabel('cm')
-    
-    
+
+
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
     ax.plot([centroid[0]], [centroid[1]], 'gX')
     ax.set_xlabel('cm')
@@ -1163,19 +1163,19 @@ def loc_place_centroid(place_data, centroid):
 def loc_spike_time_lapse(place_data):
     """
     Plots the analysis outcome of locational time-lapse analysis
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from locational time-lapsed anlaysis
-        
+
     Returns
     -------
     fig : list of matplotlib.pyplot.Figure
         Time-lapsed spike-plots
-        
+
     """
-    
+
     keys = [key[1] for key in list(enumerate(place_data.keys()))]
     fig = []
     axs = []
@@ -1197,19 +1197,19 @@ def loc_spike_time_lapse(place_data):
 def loc_rate_time_lapse(place_data):
     """
     Plots the analysis outcome of locational time-lapse analysis
-    
+
     Parameters
     ----------
     place_data : dict
         Graphical data from locational time-lapsed anlaysis
-        
+
     Returns
     -------
     fig : list of matplotlib.pyplot.Figure
         Time-lapsed firing-rate map
-        
+
     """
-    
+
     keys = [key[1] for key in list(enumerate(place_data.keys()))]
 
     fig = []
@@ -1233,19 +1233,19 @@ def loc_rate_time_lapse(place_data):
 def loc_shuffle(loc_shuffle_data):
     """
     Plots the analysis outcome of locational shuffling analysis
-    
+
     Parameters
     ----------
     loc_shuffle_data : dict
         Graphical data from head-directional shuffling anlaysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Distribution of Skaggs IC, sparsity and spatial coherecne in three subplots
-        
+
     """
-    
+
     # Loactional shuffling analysis
     fig1 = plt.figure()
 #    ax= plt.gca()
@@ -1292,12 +1292,12 @@ def loc_shuffle(loc_shuffle_data):
 def loc_time_shift(loc_shift_data):
     """
     Plots the analysis outcome of locational time-shift analysis
-    
+
     Parameters
     ----------
     loc_shift_data : dict
         Graphical data from head-directional time-shift anlaysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -1306,9 +1306,9 @@ def loc_time_shift(loc_shift_data):
         Sparsity of locational firing in shifted time of spiking events
     fig3 : matplotlib.pyplot.Figure
         Coherence of locational firing in shifted time of spiking events
-    
+
     """
-    
+
     ## Locational time shift analysis
 
     fig1 = plt.figure()
@@ -1347,17 +1347,17 @@ def loc_time_shift(loc_shift_data):
 def loc_auto_corr(locAuto_data):
     """
     Plots the analysis outcome of locational firing rate autocorrelation
-    
+
     Parameters
     ----------
     locAuto_data : dict
         Graphical data from spatial correlation of firing map
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Spatial correlation map
-    
+
     """
     # Locational firing map autocorrelation
     clist = [(1.0, 1.0, 1.0),\
@@ -1391,17 +1391,17 @@ def loc_auto_corr(locAuto_data):
 def rot_corr(plot_data):
     """
     Plots the analysis outcome of rotational correlation of spatial autocorrelation map.
-    
+
     Parameters
     ----------
     plot_data : dict
         Graphical data from spatial correlation of firing map
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Rotational correlation plot
-    
+
     """
 
 # Locationa firing map rotational analysis
@@ -1420,17 +1420,17 @@ def rot_corr(plot_data):
 def dist_rate(dist_data):
     """
     Plots the firing rate vs distance from border
-    
+
     Parameters
     ----------
     dist_data : dict
         Graphical data from border and gradient analysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Distance from border vs spike rate
-    
+
     """
 
     fig1 = plt.figure()
@@ -1449,19 +1449,19 @@ def dist_rate(dist_data):
 def stair_plot(dist_data):
     """
     Plots the stairs of mean distance vs firing-rate bands
-    
+
     Parameters
     ----------
     dist_data : dict
         Graphical data from border and gradient analysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Mean distance distance from border vs firing-rate percentage
-    
+
     """
-    
+
     perSteps = dist_data['perSteps']
     perDist = dist_data['perDist']
     stepsize = np.diff(perSteps).mean()
@@ -1480,12 +1480,12 @@ def stair_plot(dist_data):
 def border(border_data):
     """
     Plots the analysis results from border analysis
-    
+
     Parameters
     ----------
     border_data : dict
         Graphical data from border analysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
@@ -1496,9 +1496,9 @@ def border(border_data):
         Distance from border vs spike rate
     fig4 : matplotlib.pyplot.Figure
         Mean distance distance from border vs firing-rate percentage
-        
+
     """
-    
+
     fig1 = plt.figure()
     ax = fig1.add_subplot(211)
     ax.bar(border_data['distBins'], border_data['distCount'], color='slateblue', alpha=0.6, \
@@ -1534,23 +1534,23 @@ def border(border_data):
 def gradient(gradient_data):
     """
     Plots the results from gradient cell analysis
-    
+
     Parameters
     ----------
     border_data : dict
         Graphical data from border analysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Distance from border vs spike rate
     fig2 : matplotlib.pyplot.Figure
-        Differential firing rate vs distance from border        
+        Differential firing rate vs distance from border
     fig3 : matplotlib.pyplot.Figure
         Mean distance distance from border vs firing-rate percentage
-        
+
     """
-    
+
     fig1 = dist_rate(gradient_data)
 
     fig2 = plt.figure()
@@ -1568,21 +1568,21 @@ def gradient(gradient_data):
 def grid(grid_data):
     """
     Plots the results from grid analysis
-    
+
     Parameters
     ----------
     grid_data : dict
         Graphical data from border analysis
-        
+
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
         Autocorrelation of firing rate map, superimposed with central peaks
     fig2 : matplotlib.pyplot.Figure
         Rotational correlation of autocorrelation map
-        
+
     """
-    
+
     fig1 = loc_auto_corr(grid_data)
     ax = fig1.axes[0]
 
@@ -1621,3 +1621,82 @@ def grid(grid_data):
         return fig1, fig2
     else:
         return fig1
+
+def plot_angle_between_points(points, xlim, ylim, ax=None):
+    """
+    Plots the angle between three points
+
+    Parameters
+    ----------
+    points : list
+        The list of points to plot the angle between
+
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+        The angle between the points
+    """
+
+    ax, fig = _make_ax_if_none(ax)
+    arr = np.array(points)
+    xdata = arr[:, 0]
+    ydata = arr[:, 1]
+
+    line_1 = Line2D(
+        xdata[:2], ydata[:2], linewidth=1, linestyle = "-", color="green",
+        marker=".", markersize=10, markeredgecolor='k', markerfacecolor='k'
+    )
+    line_2 = Line2D(
+        xdata[1:], ydata[1:], linewidth=1, linestyle = "-", color="red",
+        marker=".", markersize=10, markeredgecolor='k', markerfacecolor='k')
+
+    ax.add_line(line_1)
+    ax.add_line(line_2)
+
+    angle_plot = _get_angle_plot(line_1, line_2, 0.2, 'b', [xdata[1], ydata[1]], xlim, ylim)
+    ax.add_patch(angle_plot) # To display the angle arc
+
+    ax.set_ylim([0, ylim])
+    ax.set_xlim([0, xlim])
+    ax.set_aspect('equal')
+    txt_list = ["P1", "P2", "P3"]
+    for i, txt in enumerate(txt_list):
+        ax.annotate(txt, (xdata[i], ydata[i] - (ylim * 0.02)))
+    ax.invert_yaxis()
+    plt.tight_layout()
+    plt.legend()
+    return fig
+
+def _get_angle_plot(line1, line2, offset = 1, color = None, origin = [0,0], len_x_axis = 1, len_y_axis = 1):
+
+    l1xy = line1.get_xydata()
+    further1 = l1xy[1] + [1, 0]
+    # Angle between line1 and x-axis
+    angle1 = angle_between_points(l1xy[0], l1xy[1], further1)
+    if l1xy[0][1] < l1xy[1][1]:
+        angle1 = 360 - angle1
+
+
+    l2xy = line2.get_xydata()
+    further2 = l2xy[0] + [1, 0]
+    # Angle between line1 and x-axis
+    angle2 = angle_between_points(l2xy[1], l2xy[0], further2)
+    if l2xy[1][1] < l2xy[0][1]:
+        angle2 = 360 - angle2
+
+    theta1 = min(angle1, angle2)
+    theta2 = max(angle1, angle2)
+
+    angle = theta2 - theta1
+
+    if color is None:
+        color = line1.get_color() # Uses the color of line 1 if color parameter is not passed.
+
+    return Arc(origin, len_x_axis*offset, len_y_axis*offset, 0, theta1, theta2, color=color, label = "%0.2f"%float(angle)+u"\u00b0")
+
+def _make_ax_if_none(ax, **kwargs):
+    fig = None
+    if ax is None:
+        fig = plt.figure()
+        ax = plt.gca(**kwargs)
+    return ax, fig

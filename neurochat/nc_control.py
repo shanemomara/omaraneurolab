@@ -646,7 +646,7 @@ class NeuroChaT(QtCore.QThread):
                               brAdjust=True, update=True)
                 fig1 = nc_plot.loc_firing(place_data)
                 self.close_fig(fig1)
-                fig2 = nc_plot.loc_firing_and_place(place_data, smooth=params['loc_field_smooth'])
+                fig2 = nc_plot.loc_firing_and_place(place_data)
                 self.close_fig(fig2)
                 self.plot_data_to_hdf(name=name+ '/loc_rate/', graph_data=place_data)
 
@@ -1325,14 +1325,19 @@ class NeuroChaT(QtCore.QThread):
                     else:
                         logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i])
                         return
+                    if should_plot:
+                        fig = nc_plot.loc_firing_and_place(place_data)
+                        figs.append(fig)
+
                     if (i + 1) % 3 == 0: #then spit out the angle
                         first_centroid = info['centroid'][i - 2]
                         second_centroid = info['centroid'][i - 1]
                         angle = angle_between_points(first_centroid, second_centroid, centroid)
                         excel_info.loc[i, "AngleInDegrees"] = angle
-                    if should_plot:
-                        fig = nc_plot.loc_firing_and_place(place_data, smooth=params['loc_field_smooth'])
-                        figs.append(fig)
+                        if should_plot:
+                            fig = nc_plot.plot_angle_between_points(
+                                info['centroid'], place_data['xedges'].max(), place_data['yedges'].max())
+                            figs.append(fig)
             if should_plot:
                 self.close_fig(figs)
             
