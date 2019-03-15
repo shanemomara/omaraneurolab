@@ -1169,7 +1169,7 @@ class NLfp(NBase):
                 byte_buffer = np.fromfile(f, dtype='uint8')
                 len_bytebuffer = len(byte_buffer)
                 end_offset = len('\r\ndata_end\r')
-                lfp_wave = np.zeros([num_samples, ], dtype=np.float32)
+                lfp_wave = np.zeros([num_samples, ], dtype=np.float64)
                 for k in np.arange(0, bytes_per_sample, 1):
                     byte_offset = k
                     sample_value = (sample_le[k]* byte_buffer[byte_offset \
@@ -1177,7 +1177,7 @@ class NLfp(NBase):
                                   :record_size])
                     if sample_value.size < num_samples:
                         sample_value = np.append(sample_value, np.zeros([num_samples-sample_value.size,]))
-                    sample_value = sample_value.astype(np.float32, casting='unsafe', copy=False)
+                    sample_value = sample_value.astype(np.float64, casting='unsafe', copy=False)
                     np.add(lfp_wave, sample_value, out=lfp_wave)
                 np.putmask(lfp_wave, lfp_wave > max_ADC_count, lfp_wave- max_byte_value)
 
