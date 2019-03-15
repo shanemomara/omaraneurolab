@@ -607,7 +607,7 @@ def linfit(X, Y, getPartial=False):
         Nd = 1
     if Nobs == len(Y):
         A = np.vstack([X, np.ones(X.shape[0])]).T
-        B = np.linalg.lstsq(A, Y)[0]
+        B = np.linalg.lstsq(A, Y, rcond="None")[0]
         Y_fit = np.matmul(A, B)
         _results['coeff'] = B[:-1]
         _results['intercept'] = B[-1]

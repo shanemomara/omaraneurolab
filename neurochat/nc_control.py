@@ -6,7 +6,8 @@ This module implements NeuroChaT Class for the NeuroChaT software
 """
 
 import os.path
-import logging, inspect
+import logging
+import inspect
 from collections import OrderedDict as oDict
 
 import numpy as np
