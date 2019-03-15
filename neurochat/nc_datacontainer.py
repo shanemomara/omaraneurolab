@@ -229,7 +229,10 @@ class NDataContainer():
         return result
 
     def __len__(self):
-        return sum(self._unit_count)
+        counts = self._unit_count
+        if counts == 0:
+            counts = [1 for _ in range(len(self._container))]  
+        return sum(counts)
 
     def _count_num_units(self):
         counts = []
@@ -239,6 +242,8 @@ class NDataContainer():
 
     def _index_to_data_pos(self, index):
         counts = self._unit_count
+        if counts == 0:
+            counts = [1 for _ in range(len(self._container))]
         if index >= len(self):
             raise IndexError
         else:
