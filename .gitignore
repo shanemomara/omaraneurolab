@@ -17,6 +17,7 @@ how-cfg-g
 # Build related files
 build/
 dist/
+*.spec
 
 # vscode
 .vscode/
