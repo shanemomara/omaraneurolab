@@ -225,7 +225,8 @@ class NDataContainer():
                 self._last_data_pt = (data_index, result)
         else:  
             result = self.get_data(data_index)
-        result.set_unit_no(self.get_units(data_index)[unit_index])
+        if len(self.get_units()) > 0:
+            result.set_unit_no(self.get_units(data_index)[unit_index])
         return result
 
     def __len__(self):
