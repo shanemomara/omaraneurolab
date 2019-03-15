@@ -4,7 +4,7 @@
 # Ada Library Information
 *.ali
 
-#Compiled files
+# Compiled files
 *.pyc
 
 # Notebook checkpoints
@@ -13,3 +13,10 @@ notebooks/Tests.ipynb
 
 # Undeletable file
 how-cfg-g
+
+# Build related files
+build/
+dist/
+
+# vscode
+.vscode/
