@@ -14,7 +14,9 @@ import matplotlib.colors as mcol
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
 from matplotlib.patches import Arc
+import matplotlib.ticker as ticker
 
+from neurochat.nc_data import NData
 from neurochat.nc_utils import find, angle_between_points
 
 BLUE = '#1f77b4'
@@ -1621,6 +1623,45 @@ def grid(grid_data):
         return fig1, fig2
     else:
         return fig1
+
+def spike_raster(collection, ax=None, **kwargs):
+    """
+    Plots the spike raster for a number of units
+
+    Parameters
+    ----------
+    collection : NDataContainer or NData list or NData object
+        The collection to plot spike rasters over
+
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+        The spike raster
+    """
+    ax, fig = _make_ax_if_none(ax)
+    
+    # TODO sort the units
+
+    if isinstance(collection, NData):
+        positions = collection.get_unit_stamp()
+
+    else:
+        positions = []
+        for data in collection:
+            positions.append(data.get_unit_stamp())
+    
+    colors = [0, 0, 0]
+    ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
+
+    # Be sure to only pick integer tick locations.
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+    ax.set_title("Spike rasters")
+    ax.set_xlabel("Time (seconds)")
+    ax.set_ylabel("Cell ID")
+
+    return fig
 
 def plot_angle_between_points(points, xlim, ylim, ax=None):
     """
