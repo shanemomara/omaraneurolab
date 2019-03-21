@@ -1628,20 +1628,29 @@ def grid(grid_data):
 
 def spike_position_raster(collection, mode="vertical", ax=None, **kwargs):
     ax, fig = _make_ax_if_none(ax)
-    
+
     if isinstance(collection, NDataContainer):
         collection.sort_units_spatially(mode=mode)
     
-    positions = []
-    for data in collection:
-        position = data.get_event_loc(data.get_unit_stamp())[1]
+    if isinstance(collection, NData):
+        positions = collection.get_event_loc(collection.get_unit_stamp())[1]
         if mode == "vertical":
-            position = position[1]
+            positions = positions[1]
         elif mode == "horizontal":
-            position = position[0]
+            positions = positions[0]
         else:
             logging.error("nc_plot: mode only supports vertical or horizontal")
-        positions.append(position)
+    else:
+        positions = []
+        for data in collection:
+            position = data.get_event_loc(data.get_unit_stamp())[1]
+            if mode == "vertical":
+                position = position[1]
+            elif mode == "horizontal":
+                position = position[0]
+            else:
+                logging.error("nc_plot: mode only supports vertical or horizontal")
+            positions.append(position)
 
     colors = [0, 0, 0]
     ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
