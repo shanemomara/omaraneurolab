@@ -82,10 +82,11 @@ class NDataContainer():
     def list_all_units(self):
         if self._load_on_fly:
                 for key, vals in self.get_file_dict().items():
-                    for descriptor in vals:
-                        result = NData()
-                        self._load(key, descriptor, ndata=result)
-                        print("units are {}".format(result.get_unit_list()))
+                    if key == "Spike":
+                        for descriptor in vals:
+                            result = NData()
+                            self._load(key, descriptor, ndata=result)
+                            print("units are {}".format(result.get_unit_list()))
         else:
             for data in self._container:
                 print("units are {}".format(data.get_unit_list()))
@@ -125,17 +126,27 @@ class NDataContainer():
         self._units = []
         if units == 'all':
             if self._load_on_fly:
-                for key, vals in self.get_file_dict().items():
-                    for descriptor in vals:
-                        result = NData()
-                        self._load(key, descriptor, ndata=result)
-                        self._units.append(result.get_unit_list())
+                vals = self.get_file_dict()["Spike"]
+                for descriptor in vals:
+                    result = NData()
+                    self._load("Spike", descriptor, ndata=result)
+                    self._units.append(result.get_unit_list())
             else:
                 for data in self.get_data():
                     self._units.append(data.get_unit_list())
         elif isinstance(units, list):
-            for unit in units:
-                if isinstance(unit, int):
+            for idx, unit in enumerate(units):
+                if unit == 'all':
+                    if self._load_on_fly:
+                        vals = self.get_file_dict()["Spike"]
+                        descriptor = vals[idx]
+                        result = NData()
+                        self._load("Spike", descriptor, ndata=result)
+                        all_units = result.get_unit_list()
+                    else:
+                        all_units = self.get_data(idx).get_unit_list()
+                    self._units.append(all_units)
+                elif isinstance(unit, int):
                     self._units.append([unit])
                 elif isinstance(unit, list):
                     self._units.append(unit)
