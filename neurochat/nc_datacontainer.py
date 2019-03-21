@@ -51,6 +51,9 @@ class NDataContainer():
         HDF = 4
 
     def get_num_data(self):
+        if self._load_on_fly:
+            for _, vals in self.get_file_dict().items():
+                return len(vals)
         return len(self._container)
     
     def get_file_dict(self):
@@ -65,6 +68,14 @@ class NDataContainer():
         return self._units[index]
 
     def get_data(self, index=None):
+        if self._load_on_fly:
+            if index is None:
+                logging.error("Can't load all data when loading on the fly")
+            result = NData()
+            for key, vals in self.get_file_dict().items():
+                descriptor = vals[index]
+                self._load(key, descriptor, ndata=result)
+            return result
         if index is None:
             return self._container
         if index >= self.get_num_data():
@@ -167,6 +178,34 @@ class NDataContainer():
 
     def add_files_from_excel(self, file_loc):
         pass
+
+    def sort_units_spatially(self, should_sort_list=None, mode="vertical"):
+        """
+        Sorts the units in the collection based on the centroid of the place field
+        mode can be horizontal or vertical
+        """
+
+        if mode == "vertical":
+            h = 1
+        elif mode == "horizontal":
+            h = 0
+        else:
+            logging.error("NDataContainer: Only modes horizontal and vertical are supported")
+
+        if should_sort_list is None:
+            should_sort_list = [True for _ in range(self.get_num_data())]
+
+        for idx, bool_val in enumerate(should_sort_list):
+            if bool_val:
+                centroids = []
+                data = self.get_data(idx)
+                for unit in self.get_units()[idx]:
+                    data.set_unit_no(unit)
+                    place_info = data.place()
+                    centroid = place_info["centroid"]
+                    centroids.append(centroid)
+                self._units[idx] = [unit for _, unit in sorted(
+                    zip(centroids, self.get_units()[idx]), key= lambda pair: pair[0][h])]
 
     # Methods from here on should be for private class use
     def _load_all_data(self):

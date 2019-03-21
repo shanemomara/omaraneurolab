@@ -7,6 +7,7 @@ This module implements plotting functions for NeuroChaT analyses.
 
 import itertools
 import math
+import logging
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +18,7 @@ from matplotlib.patches import Arc
 import matplotlib.ticker as ticker
 
 from neurochat.nc_data import NData
+from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_utils import find, angle_between_points
 
 BLUE = '#1f77b4'
@@ -1624,7 +1626,38 @@ def grid(grid_data):
     else:
         return fig1
 
-def spike_raster(collection, ax=None, **kwargs):
+def spike_position_raster(collection, mode="vertical", ax=None, **kwargs):
+    ax, fig = _make_ax_if_none(ax)
+    
+    if isinstance(collection, NDataContainer):
+        collection.sort_units_spatially(mode=mode)
+    
+    positions = []
+    for data in collection:
+        position = data.get_event_loc(data.get_unit_stamp())[1]
+        if mode == "vertical":
+            position = position[1]
+        elif mode == "horizontal":
+            position = position[0]
+        else:
+            logging.error("nc_plot: mode only supports vertical or horizontal")
+        positions.append(position)
+
+    colors = [0, 0, 0]
+    ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
+
+    # Be sure to only pick integer tick locations.
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+    ax.set_title("Spike rasters")
+    ax.set_xlabel("Position")
+    ax.set_ylabel("Cell ID")
+    ax.invert_yaxis()
+
+    return fig
+
+def spike_time_raster(collection, ax=None, **kwargs):
     """
     Plots the spike raster for a number of units
 
@@ -1640,8 +1673,6 @@ def spike_raster(collection, ax=None, **kwargs):
     """
     ax, fig = _make_ax_if_none(ax)
     
-    # TODO sort the units
-
     if isinstance(collection, NData):
         positions = collection.get_unit_stamp()
 
@@ -1660,6 +1691,7 @@ def spike_raster(collection, ax=None, **kwargs):
     ax.set_title("Spike rasters")
     ax.set_xlabel("Time (seconds)")
     ax.set_ylabel("Cell ID")
+    ax.invert_yaxis()
 
     return fig
 
