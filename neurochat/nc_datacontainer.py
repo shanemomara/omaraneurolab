@@ -6,6 +6,7 @@ This module implements a container for the Ndata class to simplify multi experim
 """
 
 from enum import Enum
+import copy
 import logging
 
 from neurochat.nc_data import NData
@@ -179,6 +180,27 @@ class NDataContainer():
     def add_files_from_excel(self, file_loc):
         pass
 
+    def subsample(self, key):
+        result = copy.deepcopy(self)
+        
+        for k in result._file_names_dict:
+            result._file_names_dict[k] = result._file_names_dict[k][key]
+            if isinstance(key, int):
+                result._file_names_dict[k] = [result._file_names_dict[k]]
+        
+        if len(result._units) > 0:
+            result._units = result._units[key]
+            if isinstance(key, int):
+                result._units = [result._units]
+
+        if len(result._container) > 0:
+            result._container = result._container[key]
+            if isinstance(key, int):
+                result._container = [result._container[key]]
+
+        result._unit_count = result._count_num_units()
+        return result
+
     def sort_units_spatially(self, should_sort_list=None, mode="vertical"):
         """
         Sorts the units in the collection based on the centroid of the place field
@@ -257,11 +279,10 @@ class NDataContainer():
             key_fn_pairs[key][2]()
         
     def __repr__(self):
-        string = "NData Container Object with {} objects:\nFiles are {}\nUnits are \n{}".format(
-            self.get_num_data(), self.get_file_dict(), self.get_units())
+        string = "NData Container Object with {} objects:\nFiles are {}\nUnits are {}\nSet to Load on Fly? {}".format(
+            self.get_num_data(), self.get_file_dict(), self.get_units(), self._load_on_fly)
         return string
 
-    # TODO test on the fly loading and cache last result
     def __getitem__(self, index):
         data_index, unit_index = self._index_to_data_pos(index)
         if self._load_on_fly:
