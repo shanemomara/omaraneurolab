@@ -1626,10 +1626,10 @@ def grid(grid_data):
     else:
         return fig1
 
-def spike_position_raster(collection, mode="vertical", ax=None, **kwargs):
+def spike_position_raster(collection, should_sort=True, mode="vertical", ax=None, **kwargs):
     ax, fig = _make_ax_if_none(ax)
 
-    if isinstance(collection, NDataContainer):
+    if isinstance(collection, NDataContainer) and should_sort:
         collection.sort_units_spatially(mode=mode)
     
     if isinstance(collection, NData):
