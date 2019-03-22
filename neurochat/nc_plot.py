@@ -17,8 +17,6 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Arc
 import matplotlib.ticker as ticker
 
-from neurochat.nc_data import NData
-from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_utils import find, angle_between_points
 
 BLUE = '#1f77b4'
@@ -565,6 +563,11 @@ def spike_phase(phase_data):
     #c_map = mcol.LinearSegmentedColormap('my_colormap', cdict, 256)
     ax.pcolormesh(phase_data['rasterbins'], np.arange(0, phase_data['raster'].shape[0]), \
                   phase_data['raster'], cmap=plt.cm.binary, rasterized=True)
+    # TODO scale rasters value to match rasterbin centres
+    # rasters = phase_data['raster']
+    # for idx, row in enumerate(rasters):
+    #     rasters[idx] = [j_idx if j == 1 else 0 for j_idx, j in enumerate(row)]
+    # ax.eventplot(rasters)
     plt.autoscale(enable=True, axis='both', tight=True)
     plt.title('Phase raster')
     ax.set_ylabel('Time')
@@ -1626,36 +1629,11 @@ def grid(grid_data):
     else:
         return fig1
 
-def spike_position_raster(collection, should_sort=True, mode="vertical", ax=None, **kwargs):
+def spike_position_raster(positions, colors=[0, 0, 0], ax=None, **kwargs):
     ax, fig = _make_ax_if_none(ax)
-
-    if isinstance(collection, NDataContainer) and should_sort:
-        collection.sort_units_spatially(mode=mode)
-    
-    if isinstance(collection, NData):
-        positions = collection.get_event_loc(collection.get_unit_stamp())[1]
-        if mode == "vertical":
-            positions = positions[1]
-        elif mode == "horizontal":
-            positions = positions[0]
-        else:
-            logging.error("nc_plot: mode only supports vertical or horizontal")
-    else:
-        positions = []
-        for data in collection:
-            position = data.get_event_loc(data.get_unit_stamp())[1]
-            if mode == "vertical":
-                position = position[1]
-            elif mode == "horizontal":
-                position = position[0]
-            else:
-                logging.error("nc_plot: mode only supports vertical or horizontal")
-            positions.append(position)
-
-    colors = [0, 0, 0]
     ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
 
-    # Be sure to only pick integer tick locations.
+    # Only pick integer tick locations
     for axis in [ax.xaxis, ax.yaxis]:
         axis.set_major_locator(ticker.MaxNLocator(integer=True))
 
@@ -1666,14 +1644,13 @@ def spike_position_raster(collection, should_sort=True, mode="vertical", ax=None
 
     return fig
 
-def spike_time_raster(collection, ax=None, **kwargs):
+def spike_time_raster(times, colors=[0, 0, 0], ax=None, **kwargs):
     """
     Plots the spike raster for a number of units
 
     Parameters
     ----------
-    collection : NDataContainer or NData list or NData object
-        The collection to plot spike rasters over
+    times : The times to plot
 
     Returns
     -------
@@ -1682,16 +1659,7 @@ def spike_time_raster(collection, ax=None, **kwargs):
     """
     ax, fig = _make_ax_if_none(ax)
     
-    if isinstance(collection, NData):
-        positions = collection.get_unit_stamp()
-
-    else:
-        positions = []
-        for data in collection:
-            positions.append(data.get_unit_stamp())
-    
-    colors = [0, 0, 0]
-    ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
+    ax.eventplot(times, colors=colors, linelengths=0.5, linewidths=0.1)
 
     # Be sure to only pick integer tick locations.
     for axis in [ax.xaxis, ax.yaxis]:
