@@ -44,7 +44,7 @@ def spike_positions(collection, should_sort=True, mode="vertical"):
 
     return positions
 
-def spike_times(collection, filter_speed=False):
+def spike_times(collection, filter_speed=False, **kwargs):
     if isinstance(collection, NData):
         times = collection.get_unit_stamp()
 
@@ -52,9 +52,8 @@ def spike_times(collection, filter_speed=False):
         times = []
         for data in collection:
             time_data = data.get_unit_stamp()
-            print(len(time_data))
             if filter_speed:
-                not_moving = data.get_speed() < 0.005
-                time_data = list(compress(time_data, not_moving))
+                ranges = data.non_moving_periods(**kwargs)
+                time_data = data.get_unit_stamps_in_ranges(ranges)
             times.append(time_data)
     return times

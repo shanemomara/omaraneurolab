@@ -1460,7 +1460,36 @@ class NSpatial(NAbstract):
             _results['Place field Centroid y'] = centroid[1]
             self.update_result(_results)
         return centroid
-        
+
+    def non_moving_periods(self, **kwargs):
+        """
+        Returns a number of tuples indicating ranges where the subject is not moving
+
+        kwargs:
+        should_smooth - flags if the speed data should be smoothed
+        min_range - the minimum amount of time that the subject should not be moving for
+        moving_thresh - any speed above this thresh is considered to be movement
+        """
+        should_smooth = kwargs.get("should_smooth", True)
+        min_range = kwargs.get("min_range", 10)
+        moving_thresh = kwargs.get("moving_thresh", 0.30)
+
+        if should_smooth:
+            self.smooth_speed()
+        not_moving = self.get_speed() < moving_thresh
+
+        in_range = False
+        ranges = []
+        for idx, b in enumerate(not_moving):
+            if b and not in_range:
+                in_range = True
+                range_start = self.get_time()[idx]
+            if not b and in_range:
+                in_range = False
+                range_end = self.get_time()[idx - 1]
+                if range_end - range_start > min_range:
+                    ranges.append((range_start, range_end))
+        return ranges
 
     def loc_time_lapse(self, ftimes, **kwargs):
         """

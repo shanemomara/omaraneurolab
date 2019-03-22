@@ -14,3 +14,4 @@ A fork of an analysis toolset for Neuroscience.
 9. Plot spike-rasters as lines instead of image-style.
 10. Add %refactory_violation to isi analysis output.
 11. Get ROC measurements by comparing a Gaussian to the distribution of spike amplitudes.
+12. Fix docs for newly added functions.

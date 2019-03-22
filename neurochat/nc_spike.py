@@ -349,6 +349,14 @@ class NSpike(NBase):
 
     # For multi-unit analysis, {'SpikeName': cell_no} pairs should be used as function input
 
+    def get_unit_stamps_in_ranges(self, ranges):
+        stamps = self.get_unit_stamp()
+        new_stamps = [
+            val for val in stamps
+            if any(lower <= val <= upper for (lower, upper) in ranges)
+        ]
+        return new_stamps
+
     def load(self, filename=None, system=None):
         """
         Loads spike datasets
