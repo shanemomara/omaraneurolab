@@ -1470,7 +1470,7 @@ class NSpatial(NAbstract):
         min_range - the minimum amount of time that the subject should not be moving for
         moving_thresh - any speed above this thresh is considered to be movement
         """
-        should_smooth = kwargs.get("should_smooth", True)
+        should_smooth = kwargs.get("should_smooth", False)
         min_range = kwargs.get("min_range", 10)
         moving_thresh = kwargs.get("moving_thresh", 0.30)
 
@@ -1490,6 +1490,17 @@ class NSpatial(NAbstract):
                 if range_end - range_start > min_range:
                     ranges.append((range_start, range_end))
         return ranges
+
+    def get_non_moving_times(self, **kwargs):
+        """ Returns the times where the subject is not moving"""
+
+        ranges = self.non_moving_periods(**kwargs)
+        print(ranges)
+        time_data = [
+            val for val in self.get_time()
+            if any(lower <= val <= upper for (lower, upper) in ranges)
+        ]
+        return time_data
 
     def loc_time_lapse(self, ftimes, **kwargs):
         """

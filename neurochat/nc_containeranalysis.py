@@ -6,7 +6,7 @@ from neurochat.nc_data import NData
 
 def spike_positions(collection, should_sort=True, mode="vertical"):
     """
-    Plots the spike raster for a number of units
+    Get the spike positions for a number of units
 
     Parameters
     ----------
@@ -46,14 +46,22 @@ def spike_positions(collection, should_sort=True, mode="vertical"):
 
 def spike_times(collection, filter_speed=False, **kwargs):
     if isinstance(collection, NData):
-        times = collection.get_unit_stamp()
+        if filter_speed:
+            ranges = collection.non_moving_periods(**kwargs)
+            time_data = collection.get_unit_stamps_in_ranges(ranges)
+        else:
+            times = collection.get_unit_stamp()
 
     else:
         times = []
+        first = True
         for data in collection:
-            time_data = data.get_unit_stamp()
             if filter_speed:
-                ranges = data.non_moving_periods(**kwargs)
+                if first:
+                    ranges = data.non_moving_periods(**kwargs)
+                first = False
                 time_data = data.get_unit_stamps_in_ranges(ranges)
+            else:
+                time_data = data.get_unit_stamp()
             times.append(time_data)
     return times

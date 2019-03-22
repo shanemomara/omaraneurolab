@@ -1644,7 +1644,7 @@ def spike_position_raster(positions, colors=[0, 0, 0], ax=None, **kwargs):
 
     return fig
 
-def spike_time_raster(times, colors=[0, 0, 0], ax=None, **kwargs):
+def spike_time_raster(times, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     """
     Plots the spike raster for a number of units
 
@@ -1667,6 +1667,8 @@ def spike_time_raster(times, colors=[0, 0, 0], ax=None, **kwargs):
 
     ax.set_title("Spike rasters")
     ax.set_xlabel("Time (seconds)")
+    if xlim:
+        ax.set_xlim(xlim[0], xlim[1])
     ax.set_ylabel("Cell ID")
     ax.invert_yaxis()
 
