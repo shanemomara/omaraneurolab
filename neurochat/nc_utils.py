@@ -807,7 +807,7 @@ def smooth_1d(x, filttype='b', filtsize=5, **kwargs):
 
     if len(x.shape) == 1:
         result = np.convolve(x, filt, mode='same')
-    elif len[x.shape] == 2:
+    elif len([x.shape]) == 2:
         result = np.zeros(x.shape)
         if direction:
             for i in np.arange(0, x.shape[0]):
