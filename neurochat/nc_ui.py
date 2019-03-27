@@ -2661,7 +2661,6 @@ class UiParameters(QtWidgets.QDialog):
         widget.setContents(layout)
 
         return widget
-        print('Wait')
         
     def lfp_spike_causality_page(self):
         """
