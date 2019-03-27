@@ -44,6 +44,7 @@ class NDataContainer():
         self._share_positions = share_positions
         self._load_on_fly = load_on_fly
         self._last_data_pt = (1, None)
+        self._smoothed_speed = False
 
     class EFileType(Enum):
         Spike = 1
@@ -104,6 +105,12 @@ class NDataContainer():
                 print("units are {}".format(data.get_unit_list()))
 
     def add_files(self, f_type, descriptors):
+        """ 
+        Expects descriptors to be in the format of either a list of filenames,
+        Or a list of tuples in the order (filenames, obj_names, data_sytem)
+        filenames should be absolute
+        """
+
         if isinstance(descriptors, list):
             descriptors = (descriptors, None, None)
         filenames, _, _ = descriptors

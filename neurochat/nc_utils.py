@@ -853,19 +853,52 @@ def smooth_2d(x, filttype='b', filtsize=5):
 
     return smoothX
 
+def find_true_ranges(arr, truth_arr, min_range):
+    """
+    Returns a list of ranges where truth values occur and the corresponding
+    values from arr
 
-#def findpeaks(data, **kwargs):
-#    data = np.array(data)
-#    slope = np.diff(data)
-#    start_at = kwargs.get('start', 0)
-#    end_at = kwargs.get('end', slope.size)
-#    thresh = kwargs.get('thresh', 0)
-#
-#    peak_loc = [j for j in np.arange(start_at, end_at-1) \
-#                if slope[j] > 0 and slope[j+1] <= 0]
-#    peak_val = [data[peak_loc[i]] for i in range(0, len(peak_loc))]
-#
-#    valid_loc = [i for i in range(0, len(peak_loc)) if peak_val[i] >= thresh]
-#    peak_val, peak_loc= zip(*((peak_val[i], peak_loc[i]) for i in range(0, len(valid_loc))))
-#
-#    return np.array(peak_val), np.array(peak_loc)
+    Parameters
+    ----------
+    arr : ndarray
+        list of values to get ranges from, equal in length to truth_arr
+    truth_arr : ndarray
+        list of truth values to make the ranges
+    min_range : int or float 
+        the minimum length of range
+
+    Returns
+    -------
+    list
+        A list of tuples, ranges in arr where truth values are truth_arr
+    """
+    min_range
+
+    in_range = False
+    ranges = []
+    for idx, b in enumerate(truth_arr):
+        if b and not in_range:
+            in_range = True
+            range_start = arr[idx]
+        if not b and in_range:
+            in_range = False
+            range_end = arr[idx - 1]
+            if range_end - range_start > min_range:
+                ranges.append((range_start, range_end))
+    return ranges
+
+def find_peaks(data, **kwargs):
+   data = np.array(data)
+   slope = np.diff(data)
+   start_at = kwargs.get('start', 0)
+   end_at = kwargs.get('end', slope.size)
+   thresh = kwargs.get('thresh', 0)
+
+   peak_loc = [j for j in np.arange(start_at, end_at-1) \
+               if slope[j] > 0 and slope[j+1] <= 0]
+   peak_val = [data[peak_loc[i]] for i in range(0, len(peak_loc))]
+
+   valid_loc = [
+       i for i in range(0, len(peak_loc)) if peak_val[i] >= thresh]
+   peak_val, peak_loc= zip(*((peak_val[i], peak_loc[i]) for i in valid_loc))
+   return np.array(peak_val), np.array(peak_loc)

@@ -15,3 +15,7 @@ A fork of an analysis toolset for Neuroscience.
 10. Add %refactory_violation to isi analysis output.
 11. Get ROC measurements by comparing a Gaussian to the distribution of spike amplitudes.
 12. Fix docs for newly added functions.
+
+## Ideas
+1. Cache the non moving periods of the subjects movement to avoid many calculations
+2. 
