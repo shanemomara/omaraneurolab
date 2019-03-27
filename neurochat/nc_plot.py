@@ -1629,28 +1629,13 @@ def grid(grid_data):
     else:
         return fig1
 
-def spike_position_raster(positions, colors=[0, 0, 0], ax=None, **kwargs):
-    ax, fig = _make_ax_if_none(ax)
-    ax.eventplot(positions, colors=colors, linelengths=0.5, linewidths=0.1)
-
-    # Only pick integer tick locations
-    for axis in [ax.xaxis, ax.yaxis]:
-        axis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-    ax.set_title("Spike rasters")
-    ax.set_xlabel("Position")
-    ax.set_ylabel("Cell ID")
-    ax.invert_yaxis()
-
-    return fig
-
-def spike_time_raster(times, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
+def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     """
     Plots the spike raster for a number of units
 
     Parameters
     ----------
-    times : The times to plot
+    events : The positions of the events
 
     Returns
     -------
@@ -1658,6 +1643,7 @@ def spike_time_raster(times, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
         The spike raster
     """
     linewidths = kwargs.get("linewidths", 0.1)
+    linelengths = kwargs.get("linelengths", 0.5)
     title = kwargs.get("title", "Spike raster")
     xlabel = kwargs.get("xlabel", "Time (seconds)")
     ylabel = kwargs.get("ylabel", "Cell ID")
@@ -1665,7 +1651,8 @@ def spike_time_raster(times, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
 
     ax, fig = _make_ax_if_none(ax)
     
-    ax.eventplot(times, colors=colors, linelengths=0.5, linewidths=linewidths)
+    ax.eventplot(
+        events, colors=colors, linelengths=linelengths, linewidths=linewidths)
 
     # Be sure to only pick integer tick locations.
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
