@@ -385,7 +385,7 @@ class NSpike(NBase):
         if filename is None:
             filename = self._filename
         else:
-            filename = self._filename
+            self._filename = filename
         loader = getattr(self, 'load_spike_'+ system)
         loader(filename)
 
