@@ -1635,7 +1635,16 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
 
     Parameters
     ----------
-    events : The positions of the events
+    events : list
+        The positions of the events
+    xlim : tuple
+        Optional start and end of raster plot
+    colors :
+        Optional list of colours, or single colour - default black
+    ax : matplotlib.axes.Axes
+        Optional axis to plot into
+    **kwargs : 
+        A set of keyword arguments to change graph appearance
 
     Returns
     -------
@@ -1677,6 +1686,12 @@ def plot_angle_between_points(points, xlim, ylim, ax=None):
     ----------
     points : list
         The list of points to plot the angle between
+    xlim : float
+        The upper xlimit of the graph
+    ylim : float
+        The upper ylimit of the graph
+    ax : matplotlib.axes.Axes
+        Optional axis to plot into
 
     Returns
     -------
@@ -1714,7 +1729,35 @@ def plot_angle_between_points(points, xlim, ylim, ax=None):
     plt.legend()
     return fig
 
-def _get_angle_plot(line1, line2, offset = 1, color = None, origin = [0,0], len_x_axis = 1, len_y_axis = 1):
+def _get_angle_plot(
+    line1, line2, offset = 1, color = None, 
+    origin = [0,0], len_x_axis = 1, len_y_axis = 1):
+    """
+    Internal helper function to get an arc between two lines
+    Can be displayed as a patch
+    
+    Parameters
+    ----------
+    line1 : matplotlib.lines.Line2D
+        The first line
+    line2 : matplotlib.lines.Line2D
+        The second line
+    offset : float
+        How far out the patch should be from the origin
+    color : string
+        The color of the patch
+    origin : list
+        Where the centre of the patch should be
+    len_x_axis: float
+        How long the x axis is in the plot
+    len_y_axis: float
+        How long the y axis is in the plot
+    
+    Returns
+    -------
+    matplotlib.patches.Arc
+        The arc which represents the angle between the lines
+    """
 
     l1xy = line1.get_xydata()
     further1 = l1xy[1] + [1, 0]
@@ -1742,6 +1785,21 @@ def _get_angle_plot(line1, line2, offset = 1, color = None, origin = [0,0], len_
     return Arc(origin, len_x_axis*offset, len_y_axis*offset, 0, theta1, theta2, color=color, label = "%0.2f"%float(angle)+u"\u00b0")
 
 def _make_ax_if_none(ax, **kwargs):
+    """
+    Makes a figure and gets the axis from this if no ax exists
+    
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Input axis
+    
+    Returns
+    -------
+    ax, fig
+        The created figure and axis if ax is None, else
+        the input ax and None
+    """
+    
     fig = None
     if ax is None:
         fig = plt.figure()
