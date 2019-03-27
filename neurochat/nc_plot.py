@@ -1657,20 +1657,28 @@ def spike_time_raster(times, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     fig : matplotlib.pyplot.Figure
         The spike raster
     """
+    linewidths = kwargs.get("linewidths", 0.1)
+    title = kwargs.get("title", "Spike raster")
+    xlabel = kwargs.get("xlabel", "Time (seconds)")
+    ylabel = kwargs.get("ylabel", "Cell ID")
+    no_y_ticks = kwargs.get("no_y_ticks", False)
+
     ax, fig = _make_ax_if_none(ax)
     
-    ax.eventplot(times, colors=colors, linelengths=0.5, linewidths=0.1)
+    ax.eventplot(times, colors=colors, linelengths=0.5, linewidths=linewidths)
 
     # Be sure to only pick integer tick locations.
-    for axis in [ax.xaxis, ax.yaxis]:
-        axis.set_major_locator(ticker.MaxNLocator(integer=True))
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
-    ax.set_title("Spike rasters")
-    ax.set_xlabel("Time (seconds)")
-    if xlim:
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    if xlim is not None:
         ax.set_xlim(xlim[0], xlim[1])
-    ax.set_ylabel("Cell ID")
+    ax.set_ylabel(ylabel)
     ax.invert_yaxis()
+
+    if no_y_ticks:
+        ax.get_yaxis().set_visible(False)
 
     return fig
 
