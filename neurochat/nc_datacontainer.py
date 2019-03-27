@@ -31,11 +31,25 @@ class NDataContainer():
         """
         Bulk load nData objects
 
+        Parameters
+        ----------
+        share_positions : bool
+            Share the same position file between the data objects
+        load_on_fly : bool
+            Don't store all the data in memory, 
+            instead load it as needed, on the fly
+
         Attributes
         ----------
         _container : List
         _file_names_dict : Dict
         _units : List
+        _unit_count : int
+        _share_positions : bool
+        _load_on_fly : bool
+        _smoothed_speed : bool
+        _last_data_pt : tuple (int, NData)
+
         """
         self._file_names_dict = {}
         self._units = []
@@ -47,21 +61,40 @@ class NDataContainer():
         self._smoothed_speed = False
 
     class EFileType(Enum):
+        """The different filetypes that a single contained object can have"""
         Spike = 1
         Position = 2
         LFP = 3
-        HDF = 4
 
     def get_num_data(self):
+        """Returns the number of Ndata objects in the container"""
+        
         if self._load_on_fly:
             for _, vals in self.get_file_dict().items():
                 return len(vals)
         return len(self._container)
     
     def get_file_dict(self):
+        """Returns the key value filename dictionary for this collection"""
+
         return self._file_names_dict
 
     def get_units(self, index=None):
+        """
+        Returns the units in this collection, optionally at a given index
+        
+        Parameters
+        ----------
+        index : int
+            Optional collection data index to get the units for
+        
+        Returns
+        -------
+        list
+            Either a list containing lists of all units in the collection
+            or the list of units for the given data index
+        """
+        
         if index is None:
             return self._units
         if index >= self.get_num_data() and (not self._load_on_fly):
@@ -70,6 +103,21 @@ class NDataContainer():
         return self._units[index]
 
     def get_data(self, index=None):
+        """
+        Returns the NData objects in this collection, 
+        or the object at a given index
+        Do not call this with no index if loading data on the fly
+        
+        Parameters
+        ----------
+        index : int
+            Optional index to get data at
+        
+        Returns
+        -------
+        NData or list of NData objects
+        """
+        
         if self._load_on_fly:
             if index is None:
                 logging.error("Can't load all data when loading on the fly")
@@ -86,6 +134,8 @@ class NDataContainer():
         return self._container[index]
 
     def add_data(self, data):
+        """Adds an NData object to this container"""
+
         if isinstance(data, NData):
             self._container.append(data)
         else:
@@ -93,6 +143,7 @@ class NDataContainer():
             return
 
     def list_all_units(self):
+        """Prints all the units in the container"""
         if self._load_on_fly:
                 for key, vals in self.get_file_dict().items():
                     if key == "Spike":
@@ -105,10 +156,20 @@ class NDataContainer():
                 print("units are {}".format(data.get_unit_list()))
 
     def add_files(self, f_type, descriptors):
-        """ 
-        Expects descriptors to be in the format of either a list of filenames,
-        Or a list of tuples in the order (filenames, obj_names, data_sytem)
-        filenames should be absolute
+        """
+        Adds a set of filenames to the container.
+
+        Parameters
+        ----------
+        f_type : EFileType:
+            The type of file being added (Spike, LFP, Position)
+        descriptors : list
+            Either a list of filenames, or a list of tuples in the order 
+            (filenames, obj_names, data_sytem). Filenames should be absolute.
+        
+        Returns
+        -------
+        None
         """
 
         if isinstance(descriptors, list):
@@ -142,6 +203,7 @@ class NDataContainer():
                 f_type.name, []).append(description)
     
     def set_units(self, units='all'):
+        """Sets the list of units for the collection."""
         self._units = []
         if units == 'all':
             if self._load_on_fly:
@@ -153,6 +215,7 @@ class NDataContainer():
             else:
                 for data in self.get_data():
                     self._units.append(data.get_unit_list())
+                    
         elif isinstance(units, list):
             for idx, unit in enumerate(units):
                 if unit == 'all':

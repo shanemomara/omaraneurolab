@@ -402,7 +402,18 @@ class NLfp(NBase):
         return self._record_info['ADC Fullscale mv']     
         
     def get_recording_time(self):
-        """Returns the recording time in seconds"""
+        """
+        Returns the recording time in seconds
+        
+        Parameters
+        ----------
+        None
+ 
+        Returns
+        -------
+        int
+            Recording time in seconds
+        """
 
         return self.get_total_samples() / (self.get_sampling_rate())
 
