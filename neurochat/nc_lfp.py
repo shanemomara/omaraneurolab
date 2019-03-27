@@ -557,7 +557,11 @@ class NLfp(NBase):
         graph_data = oDict()
 
         Fs = self.get_sampling_rate()
-        lfp = self.get_samples()
+        slc = kwargs.get('slice', None)
+        if slc:
+            lfp = self.get_samples()[slc]
+        else:
+            lfp = self.get_samples()
 
         window = kwargs.get('window', 1.0)
         window = sg.get_window('hann', int(window*Fs)) if isinstance(window, float)\
@@ -1270,7 +1274,7 @@ class NLfp(NBase):
             time = np.array([])
             lfp_wave = np.array([])
             sample_le = 256**(np.arange(0, bytes_per_sample, 1))
-            for i in np.arange(num_samples):
+            for _ in np.arange(num_samples):
                 sample_bytes = np.fromfile(f, dtype='uint8', count=record_size)
                 block_start = int.from_bytes(sample_bytes[time_offset+ \
                                 np.arange(bytes_per_timestamp)], byteorder='little', signed=False)/10**6
