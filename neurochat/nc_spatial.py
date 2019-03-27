@@ -14,7 +14,8 @@ from collections import OrderedDict as oDict
 
 from neurochat.nc_utils import chop_edges, corr_coeff, extrema,\
             find, find2d, find_chunk, histogram, histogram2d, \
-            linfit, residual_stat, rot_2d, smooth_1d, smooth_2d, centre_of_mass
+            linfit, residual_stat, rot_2d, smooth_1d, smooth_2d, \
+            centre_of_mass, find_true_ranges
 
 from neurochat.nc_base import NAbstract
 from neurochat.nc_circular import CircStat
@@ -1478,24 +1479,12 @@ class NSpatial(NAbstract):
             self.smooth_speed()
         not_moving = self.get_speed() < moving_thresh
 
-        in_range = False
-        ranges = []
-        for idx, b in enumerate(not_moving):
-            if b and not in_range:
-                in_range = True
-                range_start = self.get_time()[idx]
-            if not b and in_range:
-                in_range = False
-                range_end = self.get_time()[idx - 1]
-                if range_end - range_start > min_range:
-                    ranges.append((range_start, range_end))
-        return ranges
+        return find_true_ranges(
+            self.get_time(), not_moving, min_range)
 
     def get_non_moving_times(self, **kwargs):
         """ Returns the times where the subject is not moving"""
-
         ranges = self.non_moving_periods(**kwargs)
-        print(ranges)
         time_data = [
             val for val in self.get_time()
             if any(lower <= val <= upper for (lower, upper) in ranges)
