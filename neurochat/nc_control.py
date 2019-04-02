@@ -17,6 +17,7 @@ from PyQt5 import QtCore
 
 from neurochat.nc_utils import NLog, angle_between_points
 from neurochat.nc_data import NData
+from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_hdf import Nhdf
 from neurochat.nc_clust import NClust
 from neurochat.nc_config import Configuration
@@ -1257,99 +1258,62 @@ class NeuroChaT(QtCore.QThread):
         else:
             filttype = 'b'
 
-        info = {'spat': [], 'spike': [], 'unit': [], 'centroid': []}
-        if os.path.exists(excel_file):
-            excel_info = pd.read_excel(excel_file, index_col=None)
-            if excel_info.shape[1] > 5:
-                excel_info = excel_info.iloc[:, 1:]
-            # excel list: directory| position_file| spike file| unit_no
-            for row in excel_info.itertuples():
-                spike_file = row[1]+ os.sep+ row[3]
-                unit_no = int(row[4])
-                if row[2][-4:] == '.txt':
-                    spat_file = row[1] + os.sep+ row[2]
-                else:
-                    spat_file = row[1] + os.sep+ row[2] + '.txt'
-                if self.get_data_format() == 'NWB':
-                
-                    hdf_name = row[1] + os.sep+ row[3]+ '.hdf5'
-                    spike_file = hdf_name+ '/processing/Shank'+ '/'+ row[4]
-                info['spat'].append(spat_file)
-                info['spike'].append(spike_file)
-                info['unit'].append(unit_no)
-            n_units = excel_info.shape[0]
-            if (n_units % 3 != 0) :
-                logging.error("angle_calculation: Can't compute the angle for a number of units not divisible by 3, given " + str(n_units))
-                return
+        collection = NDataContainer()
+        excel_info = collection.add_files_from_excel(excel_file)
+        if excel_info is None:
+            return
 
-            excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
-            excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
-            excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units)))
-            
-            figs = []
-            if info['spike']:
-                for i, spike_file in enumerate(info['spike']):
-                    logging.info('Computing place field for unit: '+ str(i+ 1) + ' with value ' + str(info['unit'][i]))
-                    if os.path.exists(spike_file):
-                        self.ndata.set_spike_file(spike_file)
-                        self.ndata.load_spike()
-                        units = self.ndata.get_unit_list()
-                    else:
-                        logging.error('No existing file for spike file number '+ str(i+ 1) + " with name " + spike_file)
-                        return
-                    
-                    unit_num = info['unit'][i]
-                    if unit_num in units:
-                        self.ndata.set_unit_no(unit_num)
-                    else:
-                        logging.error('No existing unit for file number '+ str(i+ 1) + " with unit value " + info['unit'][i])
-                        logging.info("Existing units are " + str(units))
-                        return
+        n_units = len(collection)
+        if (n_units % 3 != 0) :
+            logging.error("angle_calculation: Can't compute the angle for a number of units not divisible by 3, given " + str(n_units))
+            return
 
-                    # Open the position file if it exists
-                    spat_file = info['spat'][i]
-                    if os.path.exists(spat_file):
-                        self.ndata.set_spatial_file(spat_file)
-                        self.ndata.load_spatial()
-                        # Get the centroid and save the info to excel file and local copy
-                        place_data = self.ndata.place(
-                              pixel=params['loc_pixel_size'],
-                              chop_bound=params['loc_chop_bound'],
-                              filter=[filttype, params['loc_rate_kern_len']],
-                              fieldThresh=params['loc_field_thresh'],
-                              smoothPlace=params['loc_field_smooth'],
-                              brAdjust=True, update=True)
-                        centroid = place_data['centroid']
-                        info['centroid'].append(centroid)
-                        excel_info.loc[i, "CentroidX"] = centroid[0]
-                        excel_info.loc[i, "CentroidY"] = centroid[1]
-                    else:
-                        logging.error('No existing file for spatial file number '+ str(i+ 1) + " with name " + info['spat'][i])
-                        return
-                    if should_plot:
-                        fig = nc_plot.loc_firing_and_place(place_data)
-                        figs.append(fig)
-
-                    if (i + 1) % 3 == 0: #then spit out the angle
-                        first_centroid = info['centroid'][i - 2]
-                        second_centroid = info['centroid'][i - 1]
-                        angle = angle_between_points(first_centroid, second_centroid, centroid)
-                        excel_info.loc[i, "AngleInDegrees"] = angle
-                        if should_plot:
-                            fig = nc_plot.plot_angle_between_points(
-                                info['centroid'], place_data['xedges'].max(), place_data['yedges'].max())
-                            figs.append(fig)
+        excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
+        excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
+        excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units)))
+        
+        centroids = []
+        figs = []
+        for i, data in enumerate(collection):
+            place_data = data.place(
+                pixel=params['loc_pixel_size'],
+                chop_bound=params['loc_chop_bound'],
+                filter=[filttype, params['loc_rate_kern_len']],
+                fieldThresh=params['loc_field_thresh'],
+                smoothPlace=params['loc_field_smooth'],
+                brAdjust=True, update=True)
+            centroid = place_data['centroid']
+            centroids.append(centroid)
+            excel_info.loc[i, "CentroidX"] = centroid[0]
+            excel_info.loc[i, "CentroidY"] = centroid[1]
             if should_plot:
-                self.close_fig(figs)
-            
-            try:
-                excel_info.to_excel(excel_file)
-            except PermissionError:
-                logging.warning("Please close the excel file to write the result back to it")
+                fig = nc_plot.loc_firing_and_place(place_data)
+                figs.append(fig)
 
-            logging.info('Angle calculation completed! Value was {}'.format(angle))
-        else:
-            logging.error('Excel file does not exist!')
+            if (i + 1) % 3 == 0: #then spit out the angle
+                first_centroid = centroids[0]
+                second_centroid = centroids[1]
+                angle = angle_between_points(
+                    first_centroid, second_centroid, centroid)
+                excel_info.loc[i, "AngleInDegrees"] = angle
+                if should_plot:
+                    fig = nc_plot.plot_angle_between_points(
+                        centroids, 
+                        place_data['xedges'].max(), 
+                        place_data['yedges'].max())
+                    figs.append(fig)
+                centroids = []
+        
+        if should_plot:
+            self.close_fig(figs)
+
+        try:
+            print(excel_info)
+            excel_info.to_excel(excel_file, index=False)
+        except PermissionError:
+            logging.warning("Please close the excel file to write the result back to it")
+
+        logging.info('Angle calculation completed! Value was {}'.format(angle))
 
     def cluster_evaluate(self, excel_file=None):
         """
