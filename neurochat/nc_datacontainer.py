@@ -8,6 +8,9 @@ This module implements a container for the Ndata class to simplify multi experim
 from enum import Enum
 import copy
 import logging
+import os
+
+import pandas as pd
 
 from neurochat.nc_data import NData
 
@@ -176,7 +179,9 @@ class NDataContainer():
             descriptors = (descriptors, None, None)
         filenames, _, _ = descriptors
         if not isinstance(f_type, self.EFileType):
-            logging.error("Parameter f_type in add files must be of EFileType")
+            logging.error(
+                "Parameter f_type in add files must be of EFileType\n" +
+                "given {}".format(f_type))
             return
 
         if f_type.name == "Position" and self._share_positions and len(filenames) == 1:
@@ -202,6 +207,27 @@ class NDataContainer():
             self._file_names_dict.setdefault(
                 f_type.name, []).append(description)
     
+    def add_all_files(self, spats, spikes, lfps):
+        """
+        A helper function to quickly add a list of positions, spikes and lfps
+
+        Parameters
+        ----------
+        spats : list
+            The list of spatial files
+        spikes : list
+            The list of spike files
+        lfps : list
+            The list of lfp files
+
+        Returns
+        -------
+        None
+        """
+        self.add_files(self.EFileType.Position, spats)
+        self.add_files(self.EFileType.Spike, spikes)
+        self.add_files(self.EFileType.LFP, lfps)
+
     def set_units(self, units='all'):
         """Sets the list of units for the collection."""
         self._units = []
@@ -247,8 +273,78 @@ class NDataContainer():
         else:
             self._load_all_data()
 
-    def add_files_from_excel(self, file_loc):
-        pass
+    def add_files_from_excel(self, file_loc, unit_sep=" "):
+        """
+        Adds filepaths from an excel file, setup to be in the order:
+        directory | position file | spike file | unit numbers | eeg extension
+
+        Parameters
+        ----------
+        file_loc : str
+            Name of the excel file that contains the data specifications
+        unit_sep : str
+            Optional separator character for unit numbers, default " "
+        Returns
+        -------
+        excel_info :
+            The raw info parsed from the excel file for further use
+        """
+        pos_files = []
+        spike_files = []
+        units = []
+        lfp_files = []
+        
+        if os.path.exists(file_loc):
+            excel_info = pd.read_excel(file_loc, index_col=None)
+            if excel_info.shape[1] != 5:
+                logging.error(
+                    "Incorrect excel file format, it should be:\n" +
+                    "directory | position file | spike file | unit numbers | eeg extension")
+            # excel_info = excel_info.iloc[:, 1:] # Can be used to remove index
+            for row in excel_info.itertuples():
+                base_dir = row[1]
+                pos_name = row[2]
+                tetrode_name = row[3]
+
+                if pos_name[-4:] == '.txt':
+                    spat_file = base_dir + os.sep + pos_name
+                else:
+                    spat_file = base_dir + os.sep + pos_name + '.txt'
+
+                spike_file = base_dir + os.sep + tetrode_name
+
+                # Load the unit numbers
+                unit_info = row[4]
+                if unit_info == "all":
+                    unit_list = "all"
+                elif isinstance(unit_info, int):
+                    unit_list = unit_info
+                else:
+                    unit_list = [
+                        int(x) for x in unit_info.split(" ") if x is not ""]
+
+                # Load the lfp
+                lfp_ext = row[5]
+                if lfp_ext[0] != ".":
+                    lfp_ext = "." + lfp_ext
+                spike_name = spike_file.split(".")[0]
+                lfp_file = spike_name + lfp_ext
+
+                pos_files.append(spat_file)
+                spike_files.append(spike_file)
+                lfp_files.append(lfp_file)
+                units.append(unit_list)
+
+            # Complete the file setup based on parsing from the excel file    
+            self.add_all_files(pos_files, spike_files, lfp_files)
+            self.setup()
+            self.set_units(units)
+
+            return excel_info
+        else:
+            logging.error('Excel file does not exist!')
+            return None
+
 
     def subsample(self, key):
         result = copy.deepcopy(self)
