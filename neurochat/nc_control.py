@@ -1310,7 +1310,6 @@ class NeuroChaT(QtCore.QThread):
         try:
             split_up = excel_file.split(".")
             output_file = split_up[0] + "_result." + split_up[1]
-            print(output_file)
             excel_info.to_excel(output_file, index=False)
         except PermissionError:
             logging.warning(
