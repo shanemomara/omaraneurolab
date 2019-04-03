@@ -294,53 +294,74 @@ class NDataContainer():
         spike_files = []
         units = []
         lfp_files = []
+        to_merge = []
 
         if os.path.exists(file_loc):
             excel_info = pd.read_excel(file_loc, index_col=None)
-            if excel_info.shape[1] != 5:
+            if excel_info.shape[1] % 5 != 0:
                 logging.error(
                     "Incorrect excel file format, it should be:\n" +
-                    "directory | position file | spike file | unit numbers | eeg extension")
+                    "directory | position file | spike file" + 
+                    "| unit numbers | eeg extension")
+                return
+            
             # excel_info = excel_info.iloc[:, 1:] # Can be used to remove index
-            for row in excel_info.itertuples():
-                base_dir = row[1]
-                pos_name = row[2]
-                tetrode_name = row[3]
+            count = 0
+            for full_row in excel_info.itertuples():
+                split = [full_row[i:i+5] 
+                    for i in range(1, len(full_row), 5) 
+                    if not pd.isna(full_row[i])]
+                merge = True if len(split) > 1 else False
+                merge_list = []
+                for row in split:
+                    base_dir = row[0]
+                    pos_name = row[1]
+                    tetrode_name = row[2]
 
-                if pos_name[-4:] == '.txt':
-                    spat_file = base_dir + os.sep + pos_name
-                else:
-                    spat_file = base_dir + os.sep + pos_name + '.txt'
+                    if pos_name[-4:] == '.txt':
+                        spat_file = base_dir + os.sep + pos_name
+                    else:
+                        spat_file = base_dir + os.sep + pos_name + '.txt'
 
-                spike_file = base_dir + os.sep + tetrode_name
+                    spike_file = base_dir + os.sep + tetrode_name
 
-                # Load the unit numbers
-                unit_info = row[4]
-                if unit_info == "all":
-                    unit_list = "all"
-                elif isinstance(unit_info, int):
-                    unit_list = unit_info
-                else:
-                    unit_list = [
-                        int(x) for x in unit_info.split(" ") if x is not ""]
+                    # Load the unit numbers
+                    unit_info = row[3]
+                    if unit_info == "all":
+                        unit_list = "all"
+                    elif isinstance(unit_info, int):
+                        unit_list = unit_info
+                    elif isinstance(unit_info, float):
+                        unit_list = int(unit_info)
+                    else:
+                        unit_list = [
+                            int(x) for x in unit_info.split(" ") if x is not ""]
 
-                # Load the lfp
-                lfp_ext = row[5]
-                if lfp_ext[0] != ".":
-                    lfp_ext = "." + lfp_ext
-                spike_name = spike_file.split(".")[0]
-                lfp_file = spike_name + lfp_ext
+                    # Load the lfp
+                    lfp_ext = row[4]
+                    if lfp_ext[0] != ".":
+                        lfp_ext = "." + lfp_ext
+                    spike_name = spike_file.split(".")[0]
+                    lfp_file = spike_name + lfp_ext
 
-                pos_files.append(spat_file)
-                spike_files.append(spike_file)
-                lfp_files.append(lfp_file)
-                units.append(unit_list)
+                    pos_files.append(spat_file)
+                    spike_files.append(spike_file)
+                    lfp_files.append(lfp_file)
+                    units.append(unit_list)
+                    merge_list.append(count)
+                    count += 1
+                if merge:
+                    to_merge.append(merge_list)     
 
             # Complete the file setup based on parsing from the excel file
             self.add_all_files(pos_files, spike_files, lfp_files)
             self.setup()
             self.set_units(units)
 
+            for idx, merge_list in enumerate(to_merge):
+                self.merge(merge_list)
+                for j in range(idx + 1, len(to_merge)):
+                    to_merge[j] = [k - len(merge_list) + 1 for k in to_merge[j]]
             return excel_info
         else:
             logging.error('Excel file does not exist!')
