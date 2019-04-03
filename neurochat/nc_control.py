@@ -1308,10 +1308,15 @@ class NeuroChaT(QtCore.QThread):
             self.close_fig(figs)
 
         try:
-            print(excel_info)
-            excel_info.to_excel(excel_file, index=False)
+            split_up = excel_file.split(".")
+            output_file = split_up[0] + "_result." + split_up[1]
+            print(output_file)
+            excel_info.to_excel(output_file, index=False)
         except PermissionError:
-            logging.warning("Please close the excel file to write the result back to it")
+            logging.warning(
+                "Please close the excel file to" 
+                + " write the result back to it at" 
+                + " {}".format(output_file))
 
         logging.info('Angle calculation completed! Value was {}'.format(angle))
 
