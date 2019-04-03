@@ -385,7 +385,7 @@ class NDataContainer():
                 return
 
             # Merge the spikes based on times (waveforms not done yet)
-            new_times = (
+            new_spike_times = (
                 data.spike.get_timestamp() +
                 target_data.spike.get_duration())
             new_duration = (
@@ -393,23 +393,24 @@ class NDataContainer():
                 data.spike.get_duration())
             new_tags = data.spike.get_unit_tags()
 
-            target_data.spike._timestamp = np.append(
-                target_data.spike._timestamp, new_times)
-            target_data.spike._unit_Tags = np.append(
-                target_data.spike._unit_Tags, new_tags)
-            target_data.spike._set_duration(new_duration)
-
             # Merge the spatial information based on times
-            new_times = (
+            new_spat_times = (
                 data.spatial._time +
-                target_data.spatial._time.max())
+                target_data.spike.get_duration())
+            print(new_spat_times[0:5])
             new_pos_x = data.spatial._pos_x
             new_pos_y = data.spatial._pos_y
             new_direction = data.spatial._direction
             new_speed = data.spatial._speed
 
+            target_data.spike._timestamp = np.append(
+                target_data.spike._timestamp, new_spike_times)
+            target_data.spike._unit_Tags = np.append(
+                target_data.spike._unit_Tags, new_tags)
+            target_data.spike._set_duration(new_duration)
+
             target_data.spatial._time = np.append(
-                target_data.spatial._time, new_times)
+                target_data.spatial._time, new_spat_times)
             # NB this may not work properly due to different borders
             target_data.spatial._pos_x = np.append(
                 target_data.spatial._pos_x, new_pos_x)
