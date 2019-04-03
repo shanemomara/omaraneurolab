@@ -11,6 +11,7 @@ import logging
 import os
 
 import pandas as pd
+import numpy as np
 
 from neurochat.nc_data import NData
 
@@ -39,7 +40,7 @@ class NDataContainer():
         share_positions : bool
             Share the same position file between the data objects
         load_on_fly : bool
-            Don't store all the data in memory, 
+            Don't store all the data in memory,
             instead load it as needed, on the fly
 
         Attributes
@@ -71,12 +72,12 @@ class NDataContainer():
 
     def get_num_data(self):
         """Returns the number of Ndata objects in the container"""
-        
+
         if self._load_on_fly:
             for _, vals in self.get_file_dict().items():
                 return len(vals)
         return len(self._container)
-    
+
     def get_file_dict(self):
         """Returns the key value filename dictionary for this collection"""
 
@@ -85,19 +86,19 @@ class NDataContainer():
     def get_units(self, index=None):
         """
         Returns the units in this collection, optionally at a given index
-        
+
         Parameters
         ----------
         index : int
             Optional collection data index to get the units for
-        
+
         Returns
         -------
         list
             Either a list containing lists of all units in the collection
             or the list of units for the given data index
         """
-        
+
         if index is None:
             return self._units
         if index >= self.get_num_data() and (not self._load_on_fly):
@@ -107,20 +108,20 @@ class NDataContainer():
 
     def get_data(self, index=None):
         """
-        Returns the NData objects in this collection, 
+        Returns the NData objects in this collection,
         or the object at a given index
         Do not call this with no index if loading data on the fly
-        
+
         Parameters
         ----------
         index : int
             Optional index to get data at
-        
+
         Returns
         -------
         NData or list of NData objects
         """
-        
+
         if self._load_on_fly:
             if index is None:
                 logging.error("Can't load all data when loading on the fly")
@@ -167,9 +168,9 @@ class NDataContainer():
         f_type : EFileType:
             The type of file being added (Spike, LFP, Position)
         descriptors : list
-            Either a list of filenames, or a list of tuples in the order 
+            Either a list of filenames, or a list of tuples in the order
             (filenames, obj_names, data_sytem). Filenames should be absolute.
-        
+
         Returns
         -------
         None
@@ -188,7 +189,7 @@ class NDataContainer():
             for _ in range(len(self.get_file_dict()["Spike"]) - 1):
                 filenames.append(filenames[0])
 
-        # Ensure lists are empty or of equal size    
+        # Ensure lists are empty or of equal size
         for l in descriptors:
             if l is not None:
                 if len(l) != len(filenames):
@@ -206,7 +207,7 @@ class NDataContainer():
                     description.append(None)
             self._file_names_dict.setdefault(
                 f_type.name, []).append(description)
-    
+
     def add_all_files(self, spats, spikes, lfps):
         """
         A helper function to quickly add a list of positions, spikes and lfps
@@ -241,7 +242,7 @@ class NDataContainer():
             else:
                 for data in self.get_data():
                     self._units.append(data.get_unit_list())
-                    
+
         elif isinstance(units, list):
             for idx, unit in enumerate(units):
                 if unit == 'all':
@@ -293,7 +294,7 @@ class NDataContainer():
         spike_files = []
         units = []
         lfp_files = []
-        
+
         if os.path.exists(file_loc):
             excel_info = pd.read_excel(file_loc, index_col=None)
             if excel_info.shape[1] != 5:
@@ -335,7 +336,7 @@ class NDataContainer():
                 lfp_files.append(lfp_file)
                 units.append(unit_list)
 
-            # Complete the file setup based on parsing from the excel file    
+            # Complete the file setup based on parsing from the excel file
             self.add_all_files(pos_files, spike_files, lfp_files)
             self.setup()
             self.set_units(units)
@@ -345,15 +346,100 @@ class NDataContainer():
             logging.error('Excel file does not exist!')
             return None
 
+    def merge(self, indices, force_equal_units=True):
+        """
+        WORK IN PROGRESS - ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY
+        Only call this after loading the data, and not while loading on the fly
+        Merges the data from multiple indices together into the first index
+
+        Parameters
+        ----------
+        indices: list
+            The list of indices in the data to merge together
+        force_equal_units:
+            The merged indexes must have the same unit numbers available
+
+        Returns
+        -------
+        The merged data point
+        """
+        if self._load_on_fly:
+            logging.error("Don't call merge when loading on the fly")
+            return
+
+        target_index = indices[0]
+
+        data_to_merge = []
+        target_data = self.get_data(target_index)
+        for idx in indices[1:]:
+            data = self.get_data(idx)
+            data_to_merge.append(data)
+
+        units1 = self.get_units(target_index)
+        for idx, data in zip(indices[1:], data_to_merge):
+            units2 = self.get_units(idx)
+            if force_equal_units and (not units1 == units2):
+                logging.error(
+                    "Can't merge files with unequal units\n" +
+                    "Units are {} , {}".format(units1, units2))
+                return
+
+            # Merge the spikes based on times (waveforms not done yet)
+            new_times = (
+                data.spike.get_timestamp() +
+                target_data.spike.get_duration())
+            new_duration = (
+                target_data.spike.get_duration() +
+                data.spike.get_duration())
+            new_tags = data.spike.get_unit_tags()
+
+            target_data.spike._timestamp = np.append(
+                target_data.spike._timestamp, new_times)
+            target_data.spike._unit_Tags = np.append(
+                target_data.spike._unit_Tags, new_tags)
+            target_data.spike._set_duration(new_duration)
+
+            # Merge the spatial information based on times
+            new_times = (
+                data.spatial._time +
+                target_data.spatial._time.max())
+            new_pos_x = data.spatial._pos_x
+            new_pos_y = data.spatial._pos_y
+            new_direction = data.spatial._direction
+            new_speed = data.spatial._speed
+
+            target_data.spatial._time = np.append(
+                target_data.spatial._time, new_times)
+            # NB this may not work properly due to different borders
+            target_data.spatial._pos_x = np.append(
+                target_data.spatial._pos_x, new_pos_x)
+            target_data.spatial._pos_y = np.append(
+                target_data.spatial._pos_y, new_pos_y)
+            target_data.spatial._direction = np.append(
+                target_data.spatial._direction, new_direction)
+            target_data.spatial._speed = np.append(
+                target_data.spatial._speed, new_speed)
+
+        self._container[target_index] = target_data
+
+        for idx in indices[1:]:
+            self._container.pop(idx)
+            self._units.pop(idx)
+            indices[1:] = [a - 1 for a in indices[1:]]
+        self._unit_count = self._count_num_units()
+
+        self._container[target_index].set_unit_no(
+            self.get_units(target_index)[0])
+        return self.get_data(target_index)
 
     def subsample(self, key):
         result = copy.deepcopy(self)
-        
+
         for k in result._file_names_dict:
             result._file_names_dict[k] = result._file_names_dict[k][key]
             if isinstance(key, int):
                 result._file_names_dict[k] = [result._file_names_dict[k]]
-        
+
         if len(result._units) > 0:
             result._units = result._units[key]
             if isinstance(key, int):
@@ -412,11 +498,11 @@ class NDataContainer():
             ndata = self.get_data(idx)
         key_fn_pairs = {
             "Spike" : [
-                getattr(ndata, "set_spike_file"), 
+                getattr(ndata, "set_spike_file"),
                 getattr(ndata, "set_spike_name"),
                 getattr(ndata, "load_spike")],
             "Position": [
-                getattr(ndata, "set_spatial_file"), 
+                getattr(ndata, "set_spatial_file"),
                 getattr(ndata, "set_spatial_name"),
                 getattr(ndata, "load_spatial")],
             "LFP": [
@@ -443,7 +529,7 @@ class NDataContainer():
         if filename is not None:
             key_fn_pairs[key][0](filename)
             key_fn_pairs[key][2]()
-        
+
     def __repr__(self):
         string = "NData Container Object with {} objects:\nFiles are {}\nUnits are {}\nSet to Load on Fly? {}".format(
             self.get_num_data(), self.get_file_dict(), self.get_units(), self._load_on_fly)
@@ -460,7 +546,7 @@ class NDataContainer():
                     descriptor = vals[data_index]
                     self._load(key, descriptor, idx=data_index, ndata=result)
                 self._last_data_pt = (data_index, result)
-        else:  
+        else:
             result = self.get_data(data_index)
         if len(self.get_units()) > 0:
             result.set_unit_no(self.get_units(data_index)[unit_index])
@@ -469,7 +555,7 @@ class NDataContainer():
     def __len__(self):
         counts = self._unit_count
         if counts == 0:
-            counts = [1 for _ in range(len(self._container))]  
+            counts = [1 for _ in range(len(self._container))]
         return sum(counts)
 
     def _count_num_units(self):
@@ -493,5 +579,4 @@ class NDataContainer():
                     running_sum += count
                     running_idx += 1
 
-                
-        
+
