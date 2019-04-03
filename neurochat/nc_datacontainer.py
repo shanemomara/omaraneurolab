@@ -418,7 +418,6 @@ class NDataContainer():
             new_spat_times = (
                 data.spatial._time +
                 target_data.spike.get_duration())
-            print(new_spat_times[0:5])
             new_pos_x = data.spatial._pos_x
             new_pos_y = data.spatial._pos_y
             new_direction = data.spatial._direction
