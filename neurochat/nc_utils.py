@@ -625,7 +625,8 @@ def linfit(X, Y, getPartial=False):
 
     return _results
 
-def nxl_write(file_name, data_frame, sheet_name='Sheet1', startRow=0, startColumn=0):
+def nxl_write(
+    file_name, data_frame, sheet_name='Sheet1', startRow=0, startColumn=0):
     """
     Write Pandas DataFrame to excel file. It is a wrapper for Pandas.ExcelWriter()
     
@@ -738,7 +739,9 @@ def angle_between_points(a, b, c):
         cosine_angle = np.dot(ba, bc) / (length_ba * length_bc)
         angle = np.arccos(cosine_angle)
     else:
-        logging.error("Angle between points: Two points are the same, can't measure angle")
+        logging.error(
+            "Angle between points: Two points are the same" +
+            " can't measure angle as a result")
         angle = np.NAN
 
     return np.degrees(angle)
@@ -856,7 +859,7 @@ def smooth_2d(x, filttype='b', filtsize=5):
 def find_true_ranges(arr, truth_arr, min_range):
     """
     Returns a list of ranges where truth values occur and the corresponding
-    values from arr
+    values from arr, arr is assumed to be a sorted list
 
     Parameters
     ----------
@@ -872,7 +875,6 @@ def find_true_ranges(arr, truth_arr, min_range):
     list
         A list of tuples, ranges in arr where truth values are truth_arr
     """
-    min_range
 
     in_range = False
     ranges = []
@@ -888,17 +890,31 @@ def find_true_ranges(arr, truth_arr, min_range):
     return ranges
 
 def find_peaks(data, **kwargs):
-   data = np.array(data)
-   slope = np.diff(data)
-   start_at = kwargs.get('start', 0)
-   end_at = kwargs.get('end', slope.size)
-   thresh = kwargs.get('thresh', 0)
+    """
+    Returns the peaks in the data based on gradient calculations
 
-   peak_loc = [j for j in np.arange(start_at, end_at-1) \
-               if slope[j] > 0 and slope[j+1] <= 0]
-   peak_val = [data[peak_loc[i]] for i in range(0, len(peak_loc))]
+    Parameters
+    ----------
+    kwargs
+        start : int 
+            Where to start looking for peaks in the data, default 0
+        end : int
+            Where to stop looking for peaks in the data, default data.size - 1
+        thresh : float
+            Don't consider any peaks with a value below this, default 0
+    """
 
-   valid_loc = [
-       i for i in range(0, len(peak_loc)) if peak_val[i] >= thresh]
-   peak_val, peak_loc= zip(*((peak_val[i], peak_loc[i]) for i in valid_loc))
-   return np.array(peak_val), np.array(peak_loc)
+    data = np.array(data)
+    slope = np.diff(data)
+    start_at = kwargs.get('start', 0)
+    end_at = kwargs.get('end', slope.size)
+    thresh = kwargs.get('thresh', 0)
+
+    peak_loc = [j for j in np.arange(start_at, end_at-1) \
+                if slope[j] > 0 and slope[j+1] <= 0]
+    peak_val = [data[peak_loc[i]] for i in range(0, len(peak_loc))]
+
+    valid_loc = [
+        i for i in range(0, len(peak_loc)) if peak_val[i] >= thresh]
+    peak_val, peak_loc= zip(*((peak_val[i], peak_loc[i]) for i in valid_loc))
+    return np.array(peak_val), np.array(peak_loc)

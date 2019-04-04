@@ -1384,7 +1384,6 @@ class NSpatial(NAbstract):
         else :
             smoothMap = fmap
         
-        # Could make a seperate place field smoothing map
         if smooth_place:
             pmap = smoothMap
         else:
@@ -1425,7 +1424,9 @@ class NSpatial(NAbstract):
     # Created by Sean Martin: 13/02/2019
     def place_field_centroid_zscore(self, ftimes, **kwargs):
         """
-        Finds the centroid of the place using the z-score of the normal distribution.
+        A naive method to find the centroid of the place field using the 
+        z-score of the normal distribution to remove outliers, 
+        and then averaging remaining locations' co-ordinates.
                 
         Parameters
         ----------
@@ -1467,9 +1468,12 @@ class NSpatial(NAbstract):
         Returns a number of tuples indicating ranges where the subject is not moving
 
         kwargs:
-        should_smooth - flags if the speed data should be smoothed
-        min_range - the minimum amount of time that the subject should not be moving for
-        moving_thresh - any speed above this thresh is considered to be movement
+        should_smooth : bool
+            flags if the speed data should be smoothed, default False
+        min_range : float
+            the minimum amount of time that the subject should not be moving for
+        moving_thresh : float
+            any speed above this thresh is considered to be movement
         """
         should_smooth = kwargs.get("should_smooth", False)
         min_range = kwargs.get("min_range", 10)
@@ -1900,7 +1904,6 @@ class NSpatial(NAbstract):
     
         """
         
-        
         _results = oDict()
         graph_data = {}
         shift = shift_ind/self.get_sampling_rate()
@@ -1953,8 +1956,38 @@ class NSpatial(NAbstract):
 
     @staticmethod
     def place_field(pmap, thresh=0.2, required_neighbours=9):
+        """
+        Calculates a mapping over the captured arena.
+        For each bin in the place map, it is assigned to an integer group.
+        These groups denote which neighbouring area the bin belongs to.
+
+        Parameters
+        ----------
+        pmap : ndarray
+            The firing map to calculate place fields from
+        thresh : float
+            The fraction of the peak firing that a bin must exceed
+        required_neighbours : int
+            The number of adjacent bins that must be together to form a field
+        """
 
         def alongColumn(pfield, ptag, J, I):
+            """
+            Iterates along the columns of the ptags to find vertical neighbours
+
+            Parameters
+            ----------
+            pfield : ndarray
+                The place field map, consisting of 
+                1 for groups satisying rules and 0 otherwise
+            ptag : ndarray
+                The place field map, grouped into tags of neighbouring areas
+            J : int
+                The vertical index to start searching at
+            I : int
+                The horizontal index to start searching at
+            """
+
             Ji = J
             Ii = I
             rows=[]
@@ -1973,14 +2006,28 @@ class NSpatial(NAbstract):
                     ptag[J-1, I] = ptag[J, I]
                     rows.append(J-1)
                     J-=1
-    #            rows = find(ptag[:, I] == ptag[Ji, Ii])
             for J in rows:
-                if J!= Ji:
+                if J != Ji:
                     ptag = alongRows(pfield, ptag, J, Ii)
             return ptag
 
         def alongRows(pfield, ptag, J, I):
-            Ji = J
+            """
+            Iterates along the columns of the ptags, finds horizontal neighbours
+
+            Parameters
+            ----------
+            pfield : ndarray
+                The place field map, consisting of 
+                1 for groups satisying rules and 0 otherwise
+            ptag : ndarray
+                The place field map, grouped into tags of neighbouring areas
+            J : int
+                The vertical index to start searching at
+            I : int
+                The horizontal index to start searching at
+            """
+
             Ii = I
             columns=[]
             while I+1<= ptag.shape[1]:
@@ -1998,38 +2045,45 @@ class NSpatial(NAbstract):
                     ptag[J, I-1] = ptag[J, I]
                     columns.append(I-1)
                 I-=1
-    #            columns = find(ptag[J, ] == ptag[Ji, Ii])
             for I in columns:
                 if I!= Ii:
                     ptag = alongColumn(pfield, ptag, J, I)
             return ptag
         
         # Finding the place map firing field:
-        # Rules: 1. spikes in bin 
-        # 2. The bin shares at least a side with other bins which contain spikes
-
+        # Rules to form a field: 
+            # 1. There are sufficient spikes in bin 
+            # 2. The bin shares a side with other bins which contain spikes
+        
+        # Apply Rule 1
         where_are_NaNs = np.isnan(pmap)
         pmap[where_are_NaNs] = 0
         pmap = pmap/pmap.max()
         pmap = pmap > thresh
-        pfield = np.zeros(np.add(pmap.shape,2))
+
+        # Pad the place field with a single layer of zeros to compare neighbours
+        pfield = np.zeros(np.add(pmap.shape, 2))
         pfield[1:-1, 1:-1] = pmap
 
-        has_neighbour_horizontal = np.logical_or(pfield[0:-2, 1:-1], pfield[2:, 1:-1])
-        has_neighbour_vertical = np.logical_or(pfield[1:-1, 0:-2], pfield[1:-1, 2:])
-        # shifted and tested for neighboring pixel spike occupation
+        # Apply rule 2
+        has_neighbour_horizontal = np.logical_or(
+            pfield[0:-2, 1:-1], pfield[2:, 1:-1])
+        has_neighbour_vertical = np.logical_or(
+            pfield[1:-1, 0:-2], pfield[1:-1, 2:])
+
+        # Combine rules 1 and 2
         pfield[1:-1, 1:-1] = np.logical_and(
-            pmap, np.logical_or(has_neighbour_horizontal, has_neighbour_vertical))
+            pmap, 
+            np.logical_or(has_neighbour_horizontal, has_neighbour_vertical))
         
-        # TODO expand could get size of field as I go
-        # tags start at 1; Will be renumbered based on sizes of the fields
-        group = 1
+        # Initialise all tags to 0
         ptag = np.zeros(pfield.shape, dtype = int)
 
         # Find the first non zero entry of the pfield
         J, I = find2d(pfield)
         
         #Group all the neighbouring pixels
+        group = 1
         for (j, i) in zip(J, I): 
             if ptag[j, i] == 0:
                 ptag[j, i] = group
@@ -2037,7 +2091,11 @@ class NSpatial(NAbstract):
                 # Tag all neighbours as being of the same group
                 ptag = alongColumn(pfield, ptag, j, i)
         
+        # Remove the padding
         ptag = ptag[1:-1, 1:-1]
+
+        # Find the largest field, and also remove fields that are too small
+        # If there are no large enough fields, label all bins as 0
         uniques, counts = np.unique(ptag[ptag > 0], return_counts=True)
         max_count, largest_group_num = 0, 0
         for unique, count in zip(uniques, counts):

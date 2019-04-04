@@ -1056,7 +1056,8 @@ def loc_firing(place_data):
 # Created by Sean Martin: 14/02/2019
 def loc_firing_and_place(place_data, smooth=True):
     """
-    Plots the analysis results of locational correlation to spike-rate with a place map
+    Plots the analysis results of locational correlation to spike-rate 
+    with a place map
 
     Parameters
     ----------
@@ -1077,13 +1078,9 @@ def loc_firing_and_place(place_data, smooth=True):
 
     ax2 = loc_rate(place_data, ax=fig.add_subplot(132, sharey=ax1), smooth=smooth)
     ax2.set_xlabel('cm')
-    #ax.set_ylabel('YLoc')
 
     ax3 = loc_place_field(place_data, ax=fig.add_subplot(133, sharey=ax1))
     ax3.set_xlabel('cm')
-    #plt.subplots_adjust(wspace=0.7)
-    #ax.set_ylabel('YLoc')
-#    fig.colorbar(cax)
 
     plt.tight_layout(pad=0.7)
     return fig
@@ -1135,8 +1132,8 @@ def loc_place_field(place_data, ax=None):
 # Created by Sean Martin: 13/02/2019
 def loc_place_centroid(place_data, centroid):
     """
-    Plots the analysis results of locational correlation to spike-rate along with
-    the centroid of the place field.
+    Plots the analysis results of locational correlation to spike-rate 
+    along with the centroid of the place field.
 
     Parameters
     ----------
@@ -1158,12 +1155,10 @@ def loc_place_centroid(place_data, centroid):
     ax.set_xlabel('cm')
     ax.set_ylabel('cm')
 
-
     ax = loc_rate(place_data, ax=fig.add_subplot(122))
     ax.plot([centroid[0]], [centroid[1]], 'gX')
     ax.set_xlabel('cm')
     ax.set_ylabel('cm')
-#    fig.colorbar(cax)
     plt.tight_layout()
     return fig
 

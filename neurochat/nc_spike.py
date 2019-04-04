@@ -350,6 +350,19 @@ class NSpike(NBase):
     # For multi-unit analysis, {'SpikeName': cell_no} pairs should be used as function input
 
     def get_unit_stamps_in_ranges(self, ranges):
+        """
+        Return the unit timestamps in a list of ranges.
+
+        Parameters
+        ----------
+        ranges : list
+            A list of tuples indicating time ranges to get stamps in
+        
+        Returns
+        -------
+        list
+            The timestamps
+        """
         stamps = self.get_unit_stamp()
         new_stamps = [
             val for val in stamps
