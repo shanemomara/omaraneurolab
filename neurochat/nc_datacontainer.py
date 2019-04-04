@@ -16,10 +16,15 @@ import numpy as np
 from neurochat.nc_data import NData
 
 class NDataContainer():
+    """
+    Class for storing multiple file locations for ndata objects.
+
+    Additionally the ndata objects themselves can be stored
+    """
+
     def __init__(self, share_positions=False, load_on_fly=False):
         """
-        Class for storing multiple file locations for ndata objects
-        and the ndata objects
+        Initialise the class.
 
         Parameters
         ----------
@@ -41,7 +46,6 @@ class NDataContainer():
         _last_data_pt : tuple (int, NData)
 
         """
-
         self._file_names_dict = {}
         self._units = []
         self._container = []
@@ -52,28 +56,26 @@ class NDataContainer():
         self._smoothed_speed = False
 
     class EFileType(Enum):
-        """The different filetypes that can be added to an object"""
+        """The different filetypes that can be added to an object."""
 
         Spike = 1
         Position = 2
         LFP = 3
 
     def get_num_data(self):
-        """Returns the number of Ndata objects in the container"""
-
+        """Return the number of Ndata objects in the container."""
         if self._load_on_fly:
             for _, vals in self.get_file_dict().items():
                 return len(vals)
         return len(self._container)
 
     def get_file_dict(self):
-        """Returns the key value filename dictionary for this collection"""
-
+        """Return the key value filename dictionary for this collection."""
         return self._file_names_dict
 
     def get_units(self, index=None):
         """
-        Returns the units in this collection, optionally at a given index
+        Return the units in this collection, optionally at a given index.
 
         Parameters
         ----------
@@ -85,8 +87,8 @@ class NDataContainer():
         list
             Either a list containing lists of all units in the collection
             or the list of units for the given data index
-        """
 
+        """
         if index is None:
             return self._units
         if index >= self.get_num_data() and (not self._load_on_fly):
@@ -96,8 +98,8 @@ class NDataContainer():
 
     def get_data(self, index=None):
         """
-        Returns the NData objects in this collection,
-        or the NData object at a given index
+        Return the NData objects in this collection, or a specific object.
+
         Do not call this with no index if loading data on the fly
 
         Parameters
@@ -108,8 +110,8 @@ class NDataContainer():
         Returns
         -------
         NData or list of NData objects
-        """
 
+        """
         if self._load_on_fly:
             if index is None:
                 logging.error("Can't load all data when loading on the fly")
@@ -126,8 +128,7 @@ class NDataContainer():
         return self._container[index]
 
     def add_data(self, data):
-        """Adds an NData object to this container"""
-
+        """Add an NData object to this container."""
         if isinstance(data, NData):
             self._container.append(data)
         else:
@@ -135,8 +136,7 @@ class NDataContainer():
             return
 
     def list_all_units(self):
-        """Prints all the units in the container"""
-
+        """Print all the units in the container."""
         if self._load_on_fly:
                 for key, vals in self.get_file_dict().items():
                     if key == "Spike":
@@ -150,7 +150,7 @@ class NDataContainer():
 
     def add_files(self, f_type, descriptors):
         """
-        Adds a list of filenames of the given type to the container.
+        Add a list of filenames of the given type to the container.
 
         Parameters
         ----------
@@ -158,13 +158,13 @@ class NDataContainer():
             The type of file being added (Spike, LFP, Position)
         descriptors : list
             Either a list of filenames, or a list of tuples in the order
-            (filenames, obj_names, data_sytem). Filenames should be absolute.
+            (filenames, obj_names, data_sytem). Filenames should be absolute
 
         Returns
         -------
         None
-        """
 
+        """
         if isinstance(descriptors, list):
             descriptors = (descriptors, None, None)
         filenames, _, _ = descriptors
@@ -199,7 +199,7 @@ class NDataContainer():
 
     def add_all_files(self, spats, spikes, lfps):
         """
-        A helper function to quickly add a list of positions, spikes and lfps
+        Quickly add a list of positions, spikes and lfps.
 
         Parameters
         ----------
@@ -213,15 +213,14 @@ class NDataContainer():
         Returns
         -------
         None
-        """
 
+        """
         self.add_files(self.EFileType.Position, spats)
         self.add_files(self.EFileType.Spike, spikes)
         self.add_files(self.EFileType.LFP, lfps)
 
     def set_units(self, units='all'):
-        """Sets the list of units for the collection."""
-
+        """Set the list of units for the collection."""
         self._units = []
         if units == 'all':
             if self._load_on_fly:
@@ -260,8 +259,7 @@ class NDataContainer():
         self._unit_count = self._count_num_units()
 
     def setup(self):
-        """Performs data initialisation based on the input filenames"""
-
+        """Perform data initialisation based on the input filenames."""
         if self._load_on_fly:
             self._last_data_pt = (1, None)
         else:
@@ -269,7 +267,9 @@ class NDataContainer():
 
     def add_files_from_excel(self, file_loc, unit_sep=" "):
         """
-        Adds filepaths from an excel file, setup to be in the order:
+        Add filepaths from an excel file.
+
+        These should be setup to be in the order:
         directory | position file | spike file | unit numbers | eeg extension
 
         Parameters
@@ -278,12 +278,13 @@ class NDataContainer():
             Name of the excel file that contains the data specifications
         unit_sep : str
             Optional separator character for unit numbers, default " "
+
         Returns
         -------
         excel_info :
             The raw info parsed from the excel file for further use
-        """
 
+        """
         pos_files = []
         spike_files = []
         units = []
@@ -363,9 +364,10 @@ class NDataContainer():
 
     def merge(self, indices, force_equal_units=True):
         """
+        Merge the data from multiple indices together into the first index.
+        
         WORK IN PROGRESS - ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY
         Only call this after loading the data, and not while loading on the fly
-        Merges the data from multiple indices together into the first index
 
         Parameters
         ----------
@@ -377,8 +379,8 @@ class NDataContainer():
         Returns
         -------
         The merged data point
-        """
 
+        """
         if self._load_on_fly:
             logging.error("Don't call merge when loading on the fly")
             return
@@ -450,7 +452,8 @@ class NDataContainer():
 
     def subsample(self, key):
         """
-        Returns a subsample of the original data collection
+        Return a subsample of the original data collection.
+
         This subsample is not a reference, but a deep copy
 
         Parameters
@@ -462,8 +465,8 @@ class NDataContainer():
         -------
         NDataContainer
             The deep copied subsample
-        """
 
+        """
         result = copy.deepcopy(self)
 
         for k in result._file_names_dict:
@@ -486,7 +489,7 @@ class NDataContainer():
 
     def sort_units_spatially(self, should_sort_list=None, mode="vertical"):
         """
-        Sorts the units in the collection based on the place field centroid
+        Sort the units in the collection based on the place field centroid.
 
         Parameters
         ----------
@@ -494,8 +497,12 @@ class NDataContainer():
             Optional list of boolean values indicating what objects
         mode: str
             "horizontal" or "vertical", indicating what axis to sort on.
-        """
 
+        Returns
+        -------
+        None
+
+        """
         if mode == "vertical":
             h = 1
         elif mode == "horizontal":
@@ -522,8 +529,7 @@ class NDataContainer():
 
     # Methods from here on should be for private class use
     def _load_all_data(self):
-        """Intended private function which loads all the data"""
-
+        """Intended private function which loads all the data."""
         if self._load_on_fly:
             logging.error("Don't load all the data in container if loading on the fly")
         for key, vals in self.get_file_dict().items():
@@ -536,8 +542,9 @@ class NDataContainer():
 
     def _load(self, key, descriptor, idx=None, ndata=None):
         """
-        Intended private function which loads data for a specific filetype
-        into an NData object. NData object is either passed in, or found by idx.
+        Intended private function which loads data for a specific filetype.
+
+        The NData object loaded into is either passed in, or found by idx.
 
         Parameters
         ----------
@@ -549,8 +556,12 @@ class NDataContainer():
             Optional parameter to get corresponding data from _collection
         ndata : NData
             Optional parameter to allow passing in an ndata object to load to
-        """
 
+        Returns
+        -------
+        None
+
+        """
         if ndata is None:
             ndata = self.get_data(idx)
         key_fn_pairs = {
@@ -588,15 +599,13 @@ class NDataContainer():
             key_fn_pairs[key][2]()
 
     def __repr__(self):
-        """Returns a string representation of the collection"""
-
+        """Return a string representation of the collection."""
         string = "NData Container Object with {} objects:\nFiles are {}\nUnits are {}\nSet to Load on Fly? {}".format(
             self.get_num_data(), self.get_file_dict(), self.get_units(), self._load_on_fly)
         return string
 
     def __getitem__(self, index):
-        """Returns the data object with corresponding unit at index"""
-
+        """Return the data object with corresponding unit at index."""
         data_index, unit_index = self._index_to_data_pos(index)
         if self._load_on_fly:
             if data_index == self._last_data_pt[0]:
@@ -614,16 +623,14 @@ class NDataContainer():
         return result
 
     def __len__(self):
-        """Returns the number of units in the collection"""
-
+        """Return the number of units in the collection."""
         counts = self._unit_count
         if counts == 0:
             counts = [1 for _ in range(len(self._container))]
         return sum(counts)
 
     def _count_num_units(self):
-        """Intended private function to count units in the collection"""
-
+        """Intended private function to count units in the collection."""
         counts = []
         for unit_list in self.get_units():
             counts.append(len(unit_list))
@@ -631,15 +638,19 @@ class NDataContainer():
 
     def _index_to_data_pos(self, index):
         """
-        Intended private function to turn an index into a tuple of
-        (data collection index, unit index for this data object)
+        Intended private function to turn an index into a tuple indices.
 
         Parameters
         ----------
         index : int
             The unit index to convert to a data index and unit index for that
-        """
+        
+        Returns
+        -------
+        tuple
+            (data collection index, unit index for this data object)
 
+        """
         counts = self._unit_count
         if counts == 0:
             counts = [1 for _ in range(len(self._container))]
@@ -653,5 +664,3 @@ class NDataContainer():
                 else:
                     running_sum += count
                     running_idx += 1
-
-
