@@ -463,9 +463,10 @@ class NeuroChaT(QtCore.QThread):
             logging.info('Calculating inter-spike interval distribution...')
             try:
                 params= self.get_params_by_analysis('isi')
-
-                graph_data = self.isi(bins=int(params['isi_length']/params['isi_bin']), \
-                                    bound=[0, params['isi_length']])
+                graph_data = self.isi(
+                    bins=int(params['isi_length']/params['isi_bin']),
+                    bound=[0, params['isi_length']],
+                    refractory_threshold=params['isi_refractory'])
                 fig = nc_plot.isi(graph_data)
                 self.close_fig(fig)
                 self.plot_data_to_hdf(name=name+ '/isi/', graph_data=graph_data)
@@ -1431,3 +1432,5 @@ class NeuroChaT(QtCore.QThread):
             logging.info('Cluster similarity analysis completed!')
         else:
             logging.error('Excel  file does not exist!')
+
+    

@@ -36,8 +36,11 @@ ANALYSES= {    'wave_property' : True,
                'lfp_spike_causality' : False
            }
 
-PARAMETERS = {    'isi' : {'isi_bin': 2,
-                    'isi_length': 350},
+PARAMETERS = {    
+                'isi' : {'isi_bin': 2,
+                         'isi_length': 350,
+                         'isi_refractory': 2},
+
                 'isi_corr' : {'isi_corr_bin_long': 2,
                              'isi_corr_len_long': 350,
                              'isi_corr_bin_short': 1,

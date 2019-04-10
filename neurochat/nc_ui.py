@@ -48,7 +48,7 @@ except AttributeError:
         return QtWidgets.QApplication.translate(context, text, disambig)
 
 class NeuroChaT_Ui(QtWidgets.QMainWindow):
-    def __init__(self):      
+    def __init__(self):
         super().__init__()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
@@ -63,9 +63,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def setup_ui(self):
         """
         Sets up the elements of NeuroChaT_ui class
-        
+
         """
-        
+
         self.setObjectName(xlt_from_utf8("MainWindow"))
         self.setEnabled(True)
         self.setFixedSize(725, 420)
@@ -174,12 +174,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         # Set the callbacks
         self.behaviour_ui()
-    
+
     def behaviour_ui(self):
         """
         Sets up the behaviour of NeuroChaT_ui widgets
-        
-        """        
+
+        """
 #       self.connect(self.nout, QtCore.SIGNAL('update_log(QString)'), self.update_log)
         self.nout.emitted[str].connect(self.update_log)
         self.file_format_box.currentIndexChanged[int].connect(self.data_format_select)
@@ -217,13 +217,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self._results_ui.export_button.clicked.connect(self.export_results)
 
         self.cell_type_group.buttonClicked.connect(self.cell_type_select)
-        
+
     def menu_ui(self):
         """
         Sets up the menu items in NeuroChaT GUI
-        
+
         """
-        
+
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 722, 21))
         self.menubar.setObjectName(xlt_from_utf8("menubar"))
@@ -269,7 +269,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.accumulate_act = self.utilities_menu.addAction("Accumulate output PS/PDF")
 
         self.utilities_menu.addSeparator()
-        
+
         self.verify_units_act = self.utilities_menu.addAction("Verify units")
         self.evaluate_act = self.utilities_menu.addAction("Evaluate clustering")
         self.compare_units_act = self.utilities_menu.addAction("Compare single units")
@@ -279,7 +279,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         self.angle_act = self.utilities_menu.addAction("Centroid Angle Calculation")
         self.angle_act.setStatusTip("Select an excel file which specifies files in the order of: directory | position_file | spike_file | unit_no")
-        
+
         self.view_help_act = self.help_menu.addAction("NeuroChaT documentation")
         self.view_help_act.setShortcut(QtGui.QKeySequence("F1"))
         self.tutorial_act = self.help_menu.addAction("NeuroChaT tutorial")
@@ -289,9 +289,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def selectGraphicFormatUi(self):
         """
         Sets up the graphic format selection panel in NeuroChaT GUI
-        
+
         """
-        
+
         self.pdf_button = add_radio_button(text="PDF", obj_name="pdfButton")
         self.ps_button = add_radio_button(text="Postscript", obj_name="psButton")
 
@@ -312,9 +312,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def select_cell_type_ui(self):
         """
         Sets up the cell type selection panel in NeuroChaT GUI
-        
+
         """
-        
+
         positions = [(i, j) for j in range(3) for i in range(4)]
 
         self.place_cell_button = add_radio_button(text="Place", obj_name="place_cell_button")
@@ -362,8 +362,8 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def select_analysis_ui(self):
         """
         Sets up the analysis type selection panel in NeuroChaT GUI
-        
-        """        
+
+        """
 
         self.wave_property = add_check_box(text="Waveform Properties", obj_name="wave_property")
 
@@ -464,18 +464,18 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def retranslate_ui(self):
         """
         Sets up the title and icon in NeuroChaT GUI
-        
+
         """
-        
+
         self.setWindowTitle(_translate("MainWindow", "NeuroChaT", None))
         self.setWindowIcon(QtGui.QIcon("icon_48.png"))
 
     def start(self):
         """
-        Called when start button is clicked. Starts the entire backend operation 
+        Called when start button is clicked. Starts the entire backend operation
         in NeuroChaT
-        
-        """        
+
+        """
         self._get_config()
         self._control.finished.connect(self.restore_start_button)
         self._control.start()
@@ -490,8 +490,8 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def restore_start_button(self):
         """
         After reactivating the start button, it displays the results in the UI table.
-        
-        """        
+
+        """
         pd_model = PandasModel(self._control.get_results())
         self._results_ui.set_data(pd_model)
         self._results_ui.show()
@@ -500,9 +500,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when 'Export Results' button is clicked. Opens a file dialogue for the
         selection of an Excel file, and exports the results in the table to the file
-        
+
         """
-        
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, \
         'Export analysis results to...', os.getcwd()+ os.sep+ 'nc_results.xlsx', "Excel Files (*.xlsx .*xls)")[0])
         if not excel_file:
@@ -520,9 +520,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when 'Export graphic file info' menu is clicked. Opens a file dialogue for the
         selection of an Excel file, and exports the graphic file infor in the table to the file
-        
-        """   
-        
+
+        """
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, \
         'Export information to...', os.getcwd()+ os.sep+ 'nc_graphicInfo.xlsx', "Excel Files (*.xlsx .*xls)")[0])
         if not excel_file:
@@ -540,9 +540,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when NeuroChaT window is about to close. Opens a dialogue for saving the
         session information in NeuroChaT configuration file (.ncfg).
-        
-        """        
-        
+
+        """
+
         reply = QtWidgets.QMessageBox.question(self, "Message", \
             "Save current session before you quit?",\
             QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel,\
@@ -560,12 +560,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             event.accept()
         else:
             event.ignore()
-            
+
     def exit_nc(self):
         """
         Called when 'Exit' menu item is clicked. Closes the NeuroChaT window.
-        
-        """        
+
+        """
         self.close()
 #        print('ask for saving session...')
 #        QtCore.QCoreApplication.instance().quit()
@@ -574,9 +574,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when there is a change in the data format selection combo box.
         Sets the data format to the selected item.
-        
-        """        
-        
+
+        """
+
         data_format = self.file_format_box.itemText(ind)
         self._control.set_data_format(data_format)
         logging.info("Input data format set to: " + data_format)
@@ -588,20 +588,20 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when there is a change in the analysis mode selection combo box.
         Sets the data analysis mode to the selected item.
-        
-        """                
-        
+
+        """
+
         self._control.set_analysis_mode(ind)
         logging.info("Analysis mode set to: " + self.mode_box.itemText(ind))
         self._set_dictation()
-        
+
     def graphic_format_select(self):
         """
         Called when there is a change in the graphic format selection button groups.
         Sets the output graphic format to the selected item.
-        
+
         """
-        
+
         button = self.graphic_format_group.checkedButton()
         text = button.text()
         self._control.set_graphic_format(text)
@@ -611,9 +611,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Called when there is a change in the cell type selection button groups.
         Sets the cell type to the selected item.
-        
+
         """
-        
+
         button = self.cell_type_group.checkedButton()
         text = button.text()
         self._control.set_cell_type(text)
@@ -623,9 +623,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def select_all(self):
         """
         Called when 'Select All' box is checked or unchecked. It checks or unchecks all other analyses.
-        
+
         """
-        
+
         if self.select_all_box.isChecked():
             logging.info("Selected ALL analyses")
             for checkbox in self.function_widget.findChildren(QtWidgets.QCheckBox):
@@ -639,9 +639,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Returns the list of LFP files (Neuralynx) or their file extension (Axona)
         once the spike data is set using the 'Browse' button
-        
+
         """
-        
+
         file_format = self.file_format_box.itemText(self.file_format_box.currentIndex())
         items = [""]
         if file_format == "Neuralynx":
@@ -658,7 +658,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                 self._control.open_hdf_file()
                 items= self._control.get_hdf_groups(path=path)
                 self._control.close_hdf_file()
-                
+
 #                hdf = Nhdf()
 #                hdf.set_filename(self._control.get_nwb_file())
 #                if path in hdf.f:
@@ -669,7 +669,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                 logging.error('Cannot read the hdf file')
         else:
             items = [str(i) for i in list(range(256))]
-            
+
         self.lfp_chan_box.clear()
         self.lfp_chan_box.addItems(items)
 
@@ -677,9 +677,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Opens a file dialog asking the user to select spike and spatial data files.
         Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.
-        
+
         """
-        
+
         mode_id = self.mode_box.currentIndex()
         file_format = self._control.get_data_format()
         if mode_id == 0 or mode_id == 1:
@@ -789,30 +789,30 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         ----------
         msg
             New log message or record
-        
+
         Returns
         -------
         None
-        
-        """ 
-        
+
+        """
+
         self.log_text.insert_log(msg)
-        
+
     def clear_log(self):
         """
         Clears the texts in the log box.
-        
+
         """
-        
+
         self.log_text.clear()
         logging.info("Log cleared!")
     def save_log(self):
         """
-        Opens a file dialog for the user to select a text file where the current 
+        Opens a file dialog for the user to select a text file where the current
         texts of the log-box are exported
-        
+
         """
-        
+
 #        self.log_text.select_all
         text = self.log_text.get_text()
         name = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, 'Save log as...', os.getcwd(), "Text files(*.txt)")[0])
@@ -828,18 +828,18 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def set_unit_no(self, value):
         """
         Called when the selection in the 'Unit No' is changed. Sets the unit number accordingly.
-        
+
         """
-        
+
         self._control.set_unit_no(value)
         logging.info("Selected Unit: "+ str(value))
 
     def set_lfp_chan(self, value):
         """
         Called when the selection in the 'LFP Ch No' is changed. Sets the lfp channel accordingly.
-        
+
         """
-        
+
         lfpID = self.lfp_chan_box.itemText(value)
 
         if lfpID:
@@ -863,9 +863,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def _set_dictation(self):
         """
         Sets the dictation in the text-box for the browse button as the input data format changes.
-        
+
         """
-        
+
         _dictation = ["Select spike(.n) &/or position file(.txt)",
                       "Select spike(.n) &/or position file(.txt)",
                       "Select excel(.xls/.xlsx) file with unit list",
@@ -882,12 +882,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Retrives all the configurations from the GUI elements and sets them to the
         Configuration() object through the NeuroChaT() object.
-        
+
         """
         #Get selected function from functioWidget
         for checkbox in self.function_widget.findChildren(QtWidgets.QCheckBox):
             self._control.set_analysis(checkbox.objectName(), checkbox.isChecked())
-           
+
         for checkbox in self._param_ui.findChildren(QtWidgets.QCheckBox):
             self._control.set_param(checkbox.objectName(), checkbox.isChecked())
 
@@ -908,9 +908,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def save_session(self):
         """
         Prompts the user to select a .ncfg file and saves the current settings and parameters from the GUI elements to the file.
-        
+
         """
-        
+
         ncfg_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, 'Save session as...', os.getcwd(), "*.ncfg")[0])
         if not ncfg_file:
             logging.warning("File not specified. Session is not saved")
@@ -922,9 +922,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def load_session(self):
         """
         Prompts the user to select a .ncfg file and loads the settings and parameters from the file to the GUI elements.
-        
+
         """
-        
+
         ncfg_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, 'Select NCFG file...', os.getcwd(), "(*.ncfg)")[0])
         if not ncfg_file:
             logging.error("No saved session selected! Loading failed!")
@@ -966,9 +966,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         if not select_by_type:
            for key in self._control.get_analysis_list():
                getattr(self, key).setChecked(self._control.get_analysis(key))
-               
+
         param_list = self._control.get_param_list()
-        
+
         for name in param_list:
             param_widget = self._param_ui.findChild(
                 QtWidgets.QWidget, name)
@@ -984,20 +984,20 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def merge_output(self):
         """
         Opens the UiMerge() object for the user to merge the selected PDF or Postscript files.
-        
+
         """
         self._merge_ui.merge_enable = True
         self._merge_ui.setWindowTitle(QtWidgets.QApplication.translate("mergeWindow", "Merge PDF/PS", None))
         self._merge_ui.set_default()
         self._merge_ui.show()
         logging.info("Tool to MERGE graphic files activated! Only PDF files can be merged!")
-        
+
     def accumulate_output(self):
         """
         Opens the UiMerge() object for the user to accumulate the selected PDF or Postscript files.
-        
+
         """
-        
+
         self._merge_ui.merge_enable = False
         self._merge_ui.setWindowTitle(QtWidgets.QApplication.translate("mergeWindow", "Accumulate PDF/PS", None))
         self._merge_ui.set_default()
@@ -1008,13 +1008,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Opens a file dialog for selecting the Excel list that contains specifications for comparing units
         and compares the units through NeuroChaT().cluster_similarity() method.
-        
+
         See also
         --------
         NeuroChaT().cluster_similarity()
-        
+
         """
-        
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select unit-pair list...', os.getcwd(), "*.xlsx;; .*xls")[0])
         if not excel_file:
@@ -1032,11 +1032,11 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
         and verifies the unit using the NeuroChaT().verify_units() method.
-        
+
         See also
         --------
         NeuroChaT().angle_calculation()
-        
+
         """
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
@@ -1046,7 +1046,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             self._get_config()
             logging.info("New excel file added: "+ \
                                         excel_file.rstrip("\n\r").split(os.sep)[-1])
-            
+
             pdf_name = excel_file[:excel_file.find(".")] + "_output.pdf"
             self._control.open_pdf(pdf_name)
             self._control.angle_calculation(excel_file)
@@ -1056,13 +1056,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
         and verifies the unit using the NeuroChaT().verify_units() method.
-        
+
         See also
         --------
         NeuroChaT().compare_units()
-        
+
         """
-        
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
         if not excel_file:
@@ -1071,18 +1071,18 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             logging.info("New excel file added: "+ \
                                         excel_file.rstrip("\n\r").split(os.sep)[-1])
             self._control.verify_units(excel_file)
-    
-    def cluster_evaluate(self):        
+
+    def cluster_evaluate(self):
         """
         Opens a file dialog for selecting the Excel list that contains specifications for cluster evaluation
         and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.
-        
+
         See also
         --------
         NeuroChaT().cluster_evaluate()
-        
+
         """
-        
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
         if not excel_file:
@@ -1096,13 +1096,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Opens a file dialog for selecting the Excel list that contains specifications for NWB file for conversion.
         It then converts the files using the NeuroChaT().convert_to_nwb() method.
-        
+
         See also
         --------
         NeuroChaT().convert_to_nwb()
-        
-        """        
-        
+
+        """
+
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
         if not excel_file:
@@ -1115,16 +1115,16 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def set_parameters(self):
         """
         Shows the UiParameters() widget once the user clicks the 'Parameters' menu item for setting the paramters.
-        
-        """    
+
+        """
         self._param_ui.show()
 
     def cell_type_analysis(self, cell_type):
         """
         Sets the analysis checkboxes based on the type of cell selected.
-        
-        """            
-        
+
+        """
+
         if cell_type == "Place":
             self.wave_property.setChecked(True)
             self.isi.setChecked(True)
@@ -1436,9 +1436,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 class UiResults(QtWidgets.QDialog):
     """
     NeuroChaT user interface for displaying the analysis results and and facilitating their export.
-        
+
     """
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -1446,13 +1446,13 @@ class UiResults(QtWidgets.QDialog):
         """
         Sets up the GUI elements of the widget and their behaviour. Clicking on the
         'Export Results' button calls the NeuroChaT_Ui.export_results() method.
-        
+
         See also
         --------
         PandasModel
-        
+
         """
-        
+
         self.setObjectName(xlt_from_utf8("resultsWindow"))
         self.setEnabled(True)
         self.setFixedSize(725, 220)
@@ -1476,27 +1476,27 @@ class UiResults(QtWidgets.QDialog):
     def set_data(self, pd_model):
         """
         Sets the PandasModel as the data model for the table-view.
-        
+
         Parameters
         ----------
         pd_model : PandasModel
-            PandasModel as the table-data      
-        
+            PandasModel as the table-data
+
         """
-        
+
         self.table.setModel(pd_model)
 
 #    def show_results(self):
 #        self.table.show()
 #        self.show()
-        
+
     def set_default(self):
         """
         Not implemented. Can be used for clearing the table and the data model
         underneath.
-        
+
         """
-        
+
         pass
 
 #class UiConvert(QtWidgets.QDialog):
@@ -1522,9 +1522,9 @@ class UiResults(QtWidgets.QDialog):
 class UiParameters(QtWidgets.QDialog):
     """
     NeuroChaT user interface for setting analysis specific parameters.
-        
+
     """
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
@@ -1533,7 +1533,7 @@ class UiParameters(QtWidgets.QDialog):
     def setup_ui(self):
         """
         Sets the GUI elements for the widget.
-            
+
         """
         self.setObjectName(xlt_from_utf8("paramSetWindow"))
         self.setEnabled(True)
@@ -1615,9 +1615,9 @@ class UiParameters(QtWidgets.QDialog):
     def behaviour_ui(self):
         """
         Sets the behaviour of the GUI elements.
-    
+
         """
-        
+
         self.param_list.itemActivated.connect(self.change_stack_page)
         self.loc_rate_filter.activated[str].connect(self.set_loc_rate_filter)
         self.spatial_corr_filter.activated[str].connect(self.set_spat_corr_filter)
@@ -1626,17 +1626,17 @@ class UiParameters(QtWidgets.QDialog):
     def change_stack_page(self):
         """
         Changes the stacked widgets of parameter setting according to the analysis selected from the lis on left of the window.
-    
+
         """
-        
+
         self.param_stack.setCurrentWidget(self.param_stack.widget(self.param_list.currentRow()))
 
     def set_loc_rate_filter(self, filt_type):
         """
         Sets the ui elements for the filters for locational firing rate map.
-    
+
         """
-        
+
         if filt_type == "Gaussian":
             self.loc_rate_kern_len.setSingleStep(1)
             self.loc_rate_kern_len.setValue(3)
@@ -1647,9 +1647,9 @@ class UiParameters(QtWidgets.QDialog):
     def set_spat_corr_filter(self, filt_type):
         """
         Sets the ui elements for the filters for spatial autocorrelation of locational firing rate map.
-    
-        """        
-        
+
+        """
+
         if filt_type == "Gaussian":
             self.spatial_corr_kern_len.setSingleStep(1)
             self.spatial_corr_kern_len.setValue(3)
@@ -1679,16 +1679,17 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'isi' analysis parameters.
 
-        """        
-        
+        """
+
         widget = ScrollableWidget()
+
         # Box- 1
         self.isi_gb1 = add_group_box(title="Histogram", obj_name="isi_gb1")
-
         self.isi_bin = add_spin_box(min_val=1, max_val=50, obj_name="isi_bin")
         self.isi_bin.setValue(1)
 
-        self.isi_length = add_spin_box(min_val=10, max_val=1000, obj_name="isi_length")
+        self.isi_length = add_spin_box(
+            min_val=10, max_val=1000, obj_name="isi_length")
         self.isi_length.setValue(200)
 
         box_layout = ParamBoxLayout()
@@ -1712,21 +1713,34 @@ class UiParameters(QtWidgets.QDialog):
 
         self.isi_gb2.setLayout(box_layout)
 
+        # Box- 3
+        self.isi_gb3 = add_group_box(title="Refractory", obj_name="isi_gb3")
+
+        self.isi_refractory = add_double_spin_box(
+            min_val=0, max_val=10, obj_name="isi_refractory")
+        self.isi_refractory.setSingleStep(0.1)
+        self.isi_refractory.setValue(2)
+
+        box_layout = ParamBoxLayout()
+        box_layout.addRow(
+            "Refractory Threshold", self.isi_refractory, "ms [range 0 - 10]")
+        self.isi_gb3.setLayout(box_layout)
+
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.isi_gb1)
         layout.addWidget(self.isi_gb2)
+        layout.addWidget(self.isi_gb3)
 
         widget.setContents(layout)
 
         return widget
 
-
     def isi_corr_page(self):
         """
         Sets the ui elements for the 'isi_corr' analysis parameters.
 
-        """        
-        
+        """
+
         widget = ScrollableWidget()
 
         # Box- 1
@@ -1771,7 +1785,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'theta_cell' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.theta_cell_gb1 = add_group_box(title="Curve Fitting Parameters", obj_name="theta_cell_gb1")
 
@@ -1826,7 +1840,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'theta_skip_cell' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.theta_skip_cell_gb1 = add_group_box(title="Curve Fitting Parameters", obj_name="theta_skip_cell_gb1")
 
@@ -1847,7 +1861,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'burst' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         # Box- 1
@@ -1878,7 +1892,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'burst' analysis parameters.
 
-        """    
+        """
 
         widget = ScrollableWidget()
         self.speed_gb1 = add_group_box(title="Analyses Parameters", obj_name="speed_gb1")
@@ -1929,7 +1943,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'ang_vel' analysis parameters.
 
-        """            
+        """
 
         widget = ScrollableWidget()
 
@@ -1985,7 +1999,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'hd_rate' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.hd_rate_gb1 = add_group_box(title="Analyses Paramters", obj_name="hd_rate_gb1")
 
@@ -2027,7 +2041,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'hd_shuffle' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.hd_shuffle_gb1 = add_group_box(title="Analyses Paramters", obj_name="hd_shuffle_gb1")
 
@@ -2062,7 +2076,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'hd_time_lapse' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.hd_time_lapse_gb1 = add_group_box(title="", obj_name="hd_time_lapse_gb1")
@@ -2081,7 +2095,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'hd_time_shift' analysis parameters.
 
-        """        
+        """
         widget = ScrollableWidget()
 
         self.hd_time_shift_gb1 = add_group_box(title="Shift Specifications", obj_name="hdTimeShift_gb1")
@@ -2113,7 +2127,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'loc_rate' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         # Box- 1
         self.loc_rate_gb1 = add_group_box(title="Analyses Paramters", obj_name="loc_rate_gb1")
@@ -2158,7 +2172,7 @@ class UiParameters(QtWidgets.QDialog):
         box_layout.addRow("Smoothing Filter", self.loc_rate_filter, "")
         box_layout.addRow("Spike Rate Pixels/Sigma", self.loc_rate_kern_len, \
         "[range: 1-11]\n\r Box: odds")
-    
+
         self.loc_rate_gb2.setLayout(box_layout)
 
         layout = QtWidgets.QVBoxLayout()
@@ -2174,7 +2188,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'loc_shuffle' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.loc_shuffle_gb1 = add_group_box(title="Analyses Parameters", obj_name="loc_shuffle_gb1")
 
@@ -2224,7 +2238,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'loc_time_lapse' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.loc_time_lapse_gb1 = add_group_box(title="", obj_name="loc_time_lapse_gb1")
@@ -2244,7 +2258,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'loc_time_shift' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.loc_time_shift_gb1 = add_group_box(title="Shift Specifications", obj_name="loc_time_shift_gb1")
@@ -2276,7 +2290,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'spatial_corr' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         # Box- 1
         self.spatial_corr_gb1 = add_group_box(title="2D Correlation", obj_name="spatial_corr_gb1")
@@ -2333,7 +2347,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'grid' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.grid_gb1 = add_group_box(title="Analyses Paramters", obj_name="grid_gb1")
@@ -2362,7 +2376,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'border' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.border_gb1 = add_group_box(title="Analyses Paramters", obj_name="border_gb1")
@@ -2395,7 +2409,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'gradient' analysis parameters.
 
-        """        
+        """
         widget = ScrollableWidget()
 
         self.gradient_gb1 = add_group_box(title="Gompertz Function Parameters", obj_name="gradient_gb1")
@@ -2430,7 +2444,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'multiple_regression' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         self.mra_gb1 = add_group_box(title="Analyses Paramters", obj_name="mra_gb1")
 
@@ -2464,7 +2478,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'inter_depend' analysis parameters.
 
-        """        
+        """
         widget = ScrollableWidget()
 
         self.inter_depend_gb1 = add_group_box(title="", obj_name="interDepend_gb1")
@@ -2485,7 +2499,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'lfp_spectrum' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
         # Box- 1
         self.lfp_spectrum_gb1 = add_group_box(title="Pre-filter (Butterworth) Properties", obj_name="lfp_spectrum_gb1")
@@ -2577,7 +2591,7 @@ class UiParameters(QtWidgets.QDialog):
         """
         Sets the ui elements for the 'spike_phase' analysis parameters.
 
-        """        
+        """
 
         widget = ScrollableWidget()
 
@@ -2628,7 +2642,7 @@ class UiParameters(QtWidgets.QDialog):
         Sets the ui elements for the 'phase_lock' analysis parameters.
 
         """
-        
+
         widget = ScrollableWidget()
 
         self.phase_lock_gb1 = add_group_box(title="Analysis Parameters", obj_name="phase_lock_gb1")
@@ -2664,7 +2678,7 @@ class UiParameters(QtWidgets.QDialog):
         widget.setContents(layout)
 
         return widget
-        
+
     def lfp_spike_causality_page(self):
         """
         Sets the ui elements for the 'lfp_spike_causality' analysis parameters.
@@ -2686,17 +2700,17 @@ class UiParameters(QtWidgets.QDialog):
 
 class ParamBoxLayout(QtWidgets.QVBoxLayout):
     """
-    Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis 
+    Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
     parameter selection window.
-    
+
     """
-    
+
     def __int__(self):
         super().__init__()
     def addRow(self, label_1, widg, label_2):
         """
         Adds a new row of widget using the QtWidgets.QHBoxLayout().
-        
+
         Parameters
         ----------
         label_1 : str
@@ -2705,9 +2719,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
             PyQt5 widget to add
         label_2 : str
             Additional description of the parameter, i.e., unit, range etc.
-        
+
         """
-        
+
         widg.resize(widg.sizeHint())
         hLayout = QtWidgets.QHBoxLayout()
         hLayout.addWidget(QtWidgets.QLabel(label_1), 0, QtCore.Qt.AlignLeft)

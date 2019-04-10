@@ -601,7 +601,8 @@ class NSpike(NBase):
         
         return graph_data
 
-    def isi(self, bins='auto', bound=None, density=False):
+    def isi(self, bins='auto', bound=None, density=False, 
+            refractory_threshold=2):
         """
         Calulates the ISI histogram of the spike train
         
@@ -614,17 +615,22 @@ class NSpike(NBase):
             Length of the ISI histogram in msec
         density : bool
             If true, normalized historagm is calcultaed
- 
+        refractory_threshold : int
+            Length of the refractory period in msec
+
         Returns
         -------
         dict
             Graphical data of the analysis
     
         """
-        
         graph_data = oDict()
+        _results = oDict()
+
         unitStamp = self.get_unit_stamp()
         isi = 1000*np.diff(unitStamp)
+
+        below_refractory = isi[isi < refractory_threshold]
 
         graph_data['isiHist'], edges = np.histogram(isi, bins=bins, range=bound, density=density)
         graph_data['isiBins'] = edges[:-1]
@@ -633,6 +639,13 @@ class NSpike(NBase):
         graph_data['isiBefore'] = isi[:-1]
         graph_data['isiAfter'] = isi[1:]
 
+        _results["Mean ISI"] = isi.mean()
+        _results["Std ISI"] = isi.std()
+        _results["Number of Spikes"] = unitStamp.size
+        _results["Refractory violation"] = (
+            below_refractory.size / unitStamp.size)
+
+        self.update_result(_results)
         return graph_data
 
     def isi_corr(self, spike=None, **kwargs):

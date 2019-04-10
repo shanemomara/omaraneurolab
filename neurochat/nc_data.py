@@ -441,7 +441,8 @@ class NData():
         
         return gdata
     
-    def isi(self, bins='auto', bound=None, density=False):
+    def isi(self, bins='auto', bound=None, density=False,
+            refractory_threshold=2):
         """
         Analysis of ISI histogram
         
@@ -456,6 +457,8 @@ class NData():
             Length of the ISI histogram in msec
         density : bool
             If true, normalized historagm is calcultaed
+        refractory_threshold : int
+            Length of the refractory period in msec
  
         Returns
         -------
@@ -467,8 +470,7 @@ class NData():
         nc_spike.NSpike().isi
 
         """
-    
-        gdata = self.spike.isi(bins, bound, density)
+        gdata = self.spike.isi(bins, bound, density, refractory_threshold)
         self.update_results(self.spike.get_results())
         
         return gdata
