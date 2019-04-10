@@ -968,13 +968,16 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                getattr(self, key).setChecked(self._control.get_analysis(key))
                
         param_list = self._control.get_param_list()
-
+        
         for name in param_list:
-            param_widget = getattr(self._param_ui, name)
+            param_widget = self._param_ui.findChild(
+                QtWidgets.QWidget, name)
             if isinstance(param_widget, QtWidgets.QComboBox):
                 index = param_widget.findText(str(self._control.get_params(name)))
                 if index >= 0:
                     param_widget.setCurrentIndex(index)
+            elif isinstance(param_widget, QtWidgets.QCheckBox):
+                param_widget.setChecked(self._control.get_params(name))
             else:
                 param_widget.setValue(self._control.get_params(name))
 
@@ -2036,14 +2039,14 @@ class UiParameters(QtWidgets.QDialog):
         self.hd_shuffle_limit.setValue(0)
         self.hd_shuffle_limit.setSingleStep(2)
 
-        self.hd_shuffle_no_bins = add_spin_box(min_val=10, max_val=200, obj_name="hd_shuffle_bins")
-        self.hd_shuffle_no_bins.setValue(100)
-        self.hd_shuffle_no_bins.setSingleStep(10)
+        self.hd_shuffle_bins = add_spin_box(min_val=10, max_val=200, obj_name="hd_shuffle_bins")
+        self.hd_shuffle_bins.setValue(100)
+        self.hd_shuffle_bins.setSingleStep(10)
 
         box_layout = ParamBoxLayout()
         box_layout.addRow("No of Shuffles", self.hd_shuffle_total, "[range: 100-10000, step: 50]")
         box_layout.addRow("Shuffling Limit", self.hd_shuffle_limit, "sec [range: 0-500, 0 for Random, step: 2]")
-        box_layout.addRow("No of Histogram Bins", self.hd_shuffle_no_bins, "[range: 10-200, step: 10]")
+        box_layout.addRow("No of Histogram Bins", self.hd_shuffle_bins, "[range: 10-200, step: 10]")
 
         self.hd_shuffle_gb1.setLayout(box_layout)
 
