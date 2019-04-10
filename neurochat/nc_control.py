@@ -15,7 +15,7 @@ import pandas as pd
 
 from PyQt5 import QtCore
 
-from neurochat.nc_utils import NLog, angle_between_points
+from neurochat.nc_utils import NLog, angle_between_points, log_exception
 from neurochat.nc_data import NData
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_hdf import Nhdf
@@ -469,8 +469,9 @@ class NeuroChaT(QtCore.QThread):
                 fig = nc_plot.isi(graph_data)
                 self.close_fig(fig)
                 self.plot_data_to_hdf(name=name+ '/isi/', graph_data=graph_data)
-            except:
-                logging.error('Error in assessing interspike interval distribution')
+            except Exception as ex:
+                log_exception(
+                    ex, 'Error in assessing interspike interval distribution')
 
         if self.get_analysis('isi_corr'):
             ##Autocorr 1000ms

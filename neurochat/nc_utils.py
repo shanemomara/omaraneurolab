@@ -918,3 +918,25 @@ def find_peaks(data, **kwargs):
         i for i in range(0, len(peak_loc)) if peak_val[i] >= thresh]
     peak_val, peak_loc= zip(*((peak_val[i], peak_loc[i]) for i in valid_loc))
     return np.array(peak_val), np.array(peak_loc)
+
+
+def log_exception(ex, more_info=""):
+    """
+    Log an expection and additional info
+
+    Parameters
+    ----------
+    ex : Exception
+        The python exception that occured
+    more_info : 
+        Additional string to log
+    
+    Returns
+    -------
+    None
+    
+    """
+
+    template = "{0} because exception of type {1} occurred. Arguments:\n{2!r}"
+    message = template.format(more_info, type(ex).__name__, ex.args)
+    logging.error(message)
