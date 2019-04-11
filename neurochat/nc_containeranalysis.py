@@ -12,6 +12,10 @@ from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_data import NData
 from neurochat.nc_clust import NClust
 from neurochat.nc_utils import smooth_1d, find_true_ranges
+from neurochat.nc_utils import butter_filter
+from neurochat.nc_utils import find_peaks
+from neurochat.nc_utils import window_rms
+from neurochat.nc_utils import distinct_window_rms
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
@@ -257,7 +261,7 @@ def count_units_in_bins(collection, bin_length, in_range):
     bin_centres = [(bins[j + 1] + bins[j]) / 2 for j in range(num_bins)]
     return np.sum(arr, axis=0), bin_centres
 
-def evaluate_clusters(collection, idx1, idx2):
+def evaluate_clusters(collection, idx1, idx2, set_units=False):
     """
     Find which units are closest in terms of clustering.
 
@@ -298,10 +302,10 @@ def evaluate_clusters(collection, idx1, idx2):
     for idx1, unit1 in enumerate(sub_col1.get_units()[0]):
         for idx2, unit2 in enumerate(sub_col2.get_units()[0]):
             bc, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
-            print(
-                "{} {}: Bhattacharyya {} Hellinger {}".format(
-                    unit1, unit2, bc, dh))
             distances[idx1, idx2] = dh
+            # print(
+            #     "{} {}: Bhattacharyya {} Hellinger {}".format(
+            #         unit1, unit2, bc, dh))
 
     # Solve the linear sum assignment problem based on the Hungarian method
     solution = linear_sum_assignment(distances)
@@ -311,7 +315,122 @@ def evaluate_clusters(collection, idx1, idx2):
             sub_col2.get_units()[0][j], distances[i, j])
 
     print("Best assignment is {}".format(best_matches))
+
+    if set_units:
+        run_units = [key for key in best_matches.keys()]
+        best_units = [val[0] for _, val in best_matches.items()]
+        collection.set_units([run_units, best_units])
     return best_matches
 
-def replay(collection):
-    pass
+from neurochat.nc_plot import replay_summary
+def plot_replay(results):
+    """
+    Link the results to the nc plot method
+    """
+    fig = replay_summary(
+        results["lfp times"], results["lfp samples"], results["mua histogram"],
+        results["swr times"], results["num cells"], results["sample rate"],
+        results["spike times"]
+    )
+    return fig
+
+def replay(collection, run_idx, sleep_idx, **kwargs):
+    """
+    Run and sleep session comparison.
+
+    Set the units of interest in the collection before running.
+
+    Parameters
+    ----------
+    collection : NDataContainer
+        The collection of run and sleep data
+    run_idx : int
+        The index in the collection for the run data
+    sleep_idx : int
+        The index in the collection for the sleep data
+    kwargs:
+        sample_rate : float
+
+    Returns
+    -------
+    dict
+        Graphical and numerical analysis results
+
+    """
+    results = {}
+
+    # Parse the kwargs
+    min_range = kwargs.get("min_range", 150)
+    moving_thresh = kwargs.get("moving_thresh", 2.5)
+    swr_lower = kwargs.get("swr_lower", 100)
+    swr_higher = kwargs.get("swr_upper", 250)
+    rms_window_size_ms = kwargs.get("rms_window_size_ms", 7)
+    percentile = kwargs.get("percentile", 99)
+    sorting_mode = kwargs.get("sorting_mode", "vertical")
+
+    # Preprocessing step
+
+    # Sort the run data spatially
+    truth_arr = [False for i in range(collection.get_num_data())]
+    truth_arr[run_idx] = True
+    collection.sort_units_spatially(truth_arr, mode=sorting_mode)
+
+    # Match up cells between the recordings
+    evaluate_clusters(collection, run_idx, sleep_idx, set_units=True)
+
+    # Find SWS, MUA, SWR
+    sleep = collection.get_data(sleep_idx)
+    sample_rate = sleep.lfp.get_sampling_rate()
+
+    non_moving_periods = np.array(
+            sleep.non_moving_periods(
+                min_range=min_range, 
+                moving_thresh=moving_thresh)
+            ) * sample_rate 
+    
+    # TODO reconsider - for now get the longest consecutive period.
+    sorted_periods = sorted(
+        non_moving_periods, key=lambda x : x[1] - x[0], reverse=True)
+    longest_sleep_period = sorted_periods[0]
+
+    lfp_samples = sleep.get_samples()[
+        int(longest_sleep_period[0]):int(longest_sleep_period[1])]
+    lfp_times = sleep.lfp.get_timestamp()[
+        int(longest_sleep_period[0]):int(longest_sleep_period[1])]
+    filtered_lfp = butter_filter(
+        lfp_samples, sample_rate, 10, swr_lower, swr_higher, 'bandpass')
+    rms_window_size = floor((rms_window_size_ms / 1000) * sample_rate)
+    #rms_envelope = window_rms(filtered_lfp, rms_window_size, mode="same")
+    rms_envelope = distinct_window_rms(filtered_lfp, rms_window_size)
+    p_val = np.percentile(rms_envelope, percentile)
+     # Could also find peaks like this
+     # peaks = (longest_sleep_period[0] + np.argwhere(
+     #              rms_data > p99).flatten() * rms_window_size) / sample_rate
+
+    # TODO this may still be too many peaks
+    _, peaks = find_peaks(rms_envelope, thresh=p_val)
+    #peaks = (longest_sleep_period[0] + peaks) / sample_rate
+    peaks = (longest_sleep_period[0] + peaks * rms_window_size) / sample_rate
+
+    sleep_subsample = collection.subsample(sleep_idx)
+
+    unit_hist = count_units_in_bins(
+        sleep_subsample, 1, 
+        longest_sleep_period / sample_rate)
+
+    raw_spike_times = spike_times(
+        sleep_subsample, 
+        ranges=[longest_sleep_period / sample_rate])
+
+    results["mua histogram"] = unit_hist
+    results["lfp times"] = lfp_times
+    results["lfp samples"] = filtered_lfp
+    results["swr times"] = peaks
+    results["spike times"] = raw_spike_times
+    results["sample rate"] = sample_rate
+    results["num cells"] = len(sleep_subsample)
+
+    # TODO finish this off and look at individual times of overlapping MUA 
+    # and sleep etc
+    
+    return results

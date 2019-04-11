@@ -17,7 +17,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Arc
 import matplotlib.ticker as ticker
 
-from neurochat.nc_utils import find, angle_between_points
+from neurochat.nc_utils import find, angle_between_points, get_axona_colours
 
 BLUE = '#1f77b4'
 RED = '#d62728'
@@ -1671,6 +1671,41 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     if no_y_ticks:
         ax.get_yaxis().set_visible(False)
 
+    return fig
+
+def replay_summary(
+    lfp_times, filtered_lfp, mua_hist, 
+    swr_times, num_cells, sample_rate,
+    spike_times):
+    colors = get_axona_colours()[:num_cells]
+    xlim = (lfp_times[0], lfp_times[-1])
+
+    # SWR and filtered LFP
+    fig, axes= plt.subplots(
+        nrows=3, ncols=1, figsize=(12,6), sharex=True)
+    spike_raster(
+        swr_times, ax=axes[0], ylabel=None, xlabel=None,
+        no_y_ticks=True, colors=('b'), linewidths=0.2, linelengths=0.5)
+    axes[0].plot(lfp_times, filtered_lfp, color='k')
+    axes[0].set_title("Filtered LFP and SWR Events")
+
+    # MUA
+    axes[1].bar(mua_hist[1], mua_hist[0], width=1, color='k')
+    ticks = [i for i in range(num_cells + 1)]
+    axes[1].set_yticks(ticks)
+    axes[1].set_title("Number of Active Cells")
+
+    # Raw spikes
+    spike_raster(spike_times, linewidths=0.2, ax=axes[2], colors=colors)
+
+    import matplotlib.ticker as ticker
+
+    tick_spacing = 100
+    for ax in axes:
+        ax.set_xlim(xlim[0], xlim[1])
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+
+    plt.tight_layout()
     return fig
 
 def plot_angle_between_points(points, xlim, ylim, ax=None):

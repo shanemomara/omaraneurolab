@@ -940,3 +940,84 @@ def log_exception(ex, more_info=""):
     template = "{0} because exception of type {1} occurred. Arguments:\n{2!r}"
     message = template.format(more_info, type(ex).__name__, ex.args)
     logging.error(message)
+
+def window_rms(a, window_size, mode="same"):
+    """
+    Calculate the rms envelope, similar to matlab.  
+    
+    mode determines how many points are output
+    mode valid will have no border effects
+    mode same will produce a value for each input
+    """
+    a2 = np.power(a,2)
+    window = np.ones(window_size)/float(window_size)
+    return np.sqrt(np.convolve(a2, window, mode))
+
+def distinct_window_rms(a, N):
+    """
+    Calculate the rms of a in windows of N data points.
+    """
+    a = np.array(a)
+    a = np.square(a) / float(N)
+    rms_array = []
+    rms = 0
+    
+    # For now, just throw away the last window if it does not fit
+    for idx, point in enumerate(a):
+        rms += point
+        if idx % N == N-1:
+            rms_array.append(np.sqrt(rms))
+            rms = 0
+    return rms_array
+
+def static_vars(**kwargs):
+    def decorate(func):
+        for k in kwargs:
+            setattr(func, k, kwargs[k])
+        return func
+    return decorate
+
+@static_vars(colorcells=[])
+def get_axona_colours():
+    """Create Axona cell colours
+    
+    Returns
+    -------
+    list :
+        A list of colours as rgb tuples with values in 0 to 1
+    """
+
+    if len(get_axona_colours.colorcells) == 0:
+    # crget_axona_colours.eate Axona cell colours if don't exist
+        get_axona_colours.colorcells.append((0,0,200/255))
+        get_axona_colours.colorcells.append((80/255,1,80/255))
+        get_axona_colours.colorcells.append((1,0,0))
+        get_axona_colours.colorcells.append((245/255,0,1))
+        get_axona_colours.colorcells.append((75/255,200/255,255/255))
+        get_axona_colours.colorcells.append((0/255, 185/255,0/255))
+        get_axona_colours.colorcells.append((255/255, 185/255,50/255))
+        get_axona_colours.colorcells.append((0/255, 150/255,175/255))
+        get_axona_colours.colorcells.append((150/255, 0/255,175/255))
+        get_axona_colours.colorcells.append((170/255, 170/255,0/255))
+        get_axona_colours.colorcells.append((200/255, 0/255,0/255))
+        get_axona_colours.colorcells.append((255/255, 255/255,0/255))
+        get_axona_colours.colorcells.append((140/255, 140/255,140/255))
+        get_axona_colours.colorcells.append((0/255, 255/255,255/255))
+        get_axona_colours.colorcells.append((255/255, 0/255,160/255))
+        get_axona_colours.colorcells.append((175/255, 75/255, 75/255))
+        get_axona_colours.colorcells.append((255/255, 155/255, 175/255))
+        get_axona_colours.colorcells.append((190/255, 190/255, 190/255))
+        get_axona_colours.colorcells.append((255/255, 255/255, 75/255))
+        get_axona_colours.colorcells.append((154/255, 205/255, 50/255))
+        get_axona_colours.colorcells.append((255/255, 99/255, 71/255))
+        get_axona_colours.colorcells.append((0/255, 255/255, 127/255))
+        get_axona_colours.colorcells.append((255/255, 140/255, 0/255))
+        get_axona_colours.colorcells.append((32/255, 178/255, 170/255))
+        get_axona_colours.colorcells.append((255/255, 69/255, 0/255))
+        get_axona_colours.colorcells.append((240/255, 230/255, 140/255))
+        get_axona_colours.colorcells.append((100/255, 145/255, 237/255))
+        get_axona_colours.colorcells.append((255/255, 218/255, 185/255))
+        get_axona_colours.colorcells.append((153/255, 50/255, 204/255))
+        get_axona_colours.colorcells.append((250/255, 128/255, 114/255))
+
+    return get_axona_colours.colorcells
