@@ -14,6 +14,7 @@ from neurochat.nc_clust import NClust
 from neurochat.nc_utils import smooth_1d, find_true_ranges
 
 import numpy as np
+from scipy.optimize import linear_sum_assignment
 
 def spike_positions(collection, should_sort=True, mode="vertical"):
     """
@@ -260,6 +261,9 @@ def evaluate_clusters(collection, idx1, idx2):
     """
     Find which units are closest in terms of clustering.
 
+    Uses the Hungarian (Munkres) cost optimisation based on Hellinger distance
+    between the clusters.
+
     Parameters
     ----------
     collection : NDataCollection
@@ -287,16 +291,27 @@ def evaluate_clusters(collection, idx1, idx2):
     info2 = sub_col2.get_file_dict()["Spike"][0]
     nclust2.load(info2[0], info2[2])
 
-    best_matches = {}
-    for unit1 in sub_col1.get_units()[0]:
-        best_bc, best_unit = 0, None
-        for unit2 in sub_col2.get_units()[0]:
+    distance_shape = (
+        len(sub_col1.get_units()[0]), len(sub_col2.get_units()[0]))
+    distances = np.zeros(shape=distance_shape)
+    # Build a matrix of distances for each unit
+    for idx1, unit1 in enumerate(sub_col1.get_units()[0]):
+        for idx2, unit2 in enumerate(sub_col2.get_units()[0]):
             bc, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
             print(
                 "{} {}: Bhattacharyya {} Hellinger {}".format(
                     unit1, unit2, bc, dh))
-            if bc > best_bc:
-                best_bc, best_unit = bc, unit2
-        best_matches[str(unit1)] = (best_unit, best_bc)
+            distances[idx1, idx2] = dh
+
+    # Solve the linear sum assignment problem based on the Hungarian method
+    solution = linear_sum_assignment(distances)
+    best_matches = {}
+    for i, j in zip(solution[0], solution[1]):
+        best_matches[sub_col1.get_units()[0][i]] = (
+            sub_col2.get_units()[0][j], distances[i, j])
+
+    print("Best assignment is {}".format(best_matches))
     return best_matches
 
+def replay(collection):
+    pass
