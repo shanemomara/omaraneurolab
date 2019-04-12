@@ -16,6 +16,7 @@ from neurochat.nc_utils import butter_filter
 from neurochat.nc_utils import find_peaks
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
+from neurochat.nc_plot import replay_summary
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
@@ -322,7 +323,6 @@ def evaluate_clusters(collection, idx1, idx2, set_units=False):
         collection.set_units([run_units, best_units])
     return best_matches
 
-from neurochat.nc_plot import replay_summary
 def plot_replay(results):
     """
     Link the results to the nc plot method
