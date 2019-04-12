@@ -1652,22 +1652,32 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     xlabel = kwargs.get("xlabel", "Time (seconds)")
     ylabel = kwargs.get("ylabel", "Cell ID")
     no_y_ticks = kwargs.get("no_y_ticks", False)
+    orientation = kwargs.get("orientation", "horizontal")
 
     ax, fig = _make_ax_if_none(ax)
     
     ax.eventplot(
-        events, colors=colors, linelengths=linelengths, linewidths=linewidths)
+        events, colors=colors, linelengths=linelengths, linewidths=linewidths,
+        orientation=orientation)
 
     # Be sure to only pick integer tick locations.
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    if orientation == "horizontal":
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.invert_yaxis()
+        if xlim is not None:
+            ax.set_xlim(xlim[0], xlim[1])
+    else:
+        ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+        ax.set_xlabel(ylabel)
+        ax.set_ylabel(xlabel)
+        if xlim is not None:
+            ax.set_ylim(xlim[0], xlim[1])
+        ax.invert_yaxis()
 
     ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    if xlim is not None:
-        ax.set_xlim(xlim[0], xlim[1])
-    ax.set_ylabel(ylabel)
-    ax.invert_yaxis()
-
+    
     if no_y_ticks:
         ax.get_yaxis().set_visible(False)
 
@@ -1751,6 +1761,8 @@ def plot_angle_between_points(points, xlim, ylim, ax=None):
     ax.set_ylim([0, ylim])
     ax.set_xlim([0, xlim])
     ax.set_aspect('equal')
+    ax.set_xlabel('cm')
+    ax.set_ylabel('cm')
     txt_list = ["P1", "P2", "P3"]
     for i, txt in enumerate(txt_list):
         ax.annotate(txt, (xdata[i], ydata[i] - (ylim * 0.02)))
