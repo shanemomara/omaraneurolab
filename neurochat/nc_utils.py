@@ -87,7 +87,7 @@ class Singleton(object):
 
 def bhatt(X1, X2):
     """
-    Calculates Bhattacharyya coefficient and Hellinger distance between two distributions
+    Calculates Bhattacharyya coefficient and Bhattacharyya distance between two distributions
     
     Parameters
     ----------
@@ -97,7 +97,7 @@ def bhatt(X1, X2):
     Returns
     -------
     bc, d : float
-        Bhattacharyya coefficient and Hellinger distance
+        Bhattacharyya coefficient and Bhattacharyya distance
     
     """
     
@@ -979,7 +979,8 @@ def static_vars(**kwargs):
 
 @static_vars(colorcells=[])
 def get_axona_colours():
-    """Create Axona cell colours
+    """
+    Create Axona cell colours.
     
     Returns
     -------
