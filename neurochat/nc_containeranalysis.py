@@ -302,7 +302,7 @@ def evaluate_clusters(collection, idx1, idx2, set_units=False):
     # Build a matrix of distances for each unit
     for idx1, unit1 in enumerate(sub_col1.get_units()[0]):
         for idx2, unit2 in enumerate(sub_col2.get_units()[0]):
-            bc, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
+            _, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
             distances[idx1, idx2] = dh
             # print(
             #     "{} {}: Bhattacharyya {} Hellinger {}".format(
@@ -322,17 +322,6 @@ def evaluate_clusters(collection, idx1, idx2, set_units=False):
         best_units = [val[0] for _, val in best_matches.items()]
         collection.set_units([run_units, best_units])
     return best_matches
-
-def plot_replay(results):
-    """
-    Link the results to the nc plot method
-    """
-    fig = replay_summary(
-        results["lfp times"], results["lfp samples"], results["mua histogram"],
-        results["swr times"], results["num cells"], results["sample rate"],
-        results["spike times"]
-    )
-    return fig
 
 def replay(collection, run_idx, sleep_idx, **kwargs):
     """

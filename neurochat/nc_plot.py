@@ -312,7 +312,7 @@ def lfp_spectrum_tr(plot_data):
 
 def plv(plv_data):
     """
-    Plots the analysis results of Phase-locking value (PLV)
+    Plots the analysis replay_data of Phase-locking value (PLV)
 
     Parameters
     ----------
@@ -375,7 +375,7 @@ def plv(plv_data):
 
 def plv_tr(plv_data):
     """
-    Plots the analysis results of time-resolved Phase-locking value (PLV)
+    Plots the analysis replay_data of time-resolved Phase-locking value (PLV)
 
     Parameters
     ----------
@@ -431,7 +431,7 @@ def plv_tr(plv_data):
 
 def plv_bs(plv_data):
     """
-    Plots the analysis results of bootstrapped Phase-locking value (PLV)
+    Plots the analysis replay_data of bootstrapped Phase-locking value (PLV)
 
     Parameters
     ----------
@@ -516,7 +516,7 @@ def plv_bs(plv_data):
 
 def spike_phase(phase_data):
     """
-    Plots the analysis results of spike-LFP phase locking
+    Plots the analysis replay_data of spike-LFP phase locking
 
     Parameters
     ----------
@@ -641,7 +641,7 @@ def angular_velocity(angVel_data):
 
 def multiple_regression(mra_data):
     """
-    Plots the results of multiple regression analysis.
+    Plots the replay_data of multiple regression analysis.
 
     Parameters
     ----------
@@ -651,7 +651,7 @@ def multiple_regression(mra_data):
     Returns
     -------
     fig1 : matplotlib.pyplot.Figure
-        Bar plot of multiple regression results
+        Bar plot of multiple regression replay_data
 
     """
 
@@ -729,7 +729,7 @@ def hd_spike(hd_data, ax=None):
 
 def hd_firing(hd_data):
     """
-    Plots the analysis results of head directional correlation to spike-rate
+    Plots the analysis replay_data of head directional correlation to spike-rate
 
     Parameters
     ----------
@@ -759,7 +759,7 @@ def hd_firing(hd_data):
 
 def hd_rate_ccw(hd_data):
     """
-    Plots the analysis results of head directional correlation to spike-rate
+    Plots the analysis replay_data of head directional correlation to spike-rate
     but split into counterclockwise and clockwise head-movements.
 
     Parameters
@@ -1027,7 +1027,7 @@ def loc_rate(place_data, ax=None, smooth=True):
 
 def loc_firing(place_data):
     """
-    Plots the analysis results of locational correlation to spike-rate
+    Plots the analysis replay_data of locational correlation to spike-rate
 
     Parameters
     ----------
@@ -1056,7 +1056,7 @@ def loc_firing(place_data):
 # Created by Sean Martin: 14/02/2019
 def loc_firing_and_place(place_data, smooth=True):
     """
-    Plots the analysis results of locational correlation to spike-rate 
+    Plots the analysis replay_data of locational correlation to spike-rate 
     with a place map
 
     Parameters
@@ -1132,7 +1132,7 @@ def loc_place_field(place_data, ax=None):
 # Created by Sean Martin: 13/02/2019
 def loc_place_centroid(place_data, centroid):
     """
-    Plots the analysis results of locational correlation to spike-rate 
+    Plots the analysis replay_data of locational correlation to spike-rate 
     along with the centroid of the place field.
 
     Parameters
@@ -1481,7 +1481,7 @@ def stair_plot(dist_data):
 
 def border(border_data):
     """
-    Plots the analysis results from border analysis
+    Plots the analysis replay_data from border analysis
 
     Parameters
     ----------
@@ -1535,7 +1535,7 @@ def border(border_data):
 
 def gradient(gradient_data):
     """
-    Plots the results from gradient cell analysis
+    Plots the replay_data from gradient cell analysis
 
     Parameters
     ----------
@@ -1569,7 +1569,7 @@ def gradient(gradient_data):
 
 def grid(grid_data):
     """
-    Plots the results from grid analysis
+    Plots the replay_data from grid analysis
 
     Parameters
     ----------
@@ -1683,10 +1683,28 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
 
     return fig
 
-def replay_summary(
-    lfp_times, filtered_lfp, mua_hist, 
-    swr_times, num_cells, sample_rate,
-    spike_times):
+def replay_summary(replay_data):
+    """
+    Plot a replay data summary.
+
+    Parameters
+    ----------
+    replay_data : dict
+        Dictionary of graph data
+    
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+
+    """
+    lfp_times = replay_data["lfp times"]
+    filtered_lfp = replay_data["lfp samples"]
+    mua_hist = replay_data["mua histogram"] 
+    swr_times = replay_data["swr times"] 
+    num_cells = replay_data["num cells"]
+    # sample_rate = replay_data["sample rate"]
+    spike_times = replay_data["spike times"]
+
     colors = get_axona_colours()[:num_cells]
     xlim = (lfp_times[0], lfp_times[-1])
 
