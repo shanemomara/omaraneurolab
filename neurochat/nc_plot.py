@@ -18,6 +18,7 @@ from matplotlib.patches import Arc
 import matplotlib.ticker as ticker
 
 from neurochat.nc_utils import find, angle_between_points, get_axona_colours
+import neurochat.nc_containeranalysis as nca
 
 BLUE = '#1f77b4'
 RED = '#d62728'
@@ -1056,7 +1057,7 @@ def loc_firing(place_data):
 # Created by Sean Martin: 14/02/2019
 def loc_firing_and_place(place_data, smooth=True):
     """
-    Plots the analysis replay_data of locational correlation to spike-rate 
+    Plots the analysis replay_data of locational correlation to spike-rate
     with a place map
 
     Parameters
@@ -1132,7 +1133,7 @@ def loc_place_field(place_data, ax=None):
 # Created by Sean Martin: 13/02/2019
 def loc_place_centroid(place_data, centroid):
     """
-    Plots the analysis replay_data of locational correlation to spike-rate 
+    Plots the analysis replay_data of locational correlation to spike-rate
     along with the centroid of the place field.
 
     Parameters
@@ -1638,7 +1639,7 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
         Optional list of colours, or single colour - default black
     ax : matplotlib.axes.Axes
         Optional axis to plot into
-    **kwargs : 
+    **kwargs :
         A set of keyword arguments to change graph appearance
 
     Returns
@@ -1655,7 +1656,7 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     orientation = kwargs.get("orientation", "horizontal")
 
     ax, fig = _make_ax_if_none(ax)
-    
+
     ax.eventplot(
         events, colors=colors, linelengths=linelengths, linewidths=linewidths,
         orientation=orientation)
@@ -1677,7 +1678,7 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
         ax.invert_yaxis()
 
     ax.set_title(title)
-    
+
     if no_y_ticks:
         ax.get_yaxis().set_visible(False)
 
@@ -1691,7 +1692,7 @@ def replay_summary(replay_data):
     ----------
     replay_data : dict
         Dictionary of graph data
-    
+
     Returns
     -------
     fig : matplotlib.pyplot.Figure
@@ -1699,10 +1700,9 @@ def replay_summary(replay_data):
     """
     lfp_times = replay_data["lfp times"]
     filtered_lfp = replay_data["lfp samples"]
-    mua_hist = replay_data["mua histogram"] 
-    swr_times = replay_data["swr times"] 
+    mua_hist = replay_data["mua hists"]
+    swr_times = replay_data["swr times"]
     num_cells = replay_data["num cells"]
-    # sample_rate = replay_data["sample rate"]
     spike_times = replay_data["spike times"]
 
     colors = get_axona_colours()[:num_cells]
@@ -1718,7 +1718,7 @@ def replay_summary(replay_data):
     axes[0].set_title("Filtered LFP and SWR Events")
 
     # MUA
-    axes[1].bar(mua_hist[1], mua_hist[0], width=1, color='k')
+    axes[1].plot(mua_hist[1], mua_hist[0], color='k')
     ticks = [i for i in range(num_cells + 1)]
     axes[1].set_yticks(ticks)
     axes[1].set_title("Number of Active Cells")
@@ -1734,6 +1734,37 @@ def replay_summary(replay_data):
         ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
 
     plt.tight_layout()
+    return fig
+
+def plot_replay_sections(replay_data, sleep_sample, orientation="vertical"):
+    """
+    Plot zoomed in sections of the replay data spikes
+    """
+    num_plots = len(replay_data["overlap swr mua"])
+    row_size = 6
+    if num_plots <= row_size:
+        num_cols = num_plots
+        num_rows = 1
+    else:
+        num_cols = row_size
+        num_rows = math.ceil(num_plots / row_size)
+
+    fig, axes = plt.subplots(
+        nrows=num_rows, ncols=num_cols,
+        sharex='col', tight_layout=True, figsize=(num_rows*2, num_cols*2))
+    for i, i_range in enumerate(replay_data["overlap swr mua"]):
+        if num_plots == 1:
+            ax = axes
+        else:
+            ax=axes.flatten()[i]
+
+        spike_raster(
+            nca.spike_times(sleep_sample, ranges=[i_range]),
+            linewidths=1, ax=ax, orientation=orientation,
+            colors=get_axona_colours()[:replay_data["num cells"]],
+            #xlim=(round(i_range[0], 1), round(i_range[1], 1)),
+            title=None, ylabel=None, xlabel=None)
+        plt.tight_layout()
     return fig
 
 def plot_angle_between_points(points, xlim, ylim, ax=None):
@@ -1790,12 +1821,12 @@ def plot_angle_between_points(points, xlim, ylim, ax=None):
     return fig
 
 def _get_angle_plot(
-    line1, line2, offset = 1, color = None, 
+    line1, line2, offset = 1, color = None,
     origin = [0,0], len_x_axis = 1, len_y_axis = 1):
     """
     Internal helper function to get an arc between two lines
     Can be displayed as a patch
-    
+
     Parameters
     ----------
     line1 : matplotlib.lines.Line2D
@@ -1812,7 +1843,7 @@ def _get_angle_plot(
         How long the x axis is in the plot
     len_y_axis: float
         How long the y axis is in the plot
-    
+
     Returns
     -------
     matplotlib.patches.Arc
@@ -1847,19 +1878,19 @@ def _get_angle_plot(
 def _make_ax_if_none(ax, **kwargs):
     """
     Makes a figure and gets the axis from this if no ax exists
-    
+
     Parameters
     ----------
     ax : matplotlib.axes.Axes
         Input axis
-    
+
     Returns
     -------
     ax, fig
         The created figure and axis if ax is None, else
         the input ax and None
     """
-    
+
     fig = None
     if ax is None:
         fig = plt.figure()

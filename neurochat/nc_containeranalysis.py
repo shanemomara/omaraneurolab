@@ -12,7 +12,6 @@ from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_data import NData
 from neurochat.nc_clust import NClust
 from neurochat.nc_utils import smooth_1d, find_true_ranges
-from neurochat.nc_utils import butter_filter
 from neurochat.nc_utils import find_peaks
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
@@ -137,8 +136,7 @@ def spike_times(collection, filter_speed=False, **kwargs):
             times.append(time_data)
     return times
 
-def multi_unit_activity(
-    collection, filter_speed=False, should_smooth=True, **kwargs):
+def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     """
     For each recording in the collection, detect periods of MUA.
 
@@ -149,118 +147,138 @@ def multi_unit_activity(
     ----------
     collection : NDataContainer
         The collection of units to detect Muti unit activity.
-    filter_speed : bool
-        If true, don't consider spike times when the rat is non moving
-    should_smooth : bool
-        If true, smooth the histogram of spike counts
+
     kwargs
-        ranges : tuple
-            A range of times to consider data in
-        bin_length : float
-            The length of a time bin in seconds
-        min_range : float
-            The minimum length of high activity in seconds to be considered MUA
-        mode : int
-            1 or 2, the type of analysis to use
-            1 works based off a
+    ------
+    mua_bin_length : float
+        The length of bins for mua histogram calculation in seconds
+    filter_length : float
+        The std_dev of the gaussian used for filtering in seconds
+    mua_mode : str
+        "rms_peaks" - calculate rms window and find peaks in this
+        or "raw" - calculate mua histogram, extract bins with all cells active
+        or "high_activity" - calculate rms window and 
+                             look for sustained high activity in this
+    mua_length : float
+        The length of a mua event in seconds
+    filter_mua : bool
+        Should the mua histogram be filtered by a guassian
+    mua_percentile : float
+        The percentile threshold for a mua peak
 
     Returns
     -------
     dict
-        hists, bins, bin_centres, mua
+        hists, mua
 
     """
-    # TODO could expand later to show which units are contributing
-    ranges = kwargs.get("ranges", [] if filter_speed else None)
-    bin_length = kwargs.get("bin_length", 0.001)
-    min_range = kwargs.get("min_range", 0.01)
-    mode = kwargs.get("mode", 2)
+    mua_bin_length = kwargs.get("mua_bin_length", 0.001)
+    filter_length = kwargs.get("filter_length", 0.01)
+    mode = kwargs.get("mua_mode", "rms_peaks")
+    mua_length = kwargs.get("mua_length", 0.6)
+    filter_mua = kwargs.get("filter_mua", True)
+    mua_percentile = kwargs.get("mua_percentile", 99)
 
-    result = {'hists': [], 'bins': [], 'bin_centres': [], 'mua': []}
-    for i in range(collection.get_num_data()):
-        sub_collection = collection.subsample(i)
-        if filter_speed:
-            ranges.append(
-                sub_collection.get_data(0).get_non_moving_periods(**kwargs))
-        spike_times = np.array([])
-        for data in sub_collection:
-            if ranges is not None:
-                new_spikes = np.array(data.get_unit_stamps_in_ranges(ranges))
-            else:
-                new_spikes = np.array(data.get_unit_stamp())
-            spike_times = np.append(spike_times, new_spikes)
+    result = {"mua hists": [], "mua": []}
 
-        # TODO only works for continuous interval as ranges currently
-        if ranges is not None:
-            bins = floor(
-                (ranges[0][1] - ranges[0][0]) / bin_length)
+    # Get mua histogram for each data point
+    for data_idx in range(collection.get_num_data()):
+        if collection.get_num_data() > 1:
+            sub_collection = collection.subsample(data_idx)
         else:
-            bins = floor(
-                sub_collection.get_data(0).get_recording_time() / bin_length)
-        flat_array = spike_times
-        hist, new_bins = np.histogram(flat_array, bins)
-        result['hists'].append(hist)
-        result['bins'].append(new_bins)
-        bin_centres = [
-            (new_bins[j + 1] + new_bins[j]) / 2 for j in range(len(hist))]
-        result['bin_centres'].append(bin_centres)
+            sub_collection = collection
+        sample_rate = sub_collection.get_data(0).lfp.get_sampling_rate()
+        sigma = filter_length * sample_rate
+        unit_hist = count_units_in_bins(
+            collection, mua_bin_length, time_range)[0]
+        if filter_mua:
+            unit_hist = (
+                smooth_1d(unit_hist[0], filttype='g', filtsize=sigma),
+                unit_hist[1])
+        result["mua hists"].append(unit_hist)
 
-    # TODO decide which mode is better
-    if mode == 1:
-        for i, hist in enumerate(result['hists']):
-            if should_smooth:
-                result['hists'][i] = smooth_1d(hist, filttype='g', filtsize=10)
+    for i, hist in enumerate(result['mua hists']):
+        # Look for long periods of high activity
+        if mode == "high_activity":
+            p95 = np.percentile(hist[0], 95)
+            result['mua'].append(find_true_ranges(
+                hist[1], hist[0] > p95, min_range=mua_length))
 
-            p95 = np.percentile(result['hists'][i], 95)
-            result['mua'].append(
-                find_true_ranges(
-                    result['bin_centres'][i],
-                    result['hists'][i] > p95,
-                    min_range=min_range)
-            )
-    if mode == 2:
-        for i, hist in enumerate(result['hists']):
-            p99 = np.percentile(result['hists'][i], 99)
-            large_vals = np.argwhere(result['hists'][i] > p99)
+        # Look for peaks in the activity
+        if mode == "rms_peaks":
+            p_val = np.percentile(hist[0], mua_percentile)
+            _, peaks = find_peaks(hist[0], thresh=p_val)
             corresponding_ranges = [
-                (result['bins'][i][j], result['bins'][i][j+1])
-                for j in large_vals]
+                (hist[1][peak] - mua_length*0.5, hist[1][peak] + mua_length*0.5)
+                    for peak in peaks]
             result['mua'].append(corresponding_ranges)
+
+        # Get areas where the number of units active is maximal
+        if mode == "raw":
+            if collection.get_num_data() > 1:
+                num_cells = len(collection.subsample(i))
+            else:
+                num_cells = len(collection)
+            mua_indices = np.argwhere(hist[0] == num_cells)
+            corresponding_ranges = [
+                (hist[1][index] - mua_length*0.5,
+                 hist[1][index] + mua_length*0.5)
+                    for index in mua_indices.flatten()]
+            result["mua"].append(corresponding_ranges)
+
+    if strip and collection.get_num_data() == 1:
+        result["mua hists"] = result["mua hists"][0]
+        result["mua"] = result["mua"][0]
+
     return result
 
-def count_units_in_bins(collection, bin_length, in_range):
+def count_units_in_bins(
+    collection, bin_length, in_range=None, multi_ranges=None):
     """
     Count the amount of units that fire in certain bins.
-
-    Should only be used on a collection of units
 
     Parameters
     ----------
     collection : NDataCollection
         The collection of units to count over
     bin_length : float
-        The length of the bins
+        The length of the bins in seconds
     in_range : tuple
         The range of time to count units over
 
     Returns
     -------
-    tuple
-        (unit counts in bins, bin_centres)
+    list of tuples:
+        (unit counts in bins, bin_centres) for each data object in the collection
 
     """
-    num_bins = ceil(in_range[1] - in_range[0] / bin_length)
-    arr = np.empty(shape=(len(collection), num_bins))
-    for idx, data in enumerate(collection):
-        # Check if the unit spikes in the bin
-        hist_val, bins = np.histogram(
-            data.get_unit_stamps_in_ranges([in_range]),
-            bins=num_bins, range=in_range)
-        hist_val = np.clip(hist_val, 0, 1)
-        arr[idx] = hist_val
+    result = []
+    calc_range = (in_range is None) and (multi_ranges is None)
 
-    bin_centres = [(bins[j + 1] + bins[j]) / 2 for j in range(num_bins)]
-    return np.sum(arr, axis=0), bin_centres
+    for idx in range(collection.get_num_data()):
+        if collection.get_num_data() > 1:
+            sub_collection = collection.subsample(idx)
+        else:
+            sub_collection = collection
+
+        if calc_range:
+            in_range = (0, sub_collection.get_data(0).get_duration())
+        elif multi_ranges:
+            in_range = multi_ranges[idx]
+        num_bins = ceil(float(in_range[1] - in_range[0]) / bin_length)
+
+        arr = np.empty(shape=(len(collection), num_bins))
+        for data_idx, data in enumerate(sub_collection):
+            spikes = data.get_unit_stamps_in_ranges([in_range])
+            # Check if the unit spikes in the bin
+            hist_val, bins = np.histogram(spikes, bins=num_bins, range=in_range)
+            hist_val = np.clip(hist_val, 0, 1)
+            arr[data_idx] = hist_val
+        bin_centres = [(bins[j + 1] + bins[j]) / 2 for j in range(num_bins)]
+        mua_tuple = (np.sum(arr, axis=0), bin_centres)
+        result.append(mua_tuple)
+
+    return result
 
 def evaluate_clusters(collection, idx1, idx2, set_units=False):
     """
@@ -337,27 +355,40 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
         The index in the collection for the run data
     sleep_idx : int
         The index in the collection for the sleep data
-    kwargs:
-        sample_rate : float
+    
+    kwargs
+    ------
+    sorting_mode : str
+        "vertical" or "horizontal" order for spatial sorting
+    swr_window : float
+        Lenth of SWR event around peak in seconds
+    match_clusters : bool
+        If true, set the units being used in sleep to those
+        most similar from run
+    
+    kwargs are also passed into 
+    nc_lfp.sharp_wave_ripples and 
+    multi_unit_activity and 
+    nc_spatial.non_moving_periods
 
     Returns
     -------
     dict
         Graphical and numerical analysis results
 
+    See also
+    --------
+    nc_lfp.sharp_wave_ripples
+    nc_spatial.non_moving_periods
+    multi_unit_activity
+    
     """
     results = {}
 
     # Parse the kwargs
-    min_range = kwargs.get("min_range", 150)
-    moving_thresh = kwargs.get("moving_thresh", 2.5)
-    swr_lower = kwargs.get("swr_lower", 100)
-    swr_higher = kwargs.get("swr_upper", 250)
-    rms_window_size_ms = kwargs.get("rms_window_size_ms", 7)
-    percentile = kwargs.get("percentile", 99)
     sorting_mode = kwargs.get("sorting_mode", "vertical")
-
-    # Preprocessing step
+    swr_window = kwargs.get("swr_window", 0.2)
+    match_clusters = kwargs.get("match_clusters", True)
 
     # Sort the run data spatially
     truth_arr = [False for i in range(collection.get_num_data())]
@@ -365,61 +396,59 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     collection.sort_units_spatially(truth_arr, mode=sorting_mode)
 
     # Match up cells between the recordings
-    evaluate_clusters(collection, run_idx, sleep_idx, set_units=True)
+    if match_clusters:
+        evaluate_clusters(collection, run_idx, sleep_idx, set_units=True)
 
-    # Find SWS, MUA, SWR
+    # Find the longest period of continuous sleep
     sleep = collection.get_data(sleep_idx)
+    sleep_subsample = collection.subsample(sleep_idx)
     sample_rate = sleep.lfp.get_sampling_rate()
-
     non_moving_periods = np.array(
-            sleep.non_moving_periods(
-                min_range=min_range, 
-                moving_thresh=moving_thresh)
-            ) * sample_rate 
-    
-    # TODO reconsider - for now get the longest consecutive period.
+        sleep.non_moving_periods(**kwargs)) * sample_rate
+
+    # Could take multiple periods instead of just the longest
     sorted_periods = sorted(
         non_moving_periods, key=lambda x : x[1] - x[0], reverse=True)
     longest_sleep_period = sorted_periods[0]
-
-    lfp_samples = sleep.get_samples()[
-        int(longest_sleep_period[0]):int(longest_sleep_period[1])]
-    lfp_times = sleep.lfp.get_timestamp()[
-        int(longest_sleep_period[0]):int(longest_sleep_period[1])]
-    filtered_lfp = butter_filter(
-        lfp_samples, sample_rate, 10, swr_lower, swr_higher, 'bandpass')
-    rms_window_size = floor((rms_window_size_ms / 1000) * sample_rate)
-    #rms_envelope = window_rms(filtered_lfp, rms_window_size, mode="same")
-    rms_envelope = distinct_window_rms(filtered_lfp, rms_window_size)
-    p_val = np.percentile(rms_envelope, percentile)
-     # Could also find peaks like this
-     # peaks = (longest_sleep_period[0] + np.argwhere(
-     #              rms_data > p99).flatten() * rms_window_size) / sample_rate
-
-    # TODO this may still be too many peaks
-    _, peaks = find_peaks(rms_envelope, thresh=p_val)
-    #peaks = (longest_sleep_period[0] + peaks) / sample_rate
-    peaks = (longest_sleep_period[0] + peaks * rms_window_size) / sample_rate
-
-    sleep_subsample = collection.subsample(sleep_idx)
-
-    unit_hist = count_units_in_bins(
-        sleep_subsample, 1, 
-        longest_sleep_period / sample_rate)
-
     raw_spike_times = spike_times(
-        sleep_subsample, 
+        sleep_subsample,
         ranges=[longest_sleep_period / sample_rate])
 
-    results["mua histogram"] = unit_hist
-    results["lfp times"] = lfp_times
-    results["lfp samples"] = filtered_lfp
-    results["swr times"] = peaks
+    # Estimate SWR
+    result_swr = sleep.lfp.sharp_wave_ripples(
+        in_range=longest_sleep_period / sample_rate, **kwargs)
+
+    # Estimate MUA bursts
+    result_mua = multi_unit_activity(
+        sleep_subsample, longest_sleep_period / sample_rate,
+        strip=True, **kwargs)
+
+    results.update(result_swr)
+    results.update(result_mua)
     results["spike times"] = raw_spike_times
-    results["sample rate"] = sample_rate
     results["num cells"] = len(sleep_subsample)
 
-    # TODO finish this off and look at individual times of overlapping MUA 
-    # and sleep etc
-    
+    # Get the overlapping ranges of SWR and MUA
+    def swr_interval(peak):
+        return (peak - 0.5*swr_window, peak + 0.5*swr_window)
+
+    def overlapping_swr_mua(mua, swr_peak):
+        swr_range = swr_interval(swr_peak)
+        overlapping = (
+            (swr_range[0] < mua[0] < swr_range[1]) or
+            (swr_range[0] < mua[1] < swr_range[1])
+        )
+        return overlapping
+
+    overlap = [
+        mua_range for mua_range in results["mua"]
+        if any(overlapping_swr_mua(mua_range, peak)
+            for peak in results["swr times"])
+        ]
+
+    results["overlap swr mua"] = overlap
+
+    # Zoom in on these ranges
+
+
     return results

@@ -1467,7 +1467,8 @@ class NSpatial(NAbstract):
         """
         Returns a number of tuples indicating ranges where the subject is not moving
 
-        kwargs:
+        kwargs
+        ------
         should_smooth : bool
             flags if the speed data should be smoothed, default False
         min_range : float
@@ -1476,8 +1477,8 @@ class NSpatial(NAbstract):
             any speed above this thresh is considered to be movement
         """
         should_smooth = kwargs.get("should_smooth", False)
-        min_range = kwargs.get("min_range", 10)
-        moving_thresh = kwargs.get("moving_thresh", 0.30)
+        min_range = kwargs.get("min_range", 150)
+        moving_thresh = kwargs.get("moving_thresh", 2.5)
 
         if should_smooth:
             self.smooth_speed()

@@ -13,6 +13,11 @@ from functools import reduce
 import logging
 from collections import OrderedDict as oDict
 
+from math import floor, ceil
+from neurochat.nc_utils import window_rms
+from neurochat.nc_utils import butter_filter
+from neurochat.nc_utils import find_peaks
+
 from neurochat.nc_utils import butter_filter, fft_psd, find
 
 from neurochat.nc_circular import CircStat
@@ -31,9 +36,9 @@ class NLfp(NBase):
     This data class is the placeholder for the dataset that contains information
     about the neural LFP signal. It decodes data from different formats and analyses
     LFP signal in the recording.
-     
+
     """
-    
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._file_tag = ''
@@ -41,274 +46,274 @@ class NLfp(NBase):
         self._samples = None
         self._timestamp = None
         self.set_record_info({'Total samples': 0})
-        
+
         self.__type = 'lfp'
 
     def get_type(self):
         """
         Returns the type of object. For NLfp, this is always `lfp` type
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
 
         """
         return self.__type
-    
+
     # For multi-unit analysis, {'SpikeName': cell_no} pairs should be used as function input
-    
+
     def set_channel_id(self, channel_id=''):
         """
         Sets the electrode channels ID
-        
+
         Parameters
         ----------
         channel_id : str
             Channel ID for the LFP data
-        
+
         Returns
         -------
         None
 
         """
         self._channel_id = channel_id
-        
+
     def get_channel_id(self):
         """
         Returns the electrode channels ID
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             LFP channel ID
 
         """
-        
+
         return self._channel_id
 
     def set_file_tag(self, file_tag):
         """
         Sets the file tag or extension for the LFP dataset. For example, Axona recordings usually
         have file tags like 'eeg' or 'eeg8' etc.
-        
+
         Parameters
         ----------
         file_tag : str
             File tag or extension for the LFP dataset
-        
+
         Returns
         -------
         None
 
         """
-        
+
         self._file_tag = file_tag
-        
+
     def get_file_tag(self):
         """
         Returns the file tag or extension for the LFP dataset. For example, Axona recordings usually
         have file tags like 'eeg' or 'eeg8' etc.
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             File tag or extension for the LFP dataset
         """
-        
+
         return self._file_tag
-    
+
 
     def get_timestamp(self):
         """
         Returns the timestamps of the LFP waveform
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         ndarray
             Timestamps of the LFP signal
 
         """
-        
+
         return self._timestamp
-    
+
     def _set_timestamp(self, timestamp=None):
         """
         Sets the timestamps for LFP samples
-        
+
         Parameters
         ----------
         timestamp : list or ndarray
             Timestamps of LFP samples
-            
+
         Returns
         -------
         None
 
         """
-        
+
         if timestamp is not None:
             self._timestamp = timestamp
 
     def get_samples(self):
         """
         Returns LFP waveform samples
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         ndarray
             Samples of the LFP signal
 
         """
-        
+
         return self._samples
-    
+
     def _set_samples(self, samples=[]):
         """
         Sets LFP samples
-        
+
         Parameters
         ----------
         samples : list or ndarray
             LFP samples
-            
+
         Returns
         -------
         None
 
         """
-        
+
         self._samples = samples
-        
+
     def _set_total_samples(self, tot_samples=0):
         """
         Sets the number of LFP samples as part of storing the recording information
-                
+
         Parameters
         ----------
         tot_samples : int
             Total number of samples in the LFP signal
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['No of samples'] = tot_samples
-        
+
     def _set_total_channel(self, tot_channels):
         """
         Sets the value of number of channels as part of storing the recording information
-                
+
         Parameters
         ----------
         tot_channels : int
             Total number of channels
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['No of channels'] = tot_channels
-        
+
     def _set_timestamp_bytes(self, bytes_per_timestamp):
         """
         Sets `bytes per timestamp` value as part of storing the recording information
-                
+
         Parameters
         ----------
         bytes_per_timestamp : int
             Total number of bytes to represent timestamp in the binary file
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['Bytes per timestamp'] = bytes_per_timestamp
-        
+
     def _set_sampling_rate(self, sampling_rate):
         """
         Sets the sampling rate of the LFP signal as part of storing the recording information
-                
+
         Parameters
         ----------
         sampling_rate : int
             Sampling rate of the LFP waveform
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['Sampling rate'] = sampling_rate
-        
+
     def _set_bytes_per_sample(self, bytes_per_sample):
         """
         Sets `bytes per sample` value as part of storing the recording information
-                
+
         Parameters
         ----------
         bytes_per_sample : int
             Total number of bytes to represent each sample in the binary file
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['Bytes per sample'] = bytes_per_sample
-        
+
     def _set_fullscale_mv(self, adc_fullscale_mv):
         """
         Sets fullscale value of ADC value in mV as part of storing the recording information
-                
+
         Parameters
         ----------
         adc_fullscale_mv : int
             Fullscale voltage of ADC signal in mV
- 
+
         Returns
         -------
-        None    
+        None
 
         """
-        
+
         self._record_info['ADC Fullscale mv'] = adc_fullscale_mv
 
     def get_total_samples(self):
         """
         Returns total number of LFP samples
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         ndarray
@@ -316,15 +321,15 @@ class NLfp(NBase):
 
         """
         return self._record_info['No of samples']
-    
+
     def get_total_channel(self):
         """
         Returns total number of electrode channels in the LFP data file
-                
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
@@ -332,83 +337,83 @@ class NLfp(NBase):
         """
 
         return self._record_info['No of channels']
-    
+
     def get_timestamp_bytes(self):
         """
         Returns the number of bytes to represent each timestamp in the binary file
-                
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
             Number of bytes to represent timestamps
 
         """
-        
+
         return self._record_info['Bytes per timestamp']
-    
+
     def get_sampling_rate(self):
         """
         Returns the sampling rate of spike waveforms
-                
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
             Sampling rate for spike waveforms
 
         """
-        
+
         return self._record_info['Sampling rate']
-    
+
     def get_bytes_per_sample(self):
         """
         Returns the number of bytes to represent each LFP waveform sample
-                
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
             Number of bytes to represent each sample of the LFP waveform
 
         """
-        
+
         return self._record_info['Bytes per sample']
-    
+
     def get_fullscale_mv(self):
         """
         Returns the fullscale value of the ADC in mV
-                
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
             Fullscale ADC value in mV
 
-        """ 
-        
-        return self._record_info['ADC Fullscale mv']     
-        
+        """
+
+        return self._record_info['ADC Fullscale mv']
+
     def get_recording_time(self):
         """
         Returns the recording time in seconds
-        
+
         Parameters
         ----------
         None
- 
+
         Returns
         -------
         int
@@ -420,22 +425,22 @@ class NLfp(NBase):
     def load(self, filename=None, system=None):
         """
         Loads LFP datasets
-        
+
         Parameters
         ----------
         filename : str
             Name of the spike datafile
         system : str
             Recording system or format of the spike data file
-        
+
         Returns
         -------
         None
-        
+
         See also
         --------
         load_lfp_axona(), load_lfp_NLX(), load_lfp_NWB()
-            
+
         """
         if system is None:
             system = self._system
@@ -451,19 +456,19 @@ class NLfp(NBase):
     def add_spike(self, spike=None, **kwargs):
         """
         Adds new spike node to current NLfp() object
-        
+
         Parameters
         ----------
         spike : NSpikes
             NSPike object. If None, new object is created
-        
+
         Returns
         -------
         `:obj:NSpike()`
             A new NSpike() object
 
         """
-        
+
         cls= kwargs.get('cls', None)
         if not inspect.isclass(cls):
             try:
@@ -473,29 +478,29 @@ class NLfp(NBase):
             except:
                  logging.error('Data type cannot be determined!')
         if inspect.isclass(cls):
-             new_spike = self._add_node(cls, spike, 'spike', **kwargs)             
+             new_spike = self._add_node(cls, spike, 'spike', **kwargs)
              return new_spike
         else:
             logging.error('Cannot add the spike data!')
-                
+
 
     def load_spike(self, names='all'):
         """
         Loads datasets of the spike nodes. Name of each node is used for obtaining the
         filenames
-        
+
         Parameters
         ----------
         names : list of str
             Names of the nodes to load. If None, current NSpike() object is loaded
-        
+
         Returns
         -------
         None
 
         """
- 
-        
+
+
         if names == 'all':
             for spike in self._spikes:
                 spike.load()
@@ -507,38 +512,38 @@ class NLfp(NBase):
     def add_lfp(self, lfp=None, **kwargs):
         """
         Adds new LFP node to current NLfp() object
-        
+
         Parameters
         ----------
         lfp : NLfp
             NLfp object. If None, new object is created
-        
+
         Returns
         -------
         `:obj:Nlfp`
             A new NLfp() object
 
         """
-        
+
         new_lfp = self._add_node(self.__class__, lfp, 'lfp', **kwargs)
-        
+
         return new_lfp
 
     def load_lfp(self, names=None):
         """
         Loads datasets of the LFP nodes. Name of each node is used for obtaining the
         filenames
-        
+
         Parameters
         ----------
         names : list of str
             Names of the nodes to load. If `all`, all LFP nodes are loaded
-        
+
         Returns
         -------
         None
         """
-        
+
         if names is None:
             self.load()
         elif names == 'all':
@@ -552,17 +557,17 @@ class NLfp(NBase):
     def spectrum(self, **kwargs):
         """
         Analyses frequency spectrum of the LFP signal
-                
+
         Parameters
         ----------
         **kwargs
             Keywrod arguments
- 
+
         Returns
         -------
         dict
             Graphical data of the analysis
-    
+
         """
 
         graph_data = oDict()
@@ -634,7 +639,7 @@ class NLfp(NBase):
     def phase_dist(self, event_stamp, **kwargs):
         """
         Analysis of spike to LFP phase distribution
-                
+
         Parameters
         ----------
         evnet_stamp : ndarray
@@ -642,7 +647,7 @@ class NLfp(NBase):
             distribution
         **kwargs
             Keywrod arguments
- 
+
         Returns
         -------
         dict
@@ -753,7 +758,7 @@ class NLfp(NBase):
         cs.calc_stat()
         result = cs.get_result()
         meanTheta = result['meanTheta']*np.pi/180
-        
+
         _results['LFP Spike Mean Phase']= result['meanTheta']
         _results['LFP Spike Mean Phase Count']= result['meanRho']
         _results['LFP Spike Phase Res Vect']= result['resultant']
@@ -763,7 +768,7 @@ class NLfp(NBase):
         graph_data['phBins'] = phBins
         graph_data['raster'] = rcount
         graph_data['rasterbins'] = rbins
-        
+
         self.update_result(_results)
 
         return graph_data
@@ -771,16 +776,16 @@ class NLfp(NBase):
     def plv(self, event_stamp, **kwargs):
         """
         Calculates phase-locking value of the spike train to underlying LFP signal.
-        
+
         When 'mode'= None in the inpput kwargs, it calculates the PLV and SFC over
-        the entire spike-train. 
-        
+        the entire spike-train.
+
         If 'mode'= 'bs', it bootstraps the spike-timestamps
         and calculates the locking values for each set of new spike timestamps.
-        
+
         If 'mode'= 'tr', a time-resilved phase-locking analysis is performed where
         the LFP signal is split into overlapped segments for each calculation.
-        
+
         Parameters
         ----------
         evnet_stamp : ndarray
@@ -788,12 +793,12 @@ class NLfp(NBase):
             locking
         **kwargs
             Keywrod arguments
- 
+
         Returns
         -------
         dict
             Graphical data of the analysis
-    
+
         """
         graph_data = oDict()
 
@@ -930,7 +935,7 @@ class NLfp(NBase):
     def event_trig_average(self, event_stamp=None, **kwargs):
         """
         Averaging event-triggered LFP signals
-        
+
         Parameters
         ----------
         event_stamp : ndarray
@@ -938,31 +943,31 @@ class NLfp(NBase):
             event triggered average of the LFP signal
         **kwargs
             Keywrod arguments
- 
+
         Returns
         -------
         dict
             Graphical data of the analysis
 
         """
-        
+
         graph_data = oDict()
         window = np.array(kwargs.get('window', [-0.5, 0.5]))
 #        mode = kwargs.get('mode', None)
 
         if event_stamp is None:
             spike = kwargs.get('spike', None)
-            
+
             try:
                 data_type = spike.get_type()
             except:
                 logging.error('The data type of the addes object cannot be determined!')
-            
+
             if data_type == 'spike':
                 event_stamp = spike.get_unit_stamp()
             elif spike in self.get_spike_names():
                 event_stamp = self.get_spike(spike).get_unit_stamp()
-                
+
         if event_stamp is None:
             logging.error('No valid event timestamp or spike is provided')
         else:
@@ -989,16 +994,16 @@ class NLfp(NBase):
     def spike_lfp_causality(self, spike=None, **kwargs):
         """
         (Not implemented yet)
-        
+
         Analyses spike to underlying LFP causality
-                
+
         Parameters
         ----------
         spike : NSpike
             Spike dataset which is used for the causality analysis
         **kwargs
             Keywrod arguments
- 
+
         Returns
         -------
         dict
@@ -1009,27 +1014,84 @@ class NLfp(NBase):
 
         pass
 
+    def sharp_wave_ripples(self, in_range=None, **kwargs):
+        """
+        Detect SWR events in the lfp, optionally in a given range
+
+        Parameters
+        ----------
+        in_range : tuple
+            A range in seconds
+        
+        kwargs
+        ------
+        swr_lower : float
+            Lower band in hz
+        swr_upper : float
+            Upper band in hz
+        rms_window_size_ms : int
+            Size of the rms window in ms
+        percentile : float
+            The percentile threshold for a peak
+
+        Returns
+        -------
+        dict
+            lfp times, lfp samples, swr times, lfp sample rate
+
+        """
+        swr_lower = kwargs.get("swr_lower", 100)
+        swr_higher = kwargs.get("swr_upper", 250)
+        rms_window_size_ms = kwargs.get("rms_window_size_ms", 7)
+        percentile = kwargs.get("peak_percentile", 99.5)
+
+        sample_rate = self.get_sampling_rate()
+        lfp_samples = self.get_samples()[
+            int(sample_rate*in_range[0]):int(sample_rate*in_range[1])]
+        lfp_times = self.get_timestamp()[
+            int(sample_rate*in_range[0]):int(sample_rate*in_range[1])]
+
+        # Estimate SWR events
+        filtered_lfp = butter_filter(
+            lfp_samples, sample_rate, 10, swr_lower, swr_higher, 'bandpass')
+        rms_window_size = floor((rms_window_size_ms / 1000) * sample_rate)
+        rms_envelope = window_rms(filtered_lfp, rms_window_size, mode="same")
+        p_val = np.percentile(rms_envelope, percentile)
+        _, peaks = find_peaks(rms_envelope, thresh=p_val)
+        peaks = in_range[0] + (peaks / sample_rate)
+
+        """
+        Alternative way to get SWR
+        #rms_envelope = distinct_window_rms(filtered_lfp, rms_window_size)
+        #peaks = (
+        # longest_sleep_period[0] + peaks * rms_window_size) / sample_rate
+        """
+
+        return {
+            "lfp times": lfp_times, "lfp samples": filtered_lfp,
+            "swr times": peaks, "lfp sample rate": sample_rate}
+
     def save_to_hdf5(self, file_name=None, system=None):
         """
         Stores NLfp() object to HDF5 file
-        
+
         Parameters
         ----------
         file_name : str
             Full file directory for the lfp data
         system : str
             Recoring system or data format
-        
+
         Returns
         -------
         None
-        
+
         Also see
         --------
         nc_hdf.Nhdf().save_lfp()
-        
+
         """
-        
+
         hdf = Nhdf()
         if file_name and system:
             if os.path.exists(file_name):
@@ -1045,25 +1107,25 @@ class NLfp(NBase):
     def load_lfp_NWB(self, file_name):
         """
         Decodes LFP data from NWB (HDF5) file format
-        
+
         Parameters
         ----------
         file_name : str
             Full file directory for the lfp data
-        
+
         Returns
         -------
         None
-        
+
         """
-        
+
         file_name, path = file_name.split('+')
         if os.path.exists(file_name):
             hdf = Nhdf()
             hdf.set_filename(file_name)
 
             _record_info = {}
-    
+
             if path in hdf.f:
                 g = hdf.f[path]
             elif '/processing/Neural Continuous/LFP/'+ path in hdf.f:
@@ -1071,16 +1133,16 @@ class NLfp(NBase):
                 g = hdf.f[path]
             else:
                 logging.error('Specified path does not exist!')
-    
+
             for key, value in g.attrs.items():
                 _record_info[key] = value
-                
+
             self.set_record_info(_record_info)
-            
+
             self._set_samples(hdf.get_dataset(group=g, name='data'))
             self._set_timestamp(hdf.get_dataset(group=g, name='timestamps'))
             self._set_total_samples(hdf.get_dataset(group=g, name='num_samples'))
-    
+
             hdf.close()
         else:
             logging.error(file_name + ' does not exist!')
@@ -1088,18 +1150,18 @@ class NLfp(NBase):
     def load_lfp_Axona(self, file_name):
         """
         Decodes LFP data from Axona file format
-        
+
         Parameters
         ----------
         file_name : str
             Full file directory for the lfp data
-        
+
         Returns
         -------
         None
-        
+
         """
-        
+
         words = file_name.split(sep=os.sep)
         file_directory = os.sep.join(words[0:-1])
         file_tag, file_extension = words[-1].split('.')
@@ -1206,16 +1268,16 @@ class NLfp(NBase):
     def load_lfp_Neuralynx(self, file_name):
         """
         Decodes LFP data from Neuralynx file format
-        
+
         Parameters
         ----------
         file_name : str
             Full file directory for the lfp data
-        
+
         Returns
         -------
         None
-        
+
         """
 
         self._set_data_source(file_name)
