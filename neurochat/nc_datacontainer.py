@@ -14,6 +14,8 @@ import pandas as pd
 import numpy as np
 
 from neurochat.nc_data import NData
+from neurochat.nc_utils import get_all_files_in_dir
+from neurochat.nc_utils import has_ext
 
 class NDataContainer():
     """
@@ -361,6 +363,54 @@ class NDataContainer():
         else:
             logging.error('Excel file does not exist!')
             return None
+
+    # Created by Sean Martin with help from Matheus Cafalchio
+    def add_axona_files_from_dir(self, directory, **kwargs):
+        """
+        Go through a directory, extracting files from it
+
+        Parameters
+        ----------
+        directory : str
+            The directory to parse through
+
+        Returns
+        -------
+        None
+
+        """
+        default_tetrode_list = [1, 2, 3, 4, 9, 10, 11, 12]
+        tetrode_list = kwargs.get("tetrode_list", default_tetrode_list)
+        data_extension = kwargs.get("data_extension", ".set")
+        cluster_extension = kwargs.get("cluster_extension", ".cut")
+        pos_extension = kwargs.get("pos_extension", ".txt")
+        lfp_extension = kwargs.get("lfp_extension", ".eeg")
+
+        files = get_all_files_in_dir(directory, data_extension)
+        txt_files = get_all_files_in_dir(directory, pos_extension)
+        for filename in files:
+            filename = filename[:-len(data_extension)]
+            for tetrode in tetrode_list:
+                spike_name = filename + '.' + str(tetrode)
+                cut_name = filename + '_' + str(tetrode) + cluster_extension
+                lfp_name = filename + lfp_extension
+                # Don't consider files that have not been clustered
+                if not os.path.isfile(os.path.join(directory, cut_name)):
+                    logging.info(
+                        "Skipping this - no cluster file named {}".format(cut_name))
+                    continue
+                
+                for fname in txt_files:
+                    if fname[:len(filename)] == filename:
+                        pos_name = fname
+                        break
+                else:
+                    logging.info("No position file for {}".format(filename))
+
+                self.add_files(NDataContainer.EFileType.Spike, [spike_name])
+                self.add_files(NDataContainer.EFileType.Position, [pos_name])
+                self.add_files(NDataContainer.EFileType.LFP, [lfp_name])
+        self.set_units()
 
     def merge(self, indices, force_equal_units=True):
         """

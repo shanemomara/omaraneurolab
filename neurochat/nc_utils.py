@@ -9,6 +9,8 @@ This module implements utility functions and classes for NeuroChaT software
 import logging
 import time
 from collections import OrderedDict as oDict
+from os import listdir
+from os.path import isfile, isdir, join
 
 import pandas as pd
 import numpy as np
@@ -1024,3 +1026,47 @@ def get_axona_colours():
         get_axona_colours.colorcells.append((250/255, 128/255, 114/255))
 
     return get_axona_colours.colorcells
+
+def has_ext(filename, ext):
+    """
+    Check if the filename ends in the extension
+    
+    Parameters
+    ----------
+    filename : str
+        The name of the file
+    ext : str
+        The extension, may have leading dot (e.g txt == .txt)
+    
+    Returns
+    -------
+    bool indicating if the filename has the extension
+
+    """
+    if ext == None:
+        return True
+    if ext[0] != ".":
+        ext = "." + ext
+    return filename[-len(ext):].lower() == ext.lower()
+
+def get_all_files_in_dir(in_dir, ext=None, return_absolute=True):
+    """
+    Get all files in the directory with the given extension.
+    
+    Parameters
+    ----------
+    in_dir : str
+        The absolute path to the directory
+    ext : str
+        Default None, the extension of files to get
+    return_absolute : bool
+        Whether to return the absolute filename or not
+    """
+    if not isdir(in_dir):
+        print("Non existant directory " + str(in_dir))
+        return []
+    ok_file = lambda f : isfile(join(in_dir, f)) and has_ext(f, ext)
+    convert_to_path = lambda f : join(in_dir, f) if return_absolute else f
+    onlyfiles = [
+        convert_to_path(f) for f in sorted(listdir(in_dir)) if ok_file(f)]
+    return onlyfiles

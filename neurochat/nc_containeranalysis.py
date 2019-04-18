@@ -157,7 +157,7 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     mua_mode : str
         "rms_peaks" - calculate rms window and find peaks in this
         or "raw" - calculate mua histogram, extract bins with all cells active
-        or "high_activity" - calculate rms window and 
+        or "high_activity" - calculate rms window and
                              look for sustained high activity in this
     mua_length : float
         The length of a mua event in seconds
@@ -355,7 +355,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
         The index in the collection for the run data
     sleep_idx : int
         The index in the collection for the sleep data
-    
+
     kwargs
     ------
     sorting_mode : str
@@ -365,10 +365,10 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     match_clusters : bool
         If true, set the units being used in sleep to those
         most similar from run
-    
-    kwargs are also passed into 
-    nc_lfp.sharp_wave_ripples and 
-    multi_unit_activity and 
+
+    kwargs are also passed into
+    nc_lfp.sharp_wave_ripples and
+    multi_unit_activity and
     nc_spatial.non_moving_periods
 
     Returns
@@ -381,7 +381,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     nc_lfp.sharp_wave_ripples
     nc_spatial.non_moving_periods
     multi_unit_activity
-    
+
     """
     results = {}
 
