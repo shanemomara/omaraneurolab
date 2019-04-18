@@ -16,6 +16,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
 from matplotlib.patches import Arc
 import matplotlib.ticker as ticker
+import matplotlib.gridspec as gridspec
 
 from neurochat.nc_utils import find, angle_between_points, get_axona_colours
 import neurochat.nc_containeranalysis as nca
@@ -1896,3 +1897,63 @@ def _make_ax_if_none(ax, **kwargs):
         fig = plt.figure()
         ax = plt.gca(**kwargs)
     return ax, fig
+
+# TODO could be worth refactoring to use the original plots with an ax param
+def print_place_cells(
+    rows, cols=4, size_multiplier=4, wspace=1.3, hspace=1.5, 
+    placedata=None, wavedata=None, graphdata=None):
+    fig = plt.figure(
+        figsize=(cols * size_multiplier, rows * size_multiplier), 
+        tight_layout=False)
+    gs = gridspec.GridSpec(2 * rows, 2 * cols, wspace=wspace, hspace=hspace)
+    for i in range(rows):
+        
+        # Plot the spike position
+        place_data = placedata[i]
+        ax = fig.add_subplot(gs[2*i:2*(i+1),0:2])
+        ax.plot(place_data['posX'], place_data['posY'], color='black', zorder=1)
+        ax.scatter(place_data['spikeLoc'][0], place_data['spikeLoc'][1], \
+           s=80, marker='.', color=colorcells[i], zorder=2)
+        ax.invert_yaxis()
+        
+        # Plot the rate map
+        ax11 = fig.add_subplot(gs[2*i:2*(i+1),2:4])
+        nc_plot.loc_rate(place_data, ax=ax11, smooth=True)
+        
+        
+        # Plot -10 to 10 autocorrelation    
+        nc_plot.isi_corr(graphdata[i], ax=fig.add_subplot(gs[2*i:2*(i+1),4:6]))
+    
+        
+        # Plot wave property
+        wave_data = wavedata[i]
+        ax1 = fig.add_subplot(gs[2*i, 6])
+        ax1.plot(wave_data['Mean wave'][:,0], color='black', linewidth=1.0)
+        ax1.plot(wave_data['Mean wave'][:,0]+wave_data['Std wave'][:, 0],\
+          color='green', linestyle='dashed')
+        ax1.plot(wave_data['Mean wave'][:,0]-wave_data['Std wave'][:, 0],\
+          color='green', linestyle='dashed')
+        
+        ax2 = fig.add_subplot(gs[2*i, 7])
+        ax2.plot(wave_data['Mean wave'][:,1], color='black', linewidth=1.0)
+        ax2.plot(wave_data['Mean wave'][:, 1]+wave_data['Std wave'][:, 1],\
+          color='green', linestyle='dashed')
+        ax2.plot(wave_data['Mean wave'][:, 1]-wave_data['Std wave'][:, 1],\
+          color='green', linestyle='dashed')
+        
+        ax3 = fig.add_subplot(gs[2*i+1, 6])
+        ax3.plot(wave_data['Mean wave'][:,2], color='black', linewidth=1.0)
+        ax3.plot(wave_data['Mean wave'][:, 2]+wave_data['Std wave'][:, 2],\
+          color='green', linestyle='dashed')
+        ax3.plot(wave_data['Mean wave'][:, 2]-wave_data['Std wave'][:, 2],\
+          color='green', linestyle='dashed')
+        
+        ax4 = fig.add_subplot(gs[2*i+1, 7])
+        ax4.plot(wave_data['Mean wave'][:,3], color='black', linewidth=1.0)
+        ax4.plot(wave_data['Mean wave'][:, 3]+wave_data['Std wave'][:, 3],\
+          color='green', linestyle='dashed')
+        ax4.plot(wave_data['Mean wave'][:, 3]-wave_data['Std wave'][:, 3],\
+          color='green', linestyle='dashed')
+    
+    #plt.tight_layout()
+    return fig

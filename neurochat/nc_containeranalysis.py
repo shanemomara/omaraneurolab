@@ -7,6 +7,7 @@ This module contains analysis functions for NDataContainer objects.
 import logging
 from itertools import compress
 from math import floor, ceil
+import os
 
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_data import NData
@@ -15,6 +16,7 @@ from neurochat.nc_utils import smooth_1d, find_true_ranges
 from neurochat.nc_utils import find_peaks
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
+from neurochat.nc_utils import make_dir_if_not_exists
 from neurochat.nc_plot import replay_summary
 
 import numpy as np
@@ -449,6 +451,28 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     results["overlap swr mua"] = overlap
 
     # Zoom in on these ranges
-
-
     return results
+
+from neurochat.nc_plot import print_place_cells
+import matplotlib.pyplot as plt
+# main dir is temp measure
+def place_cell_summary(main_dir, collection):
+    placedata=[]
+    graphdata=[]
+    wavedata=[]
+    for i, data in enumerate(collection):
+        data_idx, unit_idx = collection._index_to_data_pos(i)
+        placedata.append(
+            data.place(pixel=3, filter=['b', 3], chop_bound=0, 
+            fieldThresh=0.2, minPlaceFieldNeighbours=0, smoothPlace=False))
+        graphdata.append(data.isi_corr(bins=1, bound = [-10, 10]))
+        wavedata.append(data.wave_property())
+        fig = print_place_cells(
+            len(collection.get_units(data_idx)), placedata=placedata, 
+            graphdata=graphdata, wavedata=wavedata)
+        # TODO remove fixed - 4
+        spike_name = collection.get_file_dict()["Spike"][data_idx][0]
+        out_name = os.path.join(main_dir, "plots", spike_name + ".png")
+        plt.savefig(out_name)
+
+    return placedata, graphdata, wavedata

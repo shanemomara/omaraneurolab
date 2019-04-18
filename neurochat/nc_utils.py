@@ -9,6 +9,7 @@ This module implements utility functions and classes for NeuroChaT software
 import logging
 import time
 from collections import OrderedDict as oDict
+import os
 from os import listdir
 from os.path import isfile, isdir, join
 
@@ -1070,3 +1071,7 @@ def get_all_files_in_dir(in_dir, ext=None, return_absolute=True):
     onlyfiles = [
         convert_to_path(f) for f in sorted(listdir(in_dir)) if ok_file(f)]
     return onlyfiles
+
+def make_dir_if_not_exists(location):
+    """Makes directory structure for given location"""
+    os.makedirs(os.path.dirname(location), exist_ok=True)
