@@ -18,6 +18,7 @@ from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
 from neurochat.nc_utils import make_dir_if_not_exists
 from neurochat.nc_plot import replay_summary
+from neurochat.nc_plot import print_place_cells
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
@@ -453,9 +454,8 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     # Zoom in on these ranges
     return results
 
-from neurochat.nc_plot import print_place_cells
-import matplotlib.pyplot as plt
 # main dir is temp measure
+import matplotlib.pyplot as plt # TEMP
 def place_cell_summary(main_dir, collection):
     placedata=[]
     graphdata=[]
@@ -467,12 +467,19 @@ def place_cell_summary(main_dir, collection):
             fieldThresh=0.2, minPlaceFieldNeighbours=0, smoothPlace=False))
         graphdata.append(data.isi_corr(bins=1, bound = [-10, 10]))
         wavedata.append(data.wave_property())
-        fig = print_place_cells(
-            len(collection.get_units(data_idx)), placedata=placedata, 
-            graphdata=graphdata, wavedata=wavedata)
-        # TODO remove fixed - 4
-        spike_name = collection.get_file_dict()["Spike"][data_idx][0]
-        out_name = os.path.join(main_dir, "plots", spike_name + ".png")
-        plt.savefig(out_name)
+
+        # Save the accumulated information
+        if unit_idx == len(collection.get_units(data_idx)) - 1:
+            fig = print_place_cells(
+                len(collection.get_units(data_idx)), placedata=placedata, 
+                graphdata=graphdata, wavedata=wavedata)
+            spike_name = os.path.basename(
+                collection.get_file_dict()["Spike"][data_idx][0])
+            out_name = os.path.join(main_dir, "plots", spike_name + ".png")
+            make_dir_if_not_exists(out_name)
+            plt.savefig(out_name)
+            placedata=[]
+            graphdata=[]
+            wavedata=[]
 
     return placedata, graphdata, wavedata

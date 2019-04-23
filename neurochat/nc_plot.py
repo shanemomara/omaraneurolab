@@ -207,13 +207,11 @@ def isi_corr(isi_corr_data, ax=None):
 
     Returns
     -------
-    fig1 : matplotlib.pyplot.Figure
+    fig : matplotlib.pyplot.Figure
         ISI correlation histogram
 
     """
-    if not ax:
-        fig1 = plt.figure()
-        ax = plt.gca()
+    ax, fig = _make_ax_if_none(ax)
 
     show_edges = False
     line_width = 1 if show_edges else 0
@@ -228,7 +226,7 @@ def isi_corr(isi_corr_data, ax=None):
     ax.set_ylabel('Counts')
     ax.tick_params(width=1.5)
 
-    return fig1
+    return fig
 
 def theta_cell(plot_data):
     """
@@ -1342,9 +1340,9 @@ def loc_time_shift(loc_shift_data):
     ax.set_xlabel('Shift time (ms)')
     ax.set_title('Coherence of place firing in shifted time of spiking events')
 
-#        for ax in fig1.axes:
-#            ax.set_xlabel('shift time')
-#        fig1.suptitle('Specifity indices in time shift')
+    #        for ax in fig1.axes:
+    #            ax.set_xlabel('shift time')
+    #        fig1.suptitle('Specifity indices in time shift')
 
     return fig1, fig2, fig3
 
@@ -1408,7 +1406,7 @@ def rot_corr(plot_data):
 
     """
 
-# Locationa firing map rotational analysis
+    # Location firing map rotational analysis
     fig1 = plt.figure()
     ax = fig1.gca()
     ax.plot(plot_data['rotAngle'], plot_data['rotCorr'], linewidth=2, zorder=1)
@@ -1913,18 +1911,16 @@ def print_place_cells(
         ax = fig.add_subplot(gs[2*i:2*(i+1),0:2])
         ax.plot(place_data['posX'], place_data['posY'], color='black', zorder=1)
         ax.scatter(place_data['spikeLoc'][0], place_data['spikeLoc'][1], \
-           s=80, marker='.', color=colorcells[i], zorder=2)
+           s=80, marker='.', color=get_axona_colours()[i], zorder=2)
         ax.invert_yaxis()
         
         # Plot the rate map
         ax11 = fig.add_subplot(gs[2*i:2*(i+1),2:4])
-        nc_plot.loc_rate(place_data, ax=ax11, smooth=True)
-        
+        loc_rate(place_data, ax=ax11, smooth=True)
         
         # Plot -10 to 10 autocorrelation    
-        nc_plot.isi_corr(graphdata[i], ax=fig.add_subplot(gs[2*i:2*(i+1),4:6]))
+        isi_corr(graphdata[i], ax=fig.add_subplot(gs[2*i:2*(i+1),4:6]))
     
-        
         # Plot wave property
         wave_data = wavedata[i]
         ax1 = fig.add_subplot(gs[2*i, 6])
