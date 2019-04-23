@@ -1045,11 +1045,11 @@ def loc_rate(place_data, ax=None, smooth=True, **kwargs):
     """
     colormap = kwargs.get("colormap", "viridis")
     if colormap is "default":
-    clist = [(0.0, 0.0, 1.0),\
-            (0.0, 1.0, 0.5),\
-            (0.9, 1.0, 0.0),\
-            (1.0, 0.75, 0.0),\
-            (0.9, 0.0, 0.0)]
+        clist = [(0.0, 0.0, 1.0),\
+                (0.0, 1.0, 0.5),\
+                (0.9, 1.0, 0.0),\
+                (1.0, 0.75, 0.0),\
+                (0.9, 0.0, 0.0)]
         colormap = mcol.ListedColormap(clist)
 
     ax, fig = _make_ax_if_none(ax)
@@ -1960,60 +1960,38 @@ def _make_ax_if_none(ax, **kwargs):
         ax = plt.gca(**kwargs)
     return ax, fig
 
-# TODO could be worth refactoring to use the original plots with an ax param
 def print_place_cells(
-    rows, cols=4, size_multiplier=4, wspace=1.3, hspace=1.5, 
-    placedata=None, wavedata=None, graphdata=None):
+    rows, cols=6, size_multiplier=4, wspace=0.3, hspace=0.3,
+    placedata=None, wavedata=None, graphdata=None,
+    headdata=None, thetadata=None):
     fig = plt.figure(
-        figsize=(cols * size_multiplier, rows * size_multiplier), 
+        figsize=(cols * size_multiplier, rows * size_multiplier),
         tight_layout=False)
-    gs = gridspec.GridSpec(2 * rows, 2 * cols, wspace=wspace, hspace=hspace)
+    gs = gridspec.GridSpec(rows, cols, wspace=wspace, hspace=hspace)
+
     for i in range(rows):
-        
         # Plot the spike position
         place_data = placedata[i]
-        ax = fig.add_subplot(gs[2*i:2*(i+1),0:2])
-        ax.plot(place_data['posX'], place_data['posY'], color='black', zorder=1)
-        ax.scatter(place_data['spikeLoc'][0], place_data['spikeLoc'][1], \
-           s=80, marker='.', color=get_axona_colours()[i], zorder=2)
-        ax.invert_yaxis()
-        
+        ax = fig.add_subplot(gs[i, 0])
+        loc_spike(place_data, ax=ax, color=get_axona_colours(i))
+
         # Plot the rate map
-        ax11 = fig.add_subplot(gs[2*i:2*(i+1),2:4])
-        loc_rate(place_data, ax=ax11, smooth=True)
-        
-        # Plot -10 to 10 autocorrelation    
-        isi_corr(graphdata[i], ax=fig.add_subplot(gs[2*i:2*(i+1),4:6]))
-    
+        ax = fig.add_subplot(gs[i, 1])
+        loc_rate(place_data, ax=ax, smooth=True)
+
+        head_data = headdata[i]
+        ax = fig.add_subplot(gs[i, 2], projection='polar')
+        hd_rate(head_data, ax=ax, title=None)
+
         # Plot wave property
-        wave_data = wavedata[i]
-        ax1 = fig.add_subplot(gs[2*i, 6])
-        ax1.plot(wave_data['Mean wave'][:,0], color='black', linewidth=1.0)
-        ax1.plot(wave_data['Mean wave'][:,0]+wave_data['Std wave'][:, 0],\
-          color='green', linestyle='dashed')
-        ax1.plot(wave_data['Mean wave'][:,0]-wave_data['Std wave'][:, 0],\
-          color='green', linestyle='dashed')
-        
-        ax2 = fig.add_subplot(gs[2*i, 7])
-        ax2.plot(wave_data['Mean wave'][:,1], color='black', linewidth=1.0)
-        ax2.plot(wave_data['Mean wave'][:, 1]+wave_data['Std wave'][:, 1],\
-          color='green', linestyle='dashed')
-        ax2.plot(wave_data['Mean wave'][:, 1]-wave_data['Std wave'][:, 1],\
-          color='green', linestyle='dashed')
-        
-        ax3 = fig.add_subplot(gs[2*i+1, 6])
-        ax3.plot(wave_data['Mean wave'][:,2], color='black', linewidth=1.0)
-        ax3.plot(wave_data['Mean wave'][:, 2]+wave_data['Std wave'][:, 2],\
-          color='green', linestyle='dashed')
-        ax3.plot(wave_data['Mean wave'][:, 2]-wave_data['Std wave'][:, 2],\
-          color='green', linestyle='dashed')
-        
-        ax4 = fig.add_subplot(gs[2*i+1, 7])
-        ax4.plot(wave_data['Mean wave'][:,3], color='black', linewidth=1.0)
-        ax4.plot(wave_data['Mean wave'][:, 3]+wave_data['Std wave'][:, 3],\
-          color='green', linestyle='dashed')
-        ax4.plot(wave_data['Mean wave'][:, 3]-wave_data['Std wave'][:, 3],\
-          color='green', linestyle='dashed')
-    
-    #plt.tight_layout()
+        ax = fig.add_subplot(gs[i, 3])
+        largest_waveform(wavedata[i], ax=ax)
+
+        # Plot -10 to 10 autocorrelation
+        ax = fig.add_subplot(gs[i, 4])
+        isi_corr(graphdata[i], ax=ax, title=None, xlabel=None, ylabel=None)
+
+        ax = fig.add_subplot(gs[i, 5])
+        theta_cell(thetadata[i], ax=ax, title=None, xlabel=None, ylabel=None)
+
     return fig

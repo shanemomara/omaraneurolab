@@ -21,6 +21,7 @@ from neurochat.nc_plot import print_place_cells
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
+from matplotlib.pyplot import savefig
 
 def spike_positions(collection, should_sort=True, mode="vertical"):
     """
@@ -453,32 +454,37 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     # Zoom in on these ranges
     return results
 
-# main dir is temp measure
-import matplotlib.pyplot as plt # TEMP
-def place_cell_summary(main_dir, collection):
-    placedata=[]
-    graphdata=[]
-    wavedata=[]
+def place_cell_summary(collection):
+    placedata = []
+    graphdata = []
+    wavedata = []
+    headdata = []
+    thetadata = []
     for i, data in enumerate(collection):
         data_idx, unit_idx = collection._index_to_data_pos(i)
-        placedata.append(
-            data.place(pixel=3, filter=['b', 3], chop_bound=0, 
-            fieldThresh=0.2, minPlaceFieldNeighbours=0, smoothPlace=False))
-        graphdata.append(data.isi_corr(bins=1, bound = [-10, 10]))
+        placedata.append(data.place(pixel=3, filter=['b', 3], chop_bound=0))
+        graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
         wavedata.append(data.wave_property())
+        headdata.append(data.hd_rate())
+        thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
 
         # Save the accumulated information
         if unit_idx == len(collection.get_units(data_idx)) - 1:
-            fig = print_place_cells(
-                len(collection.get_units(data_idx)), placedata=placedata, 
-                graphdata=graphdata, wavedata=wavedata)
-            spike_name = os.path.basename(
-                collection.get_file_dict()["Spike"][data_idx][0])
+            print_place_cells(
+                len(collection.get_units(data_idx)),
+                placedata=placedata, graphdata=graphdata, 
+                wavedata=wavedata, headdata=headdata,
+                thetadata=thetadata,
+                size_multiplier=4)
+            filename = collection.get_file_dict()["Spike"][data_idx][0]
+            spike_name = os.path.basename(filename)
+            main_dir = os.path.dirname(filename)
             out_name = os.path.join(main_dir, "plots", spike_name + ".png")
             make_dir_if_not_exists(out_name)
-            plt.savefig(out_name)
-            placedata=[]
-            graphdata=[]
-            wavedata=[]
-
-    return placedata, graphdata, wavedata
+            savefig(out_name, dpi=200)
+            placedata = []
+            graphdata = []
+            wavedata = []
+            headdata = []
+            thetadata = []
+    return
