@@ -692,32 +692,34 @@ def multiple_regression(mra_data):
 
     return fig1
 
-def hd_rate(hd_data, ax=None):
+def hd_rate(hd_data, ax=None, **kwargs):
     """
-    Plots head direction vs spike rate
+    Plot head direction vs spike rate.
 
     Parameters
     ----------
     hd_data : dict
         Graphical data from the unit firing to head-direction correlation
-    ax : matplotlib.pyplot.axis
-        Axis object. If specified, the figure is plotted in this axis.
+    ax : matplotlib.axes.Axes
+        Polar Axes object. If specified, the figure is plotted in this axes.
+    kwargs :
 
     Returns
     -------
-    ax : matplotlib.pyplot.Axis
-        Axis of the polar plot of head-direction vs spike-rate.
+    ax : matplotlib.axes.Axes
+        Axes of the polar plot of head-direction vs spike-rate.
 
     """
-
+    title = kwargs.get("title", "Head directional firing rate")
     if not ax:
         plt.figure()
         ax = plt.gca(polar=True)
+
     bins = np.append(hd_data['bins'], hd_data['bins'][0])
     rate = np.append(hd_data['smoothRate'], hd_data['smoothRate'][0])
     ax.plot(np.radians(bins), rate, color=BLUE)
 
-    ax.set_title('Head directional firing rate')
+    ax.set_title(title)
     ax.set_rticks([hd_data['hdRate'].max()])
 
     return ax
