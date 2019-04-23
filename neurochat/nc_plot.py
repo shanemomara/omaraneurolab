@@ -983,7 +983,7 @@ def hd_time_shift(hd_shift_data):
 
     return fig1, fig2, fig3
 
-def loc_spike(place_data, ax=None):
+def loc_spike(place_data, ax=None, **kwargs):
     """
     Plots the location of spiking-events (spike-plot) along with the trace of animal in the enviroment.
 
@@ -1000,7 +1000,13 @@ def loc_spike(place_data, ax=None):
         Axis of the spike-plot
 
     """
+    default_point_size = max(
+        place_data['yedges'].max() - place_data['yedges'].min(),
+        place_data['xedges'].max() - place_data['xedges'].min()
+    ) / 10
 
+    color = kwargs.get("color", RED)
+    point_size = kwargs.get("point_size", default_point_size)
     # spatial firing map
     if not ax:
         plt.figure()
@@ -1008,14 +1014,13 @@ def loc_spike(place_data, ax=None):
 
     ax.plot(place_data['posX'], place_data['posY'], color='black', zorder=1)
     ax.scatter(place_data['spikeLoc'][0], place_data['spikeLoc'][1], \
-               s=2, marker='.', color=RED, zorder=2)
+               s=point_size, marker='.', color=color, zorder=2)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
     #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
     #ax.set_aspect(asp)
     ax.set_aspect('equal')
     ax.invert_yaxis()
-#        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
 def loc_rate(place_data, ax=None, smooth=True, **kwargs):
