@@ -1018,7 +1018,7 @@ def loc_spike(place_data, ax=None):
 #        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
-def loc_rate(place_data, ax=None, smooth=True):
+def loc_rate(place_data, ax=None, smooth=True, **kwargs):
     """
     Plots location vs spike rate
 
@@ -1028,32 +1028,36 @@ def loc_rate(place_data, ax=None, smooth=True):
         Graphical data from the unit firing to locational correlation
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
-
+    kwargs :
+        colormap :
+            viridis is used if not specified
+            "default" uses the standard red green intensity colours
     Returns
     -------
     ax : matplotlib.pyplot.Axis
         Axis of the firing rate map
 
     """
-
-    if not ax:
-        plt.figure()
-        ax = plt.gca()
+    colormap = kwargs.get("colormap", "viridis")
+    if colormap is "default":
     clist = [(0.0, 0.0, 1.0),\
             (0.0, 1.0, 0.5),\
             (0.9, 1.0, 0.0),\
             (1.0, 0.75, 0.0),\
             (0.9, 0.0, 0.0)]
-    c_map = mcol.ListedColormap(clist)
+        colormap = mcol.ListedColormap(clist)
 
+    ax, fig = _make_ax_if_none(ax)
     divider = make_axes_locatable(ax)
     cax = divider.append_axes('right', size='3%', pad=0.05)
     if smooth:
         fmap = place_data['smoothMap']
     else:
         fmap = place_data['firingMap']
-    pmap= ax.pcolormesh(place_data['xedges'], place_data['yedges'], np.ma.array(fmap, \
-                        mask=np.isnan(fmap)), cmap=c_map, rasterized=True)
+    pmap= ax.pcolormesh(
+        place_data['xedges'], place_data['yedges'],
+        np.ma.array(fmap, mask=np.isnan(fmap)),
+        cmap=colormap, rasterized=True)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
     #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
@@ -1061,7 +1065,6 @@ def loc_rate(place_data, ax=None, smooth=True):
     ax.set_aspect('equal')
     ax.invert_yaxis()
     plt.colorbar(pmap, cax=cax, orientation='vertical', use_gridspec=True)
-#        plt.autoscale(enable=True, axis='both', tight=True)
     return ax
 
 def loc_firing(place_data):
