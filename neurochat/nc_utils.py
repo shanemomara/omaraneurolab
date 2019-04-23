@@ -983,10 +983,14 @@ def static_vars(**kwargs):
     return decorate
 
 @static_vars(colorcells=[])
-def get_axona_colours():
+def get_axona_colours(index=None):
     """
     Create Axona cell colours.
     
+    Parameters
+    ----------
+    index : int
+        Optional integer to get colours at
     Returns
     -------
     list :
@@ -1026,7 +1030,13 @@ def get_axona_colours():
         get_axona_colours.colorcells.append((153/255, 50/255, 204/255))
         get_axona_colours.colorcells.append((250/255, 128/255, 114/255))
 
-    return get_axona_colours.colorcells
+    if index is None:
+        return get_axona_colours.colorcells
+    else:
+        if index >= len(get_axona_colours.colorcells):
+            logging.error("Passed colour index out of range")
+            return
+        return get_axona_colours.colorcells[index]
 
 def has_ext(filename, ext):
     """
