@@ -536,6 +536,7 @@ class NSpike(NBase):
             trough_loc = [peak_loc - j for j in range(peak_loc - 2) \
                         if data[peak_loc - j] >= 0 and data[peak_loc - j - 1] <= 0]
             return trough_loc[0] if trough_loc else 0
+
         def wave_width(wave, peak, thresh=0.25):
             p_loc, p_val = peak
             Len = wave.size
@@ -591,7 +592,8 @@ class NSpike(NBase):
         height = height[:, max_chan]
 
         graph_data = {'Mean wave': meanWave, 'Std wave': stdWave,
-                      'Amplitude': amp, 'Width': width, 'Height': height}
+                      'Amplitude': amp, 'Width': width, 'Height': height,
+                      'Max channel': max_chan}
 
         _result.update({'Mean amplitude': amp.mean(), 'Std amplitude': amp.std(),
                         'Mean height': height.mean(), 'Std height': height.std(),
