@@ -19,7 +19,6 @@ import matplotlib.ticker as ticker
 import matplotlib.gridspec as gridspec
 
 from neurochat.nc_utils import find, angle_between_points, get_axona_colours
-import neurochat.nc_containeranalysis as nca
 
 BLUE = '#1f77b4'
 RED = '#d62728'
@@ -1735,12 +1734,28 @@ def replay_summary(replay_data):
     plt.tight_layout()
     return fig
 
-def plot_replay_sections(replay_data, sleep_sample, orientation="vertical"):
+def plot_replay_sections(replay_data, spike_times, orientation="vertical"):
     """
-    Plot zoomed in sections of the replay data spikes
+    Plot zoomed in sections of the replay data spikes.
+
+    Parameters
+    ----------
+    replay_data : dict
+        Results from replay_summary
+    spike_times : list
+        A 3 tiered list, most commonly a list of nca.spike_times outputs
+    orientation : str
+        "vertical" or "horizontal" - the direction to plot rasters in
+
+    Returns
+    -------
+    matplotlib.pyplot.Figure :
+        Resulting multi Axes figure
+
     """
     num_plots = len(replay_data["overlap swr mua"])
     row_size = 6
+
     if num_plots <= row_size:
         num_cols = num_plots
         num_rows = 1
@@ -1751,19 +1766,20 @@ def plot_replay_sections(replay_data, sleep_sample, orientation="vertical"):
     fig, axes = plt.subplots(
         nrows=num_rows, ncols=num_cols,
         sharex='col', tight_layout=True, figsize=(num_rows*2, num_cols*2))
+
     for i, i_range in enumerate(replay_data["overlap swr mua"]):
         if num_plots == 1:
             ax = axes
         else:
             ax=axes.flatten()[i]
-
+        # nca.spike_times(sleep_sample, ranges=[i_range])
+        # can be used to get spike times
         spike_raster(
-            nca.spike_times(sleep_sample, ranges=[i_range]),
+            spike_times[i],
             linewidths=1, ax=ax, orientation=orientation,
             colors=get_axona_colours()[:replay_data["num cells"]],
             #xlim=(round(i_range[0], 1), round(i_range[1], 1)),
             title=None, ylabel=None, xlabel=None)
-        plt.tight_layout()
     return fig
 
 def plot_angle_between_points(points, xlim, ylim, ax=None):

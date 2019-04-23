@@ -17,7 +17,6 @@ from neurochat.nc_utils import find_peaks
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
 from neurochat.nc_utils import make_dir_if_not_exists
-from neurochat.nc_plot import replay_summary
 from neurochat.nc_plot import print_place_cells
 
 import numpy as np
