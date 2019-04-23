@@ -117,6 +117,31 @@ def wave_property(wave_data, plots=[2, 2]):
 
     return fig1
 
+def largest_waveform(wave_data, ax=None):
+    """
+    Plot the largest waveform in electrode groups.
+
+    Parameters
+    ----------
+    wave_data : dict
+        Graphical data form the Waveform analysis
+    ax : matplotlib.axes.Axes
+        Optional axes to plot to
+    Returns
+    -------
+    matplotlib.pyplot.Figure
+        The figure plotted to, or None if an axes is provided
+    """
+    ax, fig = _make_ax_if_none(ax)
+
+    mean_wave = wave_data['Mean wave'][:, wave_data["Max channel"]]
+    std_wave = wave_data['Std wave'][:, wave_data["Max channel"]]
+    ax.plot(mean_wave, color='black', linewidth=2.0)
+    ax.plot(mean_wave+std_wave, color='green', linestyle='dashed')
+    ax.plot(mean_wave-std_wave, color='green', linestyle='dashed')
+
+    return fig
+
 def isi(isi_data):
     """
     Plots Interspike interval histogram and scatter plots of interval-before
