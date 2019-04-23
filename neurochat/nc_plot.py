@@ -220,7 +220,7 @@ def isi(isi_data):
 
     return fig1, fig2, fig3
 
-def isi_corr(isi_corr_data, ax=None):
+def isi_corr(isi_corr_data, ax=None, **kwargs):
     """
     Plots ISI correlation.
 
@@ -228,6 +228,10 @@ def isi_corr(isi_corr_data, ax=None):
     ----------
     isi_corr_data : dict
         Graphical data from the ISI correlation
+    ax : matplotlib.axes.Axes
+        Optional axes object to plot to.
+    kwargs :
+        title : str
 
     Returns
     -------
@@ -235,49 +239,58 @@ def isi_corr(isi_corr_data, ax=None):
         ISI correlation histogram
 
     """
+    isi_time = abs(isi_corr_data['isiCorrBins'].min())
+    default_title = (
+        'Autocorrelation Histogram \n ({}ms)'.format(str(isi_time)))
+    title = kwargs.get("title", default_title)
+    xlabel = kwargs.get("xlabel", "Time (ms)")
+    ylabel = kwargs.get("ylabel", "Counts")
+    plot_theta = kwargs.get("plot_theta", False)
+
     ax, fig = _make_ax_if_none(ax)
 
     show_edges = False
     line_width = 1 if show_edges else 0
     all_bins = isi_corr_data['isiAllCorrBins']
-    widths = [abs(all_bins[i+1] - all_bins[i]) for i in range(len(all_bins) - 1)]
-    bin_centres = [(all_bins[i+1] + all_bins[i]) / 2 for i in range(len(all_bins) - 1)]
+
+    widths = [
+        abs(all_bins[i+1] - all_bins[i]) for i in range(len(all_bins) - 1)]
+    bin_centres = [
+        (all_bins[i+1] + all_bins[i]) / 2 for i in range(len(all_bins) - 1)]
     ax.bar(bin_centres, isi_corr_data['isiCorr'],
            width=widths, linewidth=line_width, color='darkblue',
            edgecolor='black', rasterized=True, align='center', antialiased=True)
-    ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(isi_corr_data['isiCorrBins'].min()))+ 'ms)')
-    ax.set_xlabel('Time (ms)')
-    ax.set_ylabel('Counts')
     ax.tick_params(width=1.5)
+
+    if plot_theta:
+        ax.plot(bin_centres, isi_corr_data['corrFit'], linewidth=2, color='red')
+
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
 
     return fig
 
-def theta_cell(plot_data):
+def theta_cell(plot_data, ax=None, **kwargs):
     """
     Plots theta-modulated cell and theta-skipping cell analysis data
 
     Parameters
     ----------
     plot_data : dict
-        Graphical data from the theta-modulated cell and theta skipping cell analysis
+        Graphical data from the theta-modulated cell
+    ax : matplotlib.axes.Axes
+        Optional axes object to plot to.
+    kwargs :
+        title : str
 
     Returns
     -------
-    fig1 : matplotlib.pyplot.Figure
+    matplotlib.pyplot.Figure
         ISI correlation histogram superimposed with fitted sinusoidal curve.
 
     """
-
-    fig1 = plt.figure()
-    ax = plt.gca()
-    ax.bar(plot_data['isiCorrBins'], plot_data['isiCorr'],\
-           color='darkblue', edgecolor='darkblue', rasterized=True)
-    ax.plot(plot_data['isiCorrBins'], plot_data['corrFit'], linewidth=2, color='red')
-    ax.set_title('Autocorrelation Histogram \n' + '('+ str(abs(plot_data['isiCorrBins'].min()))+ 'ms)')
-    ax.set_xlabel('Time (ms)')
-    ax.set_ylabel('Counts')
-
-    return fig1
+    return isi_corr(plot_data, ax=ax, plot_theta=True, **kwargs)
 
 def lfp_spectrum(plot_data):
     """
