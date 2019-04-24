@@ -17,6 +17,7 @@ from neurochat.nc_data import NData
 from neurochat.nc_utils import get_all_files_in_dir
 from neurochat.nc_utils import has_ext
 
+
 class NDataContainer():
     """
     Class for storing multiple file locations for ndata objects.
@@ -140,12 +141,12 @@ class NDataContainer():
     def list_all_units(self):
         """Print all the units in the container."""
         if self._load_on_fly:
-                for key, vals in self.get_file_dict().items():
-                    if key == "Spike":
-                        for descriptor in vals:
-                            result = NData()
-                            self._load(key, descriptor, ndata=result)
-                            print("units are {}".format(result.get_unit_list()))
+            for key, vals in self.get_file_dict().items():
+                if key == "Spike":
+                    for descriptor in vals:
+                        result = NData()
+                        self._load(key, descriptor, ndata=result)
+                        print("units are {}".format(result.get_unit_list()))
         else:
             for data in self._container:
                 print("units are {}".format(data.get_unit_list()))
@@ -306,8 +307,8 @@ class NDataContainer():
             count = 0
             for full_row in excel_info.itertuples():
                 split = [full_row[i:i+5]
-                    for i in range(1, len(full_row), 5)
-                    if not pd.isna(full_row[i])]
+                         for i in range(1, len(full_row), 5)
+                         if not pd.isna(full_row[i])]
                 merge = True if len(split) > 1 else False
                 merge_list = []
                 for row in split:
@@ -358,7 +359,8 @@ class NDataContainer():
             for idx, merge_list in enumerate(to_merge):
                 self.merge(merge_list)
                 for j in range(idx + 1, len(to_merge)):
-                    to_merge[j] = [k - len(merge_list) + 1 for k in to_merge[j]]
+                    to_merge[j] = [
+                        k - len(merge_list) + 1 for k in to_merge[j]]
             return excel_info
         else:
             logging.error('Excel file does not exist!')
@@ -399,7 +401,7 @@ class NDataContainer():
                     logging.info(
                         "Skipping this - no cluster file named {}".format(cut_name))
                     continue
-                
+
                 for fname in txt_files:
                     if fname[:len(filename)] == filename:
                         pos_name = fname
@@ -415,7 +417,7 @@ class NDataContainer():
     def merge(self, indices, force_equal_units=True):
         """
         Merge the data from multiple indices together into the first index.
-        
+
         WORK IN PROGRESS - ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY
         Only call this after loading the data, and not while loading on the fly
 
@@ -575,13 +577,15 @@ class NDataContainer():
                     centroid = place_info["centroid"]
                     centroids.append(centroid)
                 self._units[idx] = [unit for _, unit in sorted(
-                    zip(centroids, self.get_units()[idx]), key= lambda pair: pair[0][h])]
+                    zip(centroids, self.get_units()[idx]),
+                    key=lambda pair: pair[0][h])]
 
     # Methods from here on should be for private class use
     def _load_all_data(self):
         """Intended private function which loads all the data."""
         if self._load_on_fly:
-            logging.error("Don't load all the data in container if loading on the fly")
+            logging.error(
+                "Don't load all the data in container if loading on the fly")
         for key, vals in self.get_file_dict().items():
             for idx, _ in enumerate(vals):
                 if idx >= self.get_num_data():
@@ -615,7 +619,7 @@ class NDataContainer():
         if ndata is None:
             ndata = self.get_data(idx)
         key_fn_pairs = {
-            "Spike" : [
+            "Spike": [
                 getattr(ndata, "set_spike_file"),
                 getattr(ndata, "set_spike_name"),
                 getattr(ndata, "load_spike")],
@@ -637,7 +641,7 @@ class NDataContainer():
         if system is not None:
             ndata.set_system(system)
 
-        if key == "Position" and self._share_positions and idx !=0:
+        if key == "Position" and self._share_positions and idx != 0:
             if self._load_on_fly:
                 ndata.spatial = self._last_data_pt[1].spatial
             else:
@@ -694,7 +698,7 @@ class NDataContainer():
         ----------
         index : int
             The unit index to convert to a data index and unit index for that
-        
+
         Returns
         -------
         tuple
