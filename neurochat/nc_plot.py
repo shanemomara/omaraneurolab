@@ -1963,7 +1963,7 @@ def _make_ax_if_none(ax, **kwargs):
 def print_place_cells(
     rows, cols=6, size_multiplier=4, wspace=0.3, hspace=0.3,
     placedata=None, wavedata=None, graphdata=None,
-    headdata=None, thetadata=None):
+    headdata=None, thetadata=None, point_size=10):
     fig = plt.figure(
         figsize=(cols * size_multiplier, rows * size_multiplier),
         tight_layout=False)
@@ -1973,7 +1973,9 @@ def print_place_cells(
         # Plot the spike position
         place_data = placedata[i]
         ax = fig.add_subplot(gs[i, 0])
-        loc_spike(place_data, ax=ax, color=get_axona_colours(i))
+        loc_spike(
+            place_data, ax=ax, color=get_axona_colours(i),
+            point_size=point_size)
 
         # Plot the rate map
         ax = fig.add_subplot(gs[i, 1])

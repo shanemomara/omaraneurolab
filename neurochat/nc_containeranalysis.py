@@ -454,7 +454,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     # Zoom in on these ranges
     return results
 
-def place_cell_summary(collection):
+def place_cell_summary(collection, dpi=200):
     placedata = []
     graphdata = []
     wavedata = []
@@ -475,13 +475,13 @@ def place_cell_summary(collection):
                 placedata=placedata, graphdata=graphdata, 
                 wavedata=wavedata, headdata=headdata,
                 thetadata=thetadata,
-                size_multiplier=4)
+                size_multiplier=4, point_size=dpi/10)
             filename = collection.get_file_dict()["Spike"][data_idx][0]
             spike_name = os.path.basename(filename)
             main_dir = os.path.dirname(filename)
             out_name = os.path.join(main_dir, "plots", spike_name + ".png")
             make_dir_if_not_exists(out_name)
-            savefig(out_name, dpi=200)
+            savefig(out_name, dpi=dpi)
             placedata = []
             graphdata = []
             wavedata = []
