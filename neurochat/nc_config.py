@@ -11,28 +11,35 @@ from collections import OrderedDict as oDict
 
 import yaml
 
-from neurochat.nc_defaults import ANALYSES, PARAMETERS # default parameters by analaysis type
+# default parameters by analaysis type
+from neurochat.nc_defaults import ANALYSES, PARAMETERS
 
 _MAPPING_TAG = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+
+
 def __dict_representer(dumper, data):
     return dumper.represent_mapping(_MAPPING_TAG, data.items())
 
+
 def __dict_constructor(loader, node):
     return oDict(loader.construct_pairs(node))
+
+
 yaml.add_representer(oDict, __dict_representer)
 yaml.add_constructor(_MAPPING_TAG, __dict_constructor)
+
 
 class Configuration(object):
     """
     The Configuration object is the placeholder for all the settings of NeuroChaT
     consisting of specification of data and analysis along with the parameters for
     each analysis type.
-    
+
     It also facilitates saving these setting to a .ncfg file and retrive them from the file.
     The .ncfg file is a YAML-formatted file.
-    
+
     """
-    
+
     def __init__(self, filename=[]):
         """
         Attributes
@@ -64,9 +71,10 @@ class Configuration(object):
             Dictionary of analysis methods as key and their selection as boolean values
         parameters : dict
             It contains (key : value) pairs of parameter names and their values 
-            
+        special_analysis : dict
+            A dict indicating a menu analysis method.
         """
-        
+
         self.filename = filename
         self.format = 'Axona'
         self.analysis_mode = 'Single Unit'
@@ -84,45 +92,52 @@ class Configuration(object):
         self.config_directory = ''
         self.analyses = {}
         self.parameters = {}
+        self.special_analysis = {}
 
-        for k, v in PARAMETERS.items(): # setting the default parameters
+        for k, v in PARAMETERS.items():  # setting the default parameters
             self.parameters.update(v)
-            
-        for k, v in ANALYSES.items(): # setting the default analyses
-            self.analyses.update({k : v})
+
+        for k, v in ANALYSES.items():  # setting the default analyses
+            self.analyses.update({k: v})
 
         self.options = oDict()
         self.mode_dict = oDict([('Single Unit', 0),
                                 ('Single Session', 1),
                                 ('Listed Units', 2)])
 
+    def set_special_analysis(self, in_dict={}):
+        self.special_analysis = in_dict
+
+    def get_special_analysis(self):
+        return self.special_analysis
+
     def set_param(self, name=None, value=None):
         """
         Sets the value of a parameter
-        
+
         Parameters
         ----------
         name : str
             Name of the parameter
         value
             Value of the parameter
-        
+
         Returns
         -------
         None
 
         """
-        
+
         if isinstance(name, str):
             self.parameters[name] = value
         else:
             logging.error('Parameter name and/or value is inappropriate')
-            
+
     def get_params(self, name=None):
         """
         Gets the value of parameter. If a list of parameter names are provided,
         a list of values are returned.
-        
+
         Parameters
         ----------
         name : str or list of str
@@ -134,7 +149,7 @@ class Configuration(object):
             Paramater value(s)
 
         """
-        
+
         if isinstance(name, list):
             params = {}
             not_found = []
@@ -144,23 +159,24 @@ class Configuration(object):
                 else:
                     not_found.append(pname)
             if not_found:
-                logging.warning('Following parameters not found- '+ ','.join(not_found))
+                logging.warning(
+                    'Following parameters not found- ' + ','.join(not_found))
             return params
         elif isinstance(name, str):
             if name in self.parameters.keys():
                 return self.parameters[name]
             else:
-                logging.error(name+ ' is not found in parameter list')
-    
+                logging.error(name + ' is not found in parameter list')
+
     def get_params_by_analysis(self, analysis=None):
         """
         Returns the paramters and their values
-        
+
         Parameters
         ----------
         analysis : str
             Name of the analysis
-            
+
         Returns
         -------
         params : dict
@@ -169,37 +185,38 @@ class Configuration(object):
         """
         if analysis in PARAMETERS.keys():
             # get default params first
-            params= PARAMETERS[analysis]
+            params = PARAMETERS[analysis]
             # Update from set parameter
             params.update(self.get_params(list(params.keys())))
-            
+
             return params
         else:
-            logging.error('Specific analysis is not found in defaults PARAMETERS!')
-        
+            logging.error(
+                'Specific analysis is not found in defaults PARAMETERS!')
+
     def set_analysis(self, name=None, value=None):
         """
         Sets the selection of an analysis
-        
+
         Parameters
         ----------
         name : str
             Name of the analysis
         value : bool
             Boolean value to indicate analysis selection
-        
+
         Returns
         -------
         None
 
         """
-        
-        if name == 'all' and isinstance (value, bool):
+
+        if name == 'all' and isinstance(value, bool):
             for name in self.analyses.keys():
                 self.analyses[name] = value
         elif isinstance(name, str) and isinstance(value, bool):
             self.analyses[name] = value
-        elif isinstance (name, list) and isinstance(value, bool):
+        elif isinstance(name, list) and isinstance(value, bool):
             for n in name:
                 if isinstance(n, str):
                     self.analyses[n] = value
@@ -210,87 +227,87 @@ class Configuration(object):
         """
         Returns the selection of an analysis. If name is 'all', selction values
         for all the analyses are returned
-        
+
         Parameters
         ----------
         name : str
             Name of the analysis. 'all' for returning values for all the analyses
         value : bool
             Boolean value to indicate analysis selection
-        
+
         Returns
         -------
         bool
             True if selected, False if not.
 
         """
-        
+
         if name == 'all':
             return self.analyses.values()
         elif name in self.analyses.keys():
             return self.analyses[name]
         else:
-            logging.error(name+ ' is not found in parameter list')
+            logging.error(name + ' is not found in parameter list')
 
     def get_param_list(self):
         """
         Returns the list of all paramaeters
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         list
             List of parameter names
-            
+
         """
-        
+
         return list(self.parameters.keys())
-    
+
     def get_analysis_list(self):
         """
         Returns a list of analysis
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         list
 
         """
-        
+
         return list(self.analyses.keys())
 
     def set_data_format(self, file_format=None):
         """
         Sets the format of the data or recording system
-        
+
         Parameters
         ----------
         file_format  : str
             Format of the data or recording system
-            
+
         Returns
         -------
         None
 
         """
-        
+
         if file_format:
             self.format = file_format
-            
+
     def get_data_format(self):
         """
         Returns the data format or recording system
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
@@ -302,18 +319,18 @@ class Configuration(object):
     def set_analysis_mode(self, analysis_mode=None):
         """
         Sets the mode of analysis
-        
+
         Parameters
         ----------
         analysis_mode : str
             Mode of the analysis
-            
+
         Returns
         -------
         None
 
         """
-        
+
         if analysis_mode in self.mode_dict.keys():
             self.analysis_mode = analysis_mode
             self.mode_id = self.mode_dict[analysis_mode]
@@ -328,7 +345,7 @@ class Configuration(object):
     def get_analysis_mode(self):
         """
         Returns the mode of analysis and mode ID
-        
+
         Parameters
         ----------
         None        
@@ -341,56 +358,56 @@ class Configuration(object):
             ID of analysis mode
 
         """
-        
+
         return self.analysis_mode, self.mode_id
 
     def get_all_modes(self):
         """
         Returns the analysis modes in NeuroChaT
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         dict
             Modes and their IDs
 
         """
-        
+
         return self.mode_dict
 
     def set_graphic_format(self, graphic_format=None):
         """
         Sets output graphics file format
-        
+
         Parameters
         ----------
         graphic_format : str
             Format of output graphic export. Options are 'PDF' or 'Postscript'
-        
+
         Returns
         -------
         None
 
         """
-        
+
         if graphic_format in self.valid_graphics.keys():
             self.graphic_format = self.valid_graphics[graphic_format]
         elif graphic_format in self.valid_graphics.values():
-            self.graphic_format = graphic_format 
+            self.graphic_format = graphic_format
         else:
             logging.error('No/Invalid graphic format!')
-            
+
     def get_graphic_format(self):
         """
         Returns output graphics file format
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
@@ -402,29 +419,29 @@ class Configuration(object):
     def set_unit_no(self, unit_no=None):
         """
         Sets the unit no to analyse in 'Single Unit' analysis
-        
+
         Parameters
         ----------
         unit_no : int
             Unit number the user is intended to analyse
-        
+
         Returns
         -------
         None
 
         """
-        
-        if  isinstance(unit_no, int):
+
+        if isinstance(unit_no, int):
             self.unit_no = unit_no
-            
+
     def get_unit_no(self):
         """
         Returns the unit number that is already set
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
@@ -436,81 +453,81 @@ class Configuration(object):
     def set_cell_type(self, cell_type=None):
         """
         Sets the type of cell to analyse
-        
+
         Parameters
         ----------
         cell_type : str
             Cell type of interest
-        
+
         Returns
         -------
         None
 
         """
-        
+
         self.cell_type = cell_type
 
     def get_cell_type(self):
         """
         Returns the type of cell set to analyse
-        
+
         Parameters
         ----------
         None        
-        
+
         Returns
         -------
         str
             Cell type set for analyses
 
         """
-        
+
         return self.cell_type
 
     def set_spike_file(self, spike_file=None):
         """
         Sets filename of the spike data
-        
+
         Parameters
         ----------
         spike_file : str
             Filename of the spike data
-        
+
         Returns
         -------
         None
 
         """
-        
+
         if isinstance(spike_file, str):
             self.spike_file = spike_file
-            
+
     def get_spike_file(self):
         """
         Returns the filename of the spike data
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Filename of spike data
 
         """
-        
+
         return self.spike_file
 
     def set_spatial_file(self, spatial_file=None):
         """
         Sets filename of the spatial data
-        
+
         Parameters
         ----------
         spatial_file : str
             Filename of the spatial data
-        
+
         Returns
         -------
         None
@@ -522,116 +539,116 @@ class Configuration(object):
     def get_spatial_file(self):
         """
         Returns the filename of the spatial data
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Filename of the spatial data
 
         """
-        
+
         return self.spatial_file
 
     def set_lfp_file(self, lfp_file=None):
         """
         Sets filename of the lfp data
-        
+
         Parameters
         ----------
         lfp_file : str
             Filename of the lfp data
-        
+
         Returns
         -------
         None
 
         """
-        
+
         if isinstance(lfp_file, str):
             self.lfp_file = lfp_file
-            
+
     def get_lfp_file(self):
         """
         Returns the filename of the lfp data
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Filename of the lfp data
 
         """
-        
+
         return self.lfp_file
 
     def set_nwb_file(self, nwb_file=None):
         """
         Sets filename of the HDF5 data
-        
+
         Parameters
         ----------
         nwb_file : str
             Filename of the HDF5 data
-        
+
         Returns
         -------
         None
 
         """
-        
+
         if isinstance(nwb_file, str):
             self.nwb_file = nwb_file
-            
-    def get_nwb_file(self):        
+
+    def get_nwb_file(self):
         """
         Returns the filename of the HDF5 data
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Filename of the HDF5 data
 
         """
-        
+
         return self.nwb_file
 
     def get_excel_file(self):
         """
         Returns the filename of the Excel list
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Filename of the Excel list
 
-        """        
-        
+        """
+
         return self.excel_file
-    
+
     def set_excel_file(self, excel_file=None):
         """
         Sets filename of the Excel list
-        
+
         Parameters
         ----------
         excel_file : str
             Filename of the Excel list        
-            
+
         Returns
         -------
         None
@@ -646,16 +663,16 @@ class Configuration(object):
     def set_data_dir(self, directory=None):
         """
         Sets the data directory
-        
+
         Parameters
         ----------
         directory : str
             Data directory
-            
+
         Returns
         -------
         None
-        
+
         """
 
         # if if this is a valid directory
@@ -663,110 +680,110 @@ class Configuration(object):
             self.data_directory = directory
         else:
             logging.error('Invalid/No directory specified')
-        
-    def get_data_dir(self):      
+
+    def get_data_dir(self):
         """
         Returns the data directory
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Data directory
 
         """
-        
+
         return self.data_directory
 
     def set_config_dir(self, directory=None):
         """
         Sets the directory of configuration file
-        
+
         Parameters
         ----------
         directory : str
             Directory of configuration file
-            
+
         Returns
         -------
         None
-        
+
         """
-        
+
         if os.path.exists(directory):
             self.config_directory = directory
         else:
             logging.error('Invalid/No directory specified')
-    
+
     def get_config_dir(self):
         """
         Returns the directory of configuration file
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Name of the configuration file
 
         """
-        
+
         return self.config_directory
 
     def set_config_file(self, filename):
         """
         Sets the name of the configuration file
-        
+
         Parameters
         ----------
         directory : str
             Directory of configuration file
-            
+
         Returns
         -------
         None
-        
-        """        
-        
+
+        """
+
         self.filename = filename
-    
+
     def get_config_file(self):
         """
         Returns the name of the configuration file
-        
+
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         str
             Name of configuration file
 
         """
-        
+
         return self.filename
-    
+
     def save_config(self, filename=None):
         """
         Exports the configuration data to .ncfg file
-        
+
         Parameters
         ----------
         filename : str
             Name of the configuration file
-            
+
         Returns
         -------
         None
-        
+
         """
-        
+
         if filename:
             self.set_config_file(filename)
         if not self.filename:
@@ -778,18 +795,18 @@ class Configuration(object):
     def load_config(self, filename=None):
         """
         Imports the configuration data from a .ncfg file
-        
+
         Parameters
         ----------
         None
-            
+
         Returns
         -------
         filename : str
             Name of the configuration file
-        
+
         """
-        
+
         if filename:
             self.set_config_file(filename)
         if not self.filename:
@@ -801,9 +818,9 @@ class Configuration(object):
     def _save(self):
         """
         Saves configuration data to the specified .ncfg(YAML) file
-        
+
         """
-        
+
         try:
             with open(self.filename, 'w') as f:
                 settings = oDict([('format', self.format),
@@ -825,14 +842,15 @@ class Configuration(object):
 
                 yaml.dump(cfgData, f, default_flow_style=False)
         except:
-            logging.error('Configuration cannot be saved in the specified file!')
+            logging.error(
+                'Configuration cannot be saved in the specified file!')
 
     def _load(self):
         """
         Loads configuration data from the .ncfg(YAML) file
-        
+
         """
-        
+
         with open(self.filename, 'r') as f:
             cfgData = yaml.load(f)
             settings = cfgData.get('settings')

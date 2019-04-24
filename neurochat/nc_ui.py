@@ -47,6 +47,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
+
 class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -488,13 +489,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self._get_config()
         self._control.finished.connect(self.restore_start_button)
         self._control.start()
-#        self.nthread = QtCore.QThread()
-#        self.worker = Worker(self.startAnalysis)
-#        self.worker.moveToThread(self.nthread)
-#        self.nthread.started.connect(self.worker.run)
-#        [self.worker.finished.connect(x) for x in [self.restoreStartButton, self.nthread.quit]]
-#
-#        self.nthread.start()
+        # self.nthread = QtCore.QThread()
+        # self.worker = Worker(self.startAnalysis)
+        # self.worker.moveToThread(self.nthread)
+        # self.nthread.started.connect(self.worker.run)
+        # [self.worker.finished.connect(x) for x in [self.restoreStartButton, self.nthread.quit]]
+
+        # self.nthread.start()
 
     def restore_start_button(self):
         """
@@ -742,13 +743,13 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         self._control.open_hdf_file()
                         items= self._control.get_hdf_groups(path=path)
                         self._control.close_hdf_file()
-#                        hdf = Nhdf()
-#                        hdf.set_filename(nwb_file)
-#                        path = '/processing/Shank'
-#                        if path in hdf.f:
-#                            items = list(hdf.f[path].keys())
-#                        else:
-#                            logging.warning('No Shank data stored in the path:'+ path)
+                        # hdf = Nhdf()
+                        # hdf.set_filename(nwb_file)
+                        # path = '/processing/Shank'
+                        # if path in hdf.f:
+                        #     items = list(hdf.f[path].keys())
+                        # else:
+                        #     logging.warning('No Shank data stored in the path:'+ path)
                         if items:
                             item, ok = QtWidgets.QInputDialog.getItem(self, "Select electrode group",
                                                                       "Electrode groups: ", items, 0, False)
@@ -776,8 +777,8 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                 words = excel_file.rstrip("\n\r").split(os.sep)
                 directory = os.sep.join(words[0:-1])
                 os.chdir(directory)
-#                self._curr_dir = directory
-##                excel_file = words[-1]
+                # self._curr_dir = directory
+                # excel_file = words[-1]
                 self._control.set_excel_file(excel_file)
                 logging.info("New excel file added: "+ \
                                         words[-1])
@@ -815,6 +816,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         self.log_text.clear()
         logging.info("Log cleared!")
+
     def save_log(self):
         """
         Opens a file dialog for the user to select a text file where the current
@@ -822,7 +824,6 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         """
 
-#        self.log_text.select_all
         text = self.log_text.get_text()
         name = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, 'Save log as...', os.getcwd(), "Text files(*.txt)")[0])
         if not name:
@@ -834,6 +835,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                 logging.info("Log saved in: "+ name)
             except:
                 logging.error('Log is not saved! See if the file is open in another application!')
+
     def set_unit_no(self, value):
         """
         Called when the selection in the 'Unit No' is changed. Sets the unit number accordingly.
@@ -1070,8 +1072,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                     QtWidgets.QFileDialog.ShowDirsOnly
                     | QtWidgets.QFileDialog.DontResolveSymlinks)))
         if directory:
-            self._control.place_cell_plots(directory)
-
+            dict_info = {
+                "key": self.place_cell_plots.__name__,
+                "directory": directory,
+                "dpi": 400}
+            self._control.set_special_analysis(dict_info)
+            self.start()
 
     def verify_units(self):
         """

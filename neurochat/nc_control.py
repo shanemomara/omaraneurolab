@@ -270,7 +270,18 @@ class NeuroChaT(QtCore.QThread):
         # Same filename for spike, lfp and spatial will go for NWB
         if not any(self.get_analysis('all')):
             verified = False
-            logging.error('No analysis method has been selected')
+            # Handle menu functions
+            special_analysis = self.get_special_analysis()
+            if special_analysis:
+                key = special_analysis["key"]
+                logging.info("Starting special analysis {}".format(
+                    key))
+                if key == "place_cell_plots":
+                    self.place_cell_plots(
+                        special_analysis["directory"],
+                        special_analysis["dpi"])
+                else:
+                    logging.error('No analysis method has been selected')
         else:
             # Could take this to mode, 
             # but replication would occur for each data format
@@ -1090,6 +1101,7 @@ class NeuroChaT(QtCore.QThread):
             self.config = config
         else:
             logging.warning('Inappropriate Configuration object or class')
+
     def get_configuration(self):
         """
         Returns the Configuration() object from this class.
