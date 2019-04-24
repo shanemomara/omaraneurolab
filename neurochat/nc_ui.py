@@ -153,8 +153,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         final_layer.addLayout(layer_1_1, 4)
         final_layer.addLayout(layer_1_2, 2)
 
-#        self.mode_box.addItems(["Single Unit", "Single Session", "Listed Units", "Multiple Sessions"])
-        self.mode_box.addItems(["Single Unit", "Single Session", "Listed Units"])
+        # self.mode_box.addItems(["Single Unit", "Single Session", "Listed Units", "Multiple Sessions"])
+        self.mode_box.addItems(
+            ["Single Unit", "Single Session", "Listed Units"])
         self.file_format_box.addItems(["Axona", "Neuralynx", "NWB"])
         self.lfp_chan_getitems()
 
@@ -180,7 +181,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         Sets up the behaviour of NeuroChaT_ui widgets
 
         """
-#       self.connect(self.nout, QtCore.SIGNAL('update_log(QString)'), self.update_log)
+        # self.connect(self.nout, QtCore.SIGNAL('update_log(QString)'), self.update_log)
         self.nout.emitted[str].connect(self.update_log)
         self.file_format_box.currentIndexChanged[int].connect(self.data_format_select)
         self.mode_box.currentIndexChanged[int].connect(self.mode_select)
@@ -207,6 +208,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.accumulate_act.triggered.connect(self.accumulate_output)
 
         self.angle_act.triggered.connect(self.angle_calculation)
+        self.multi_place_cell_act.triggered.connect(self.place_cell_plots)
 
         self.verify_units_act.triggered.connect(self.verify_units)
         self.evaluate_act.triggered.connect(self.cluster_evaluate)
@@ -230,7 +232,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.file_menu = self.menubar.addMenu('&File')
         self.settings_menu = self.menubar.addMenu('&Settings')
         self.utilities_menu = self.menubar.addMenu('&Utilities')
-        #self.experimental_menu = self.menubar.addMenu('&Experimental')
+        self.multifile_menu = self.menubar.addMenu('&Multiple Files')
         self.help_menu = self.menubar.addMenu('&Help')
 
         self.setMenuBar(self.menubar)
@@ -275,10 +277,17 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.compare_units_act = self.utilities_menu.addAction("Compare single units")
         self.convert_files_act = self.utilities_menu.addAction("Convert to NWB format")
 
-        self.utilities_menu.addSeparator()
+        self.angle_act = self.multifile_menu.addAction(
+            "Centroid Angle Calculation")
+        self.angle_act.setStatusTip(
+            "Select an excel file which specifies files " +
+            "in the order of: " +
+            "directory | position_file | spike_file | unit_no | eeg extension")
 
-        self.angle_act = self.utilities_menu.addAction("Centroid Angle Calculation")
-        self.angle_act.setStatusTip("Select an excel file which specifies files in the order of: directory | position_file | spike_file | unit_no")
+        self.multi_place_cell_act = self.multifile_menu.addAction(
+            "Directory place cell summary")
+        self.multi_place_cell_act.setStatusTip(
+            "Select a folder to analyse units for place cells")
 
         self.view_help_act = self.help_menu.addAction("NeuroChaT documentation")
         self.view_help_act.setShortcut(QtGui.QKeySequence("F1"))
@@ -1030,13 +1039,11 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
     def angle_calculation(self):
         """
-        Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
-        and verifies the unit using the NeuroChaT().verify_units() method.
+        Open an excel file and calculate angles between centroids.
 
         See also
         --------
-        NeuroChaT().angle_calculation()
-
+        NeuroChaT.angle_calculation
         """
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
@@ -1051,6 +1058,20 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             self._control.open_pdf(pdf_name)
             self._control.angle_calculation(excel_file)
             self._control.close_pdf()
+
+    def place_cell_plots(self):
+        """
+        Plot place cell figures for each set file in a directory.
+        """
+        dlg = QtWidgets.QFileDialog()
+        dlg.setFileMode(QtWidgets.QFileDialog.Directory)
+        # Could also use this
+        directory = (
+            QtCore.QDir.toNativeSeparators(
+                QtWidgets.QFileDialog.getExistingDirectory(
+                    self, 'Select data description list...', 
+                    os.getcwd(), QtWidgets.QFileDialog.ShowDirsOnly)))
+        self._control.place_cell_plots(directory)
 
     def verify_units(self):
         """

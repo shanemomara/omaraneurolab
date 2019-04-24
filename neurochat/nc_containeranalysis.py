@@ -464,7 +464,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     return results
 
 
-def place_cell_summary(collection, dpi=200):
+def place_cell_summary(collection, dpi=400):
     placedata = []
     graphdata = []
     wavedata = []
@@ -485,11 +485,13 @@ def place_cell_summary(collection, dpi=200):
                 placedata=placedata, graphdata=graphdata,
                 wavedata=wavedata, headdata=headdata,
                 thetadata=thetadata,
-                size_multiplier=4, point_size=dpi/10)
+                size_multiplier=4, point_size=dpi/7.0)
             filename = collection.get_file_dict()["Spike"][data_idx][0]
             spike_name = os.path.basename(filename)
             main_dir = os.path.dirname(filename)
             out_name = os.path.join(main_dir, "plots", spike_name + ".png")
+            logging.info("Saving place cell figure to {}".format(
+                out_name))
             make_dir_if_not_exists(out_name)
             savefig(out_name, dpi=dpi)
             placedata = []

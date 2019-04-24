@@ -22,7 +22,8 @@ from neurochat.nc_hdf import Nhdf
 from neurochat.nc_clust import NClust
 from neurochat.nc_config import Configuration
 import neurochat.nc_plot as nc_plot
-
+from neurochat.nc_datacontainer import NDataContainer
+import neurochat.nc_containeranalysis as nca
 
 import matplotlib.pyplot as plt
 import matplotlib.figure
@@ -1433,4 +1434,21 @@ class NeuroChaT(QtCore.QThread):
         else:
             logging.error('Excel  file does not exist!')
 
-    
+    def place_cell_plots(self, directory, dpi=400):
+        """
+        Plot png images of place cell figures, looping over a directory.
+
+        Currently only works for axona files, but can be extended.
+
+        Parameters
+        ----------
+        dir : str
+            The directory to get files from.
+        dpi : int
+            The desired dpi of the pngs.
+
+        """
+        container = NDataContainer(load_on_fly=True)
+        container.add_axona_files_from_dir(directory)
+        nca.place_cell_summary(container, dpi=dpi)
+        return
