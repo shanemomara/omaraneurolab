@@ -235,7 +235,6 @@ class NeuroChaT(QtCore.QThread):
                             self.pdf.savefig(f, dpi=400)
                         except PermissionError:
                             logging.error("Please close pdf before saving output to it")
-#                        self.pdf.savefig(f)
                     plt.close(f)
                 else:
                     logging.error('Invalid matplotlib.figure instance')
@@ -267,13 +266,14 @@ class NeuroChaT(QtCore.QThread):
     
         self.reset()
         verified = True
-    # Deduce the configuration
-    # Same filename for spike, lfp and spatial will go for NWB
+        # Deduce the configuration
+        # Same filename for spike, lfp and spatial will go for NWB
         if not any(self.get_analysis('all')):
             verified = False
             logging.error('No analysis method has been selected')
         else:
-            # Could take this to mode, but replication would occur for each data format
+            # Could take this to mode, 
+            # but replication would occur for each data format
             mode_id = self.get_analysis_mode()[1]
             if (mode_id == 0 or mode_id == 1) and \
                 (self.get_data_format() == 'Axona' or self.get_data_format() == 'Neuralynx'):
@@ -291,8 +291,6 @@ class NeuroChaT(QtCore.QThread):
         if verified:
             self.__count = 0
             self.ndata.set_data_format(self.get_data_format())
-#            mode = getattr(self, 'mode_'+ self.get_data_format())
-#            mode()
             self.mode()
         self.finished.emit()
 
@@ -315,7 +313,8 @@ class NeuroChaT(QtCore.QThread):
         
         info = {'spat': [], 'spike': [], 'unit': [], 'lfp': [], 'nwb': [], 'graphics': [], 'cellid': []}
         mode_id = self.get_analysis_mode()[1]
-        if mode_id == 0 or mode_id == 1: # All the cells in the same tetrode will use the same lfp channel
+        # All the cells in the same tetrode will use the same lfp channel
+        if mode_id == 0 or mode_id == 1: 
             spatial_file = self.get_spatial_file()
             spike_file = self.get_spike_file()
             lfp_file = self.get_lfp_file()
@@ -365,7 +364,6 @@ class NeuroChaT(QtCore.QThread):
         if info['unit']:
             for i, unit_no in enumerate(info['unit']):
                 logging.info('Starting a new unit...')
-#                try:
                 self.ndata.set_spatial_file(info['spat'][i])
                 self.ndata.set_spike_file(info['spike'][i])
                 self.ndata.set_lfp_file(info['lfp'][i])
@@ -440,10 +438,6 @@ class NeuroChaT(QtCore.QThread):
         
         try:
             logging.info('Calculating environmental border...')
-#            params = {'loc_pixel_size' : 3,
-#                      'loc_chop_bound' : 5}
-#            params.update(self.get_params(list(params.keys())))
-
             self.set_border(self.calc_border())
 
         except:
@@ -941,12 +935,8 @@ class NeuroChaT(QtCore.QThread):
                 logging.error('Error in spike-phase locking analysis')
 
             if self.get_analysis('lfp_spike_causality'):
-#                logging.info('Assessing gridness...')
                 logging.warning('Unit-LFP analysis has not been implemented yet!')
-#        if self.get_analysis('lfp_spike_causality'):
-#            print('do the lfpSpikeCausality analysis')
 
-# Manage Data
     def open_hdf_file(self, filename=None):
         """
         Sets the filename and opens the file object for the HDF5 file.
@@ -1117,7 +1107,7 @@ class NeuroChaT(QtCore.QThread):
         
         return self.config
     
-# Forwarding to configuration class
+    # Forwarding to configuration class
     def __getattr__(self, arg):
         if hasattr(self.config, arg):
             return getattr(self.config, arg)
@@ -1168,7 +1158,6 @@ class NeuroChaT(QtCore.QThread):
             for i, spike_file in enumerate(info['spike']):
 
                 logging.info('Converting file groups: '+ str(i+ 1))
-    #                try:
                 self.ndata.set_spatial_file(info['spat'][i])
                 self.ndata.set_spike_file(info['spike'][i])
                 self.ndata.set_lfp_file(info['lfp'][i])
