@@ -1048,7 +1048,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
         'Select data description list...', os.getcwd(), "*.xlsx;; .*xls")[0])
         if not excel_file:
-            logging.warning("No excel file selected! Verification of units is unsuccessful!")
+            logging.warning("No excel file selected!")
         else:
             self._get_config()
             logging.info("New excel file added: "+ \
@@ -1063,15 +1063,15 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
         Plot place cell figures for each set file in a directory.
         """
-        dlg = QtWidgets.QFileDialog()
-        dlg.setFileMode(QtWidgets.QFileDialog.Directory)
-        # Could also use this
         directory = (
             QtCore.QDir.toNativeSeparators(
                 QtWidgets.QFileDialog.getExistingDirectory(
-                    self, 'Select data description list...', 
-                    os.getcwd(), QtWidgets.QFileDialog.ShowDirsOnly)))
-        self._control.place_cell_plots(directory)
+                    self, 'Select data folder', os.getcwd(),
+                    QtWidgets.QFileDialog.ShowDirsOnly
+                    | QtWidgets.QFileDialog.DontResolveSymlinks)))
+        if directory:
+            self._control.place_cell_plots(directory)
+
 
     def verify_units(self):
         """

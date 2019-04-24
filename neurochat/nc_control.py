@@ -1448,7 +1448,10 @@ class NeuroChaT(QtCore.QThread):
             The desired dpi of the pngs.
 
         """
-        container = NDataContainer(load_on_fly=True)
-        container.add_axona_files_from_dir(directory)
-        nca.place_cell_summary(container, dpi=dpi)
-        return
+        try:
+            container = NDataContainer(load_on_fly=True)
+            container.add_axona_files_from_dir(directory)
+            nca.place_cell_summary(container, dpi=dpi)
+        except Exception as ex:
+            log_exception(ex, "In walking a directory for place cell summaries")
+        return 
