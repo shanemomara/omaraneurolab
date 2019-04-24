@@ -23,6 +23,7 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 from matplotlib.pyplot import savefig
 
+
 def spike_positions(collection, should_sort=True, mode="vertical"):
     """
     Get the spike positions for a number of units.
@@ -62,6 +63,7 @@ def spike_positions(collection, should_sort=True, mode="vertical"):
 
     return positions
 
+
 def smooth_speeds(collection, allow_multiple=False):
     """
     Smooth all the speed data in the collection.
@@ -86,6 +88,7 @@ def smooth_speeds(collection, allow_multiple=False):
         data = collection.get_data(i)
         data.smooth_speed()
         collection._smoothed_speed = True
+
 
 def spike_times(collection, filter_speed=False, **kwargs):
     """
@@ -138,6 +141,7 @@ def spike_times(collection, filter_speed=False, **kwargs):
                 time_data = data.get_unit_stamp()
             times.append(time_data)
     return times
+
 
 def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     """
@@ -212,8 +216,9 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
             p_val = np.percentile(hist[0], mua_percentile)
             _, peaks = find_peaks(hist[0], thresh=p_val)
             corresponding_ranges = [
-                (hist[1][peak] - mua_length*0.5, hist[1][peak] + mua_length*0.5)
-                    for peak in peaks]
+                (hist[1][peak] - mua_length*0.5,
+                 hist[1][peak] + mua_length*0.5)
+                for peak in peaks]
             result['mua'].append(corresponding_ranges)
 
         # Get areas where the number of units active is maximal
@@ -226,7 +231,7 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
             corresponding_ranges = [
                 (hist[1][index] - mua_length*0.5,
                  hist[1][index] + mua_length*0.5)
-                    for index in mua_indices.flatten()]
+                for index in mua_indices.flatten()]
             result["mua"].append(corresponding_ranges)
 
     if strip and collection.get_num_data() == 1:
@@ -235,8 +240,9 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
 
     return result
 
+
 def count_units_in_bins(
-    collection, bin_length, in_range=None, multi_ranges=None):
+        collection, bin_length, in_range=None, multi_ranges=None):
     """
     Count the amount of units that fire in certain bins.
 
@@ -274,7 +280,8 @@ def count_units_in_bins(
         for data_idx, data in enumerate(sub_collection):
             spikes = data.get_unit_stamps_in_ranges([in_range])
             # Check if the unit spikes in the bin
-            hist_val, bins = np.histogram(spikes, bins=num_bins, range=in_range)
+            hist_val, bins = np.histogram(
+                spikes, bins=num_bins, range=in_range)
             hist_val = np.clip(hist_val, 0, 1)
             arr[data_idx] = hist_val
         bin_centres = [(bins[j + 1] + bins[j]) / 2 for j in range(num_bins)]
@@ -282,6 +289,7 @@ def count_units_in_bins(
         result.append(mua_tuple)
 
     return result
+
 
 def evaluate_clusters(collection, idx1, idx2, set_units=False):
     """
@@ -343,6 +351,7 @@ def evaluate_clusters(collection, idx1, idx2, set_units=False):
         best_units = [val[0] for _, val in best_matches.items()]
         collection.set_units([run_units, best_units])
     return best_matches
+
 
 def replay(collection, run_idx, sleep_idx, **kwargs):
     """
@@ -411,7 +420,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
 
     # Could take multiple periods instead of just the longest
     sorted_periods = sorted(
-        non_moving_periods, key=lambda x : x[1] - x[0], reverse=True)
+        non_moving_periods, key=lambda x: x[1] - x[0], reverse=True)
     longest_sleep_period = sorted_periods[0]
     raw_spike_times = spike_times(
         sleep_subsample,
@@ -446,13 +455,14 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     overlap = [
         mua_range for mua_range in results["mua"]
         if any(overlapping_swr_mua(mua_range, peak)
-            for peak in results["swr times"])
-        ]
+               for peak in results["swr times"])
+    ]
 
     results["overlap swr mua"] = overlap
 
     # Zoom in on these ranges
     return results
+
 
 def place_cell_summary(collection, dpi=200):
     placedata = []
@@ -472,7 +482,7 @@ def place_cell_summary(collection, dpi=200):
         if unit_idx == len(collection.get_units(data_idx)) - 1:
             print_place_cells(
                 len(collection.get_units(data_idx)),
-                placedata=placedata, graphdata=graphdata, 
+                placedata=placedata, graphdata=graphdata,
                 wavedata=wavedata, headdata=headdata,
                 thetadata=thetadata,
                 size_multiplier=4, point_size=dpi/10)
