@@ -1057,9 +1057,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                                         excel_file.rstrip("\n\r").split(os.sep)[-1])
 
             pdf_name = excel_file[:excel_file.find(".")] + "_output.pdf"
-            self._control.open_pdf(pdf_name)
-            self._control.angle_calculation(excel_file)
-            self._control.close_pdf()
+            dict_info = {
+                "key": self.angle_calculation.__name__,
+                "excel_file": excel_file,
+                "pdf_name": pdf_name}
+            self._control.set_special_analysis(dict_info)
+            self.start()
 
     def place_cell_plots(self):
         """

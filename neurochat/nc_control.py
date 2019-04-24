@@ -280,6 +280,10 @@ class NeuroChaT(QtCore.QThread):
                     self.place_cell_plots(
                         special_analysis["directory"],
                         special_analysis["dpi"])
+                elif key == "angle_calculation":
+                    self.open_pdf(special_analysis["pdf_name"])
+                    self.angle_calculation(special_analysis["excel_file"])
+                    self.close_pdf()
                 else:
                     logging.error('No analysis method has been selected')
         else:
