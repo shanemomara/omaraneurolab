@@ -1034,9 +1034,15 @@ def loc_rate(place_data, ax=None, smooth=True, **kwargs):
     ax : matplotlib.pyplot.axis
         Axis object. If specified, the figure is plotted in this axis.
     kwargs :
-        colormap :
+        colormap : str
             viridis is used if not specified
             "default" uses the standard red green intensity colours
+            but these are bad for colorblindness.
+        style : str
+            What kind of map to plot - can be
+            "contour", "digitized" or "interpolated"
+        levels : int
+            Number of contour regions.
     Returns
     -------
     ax : matplotlib.pyplot.Axis
@@ -1044,6 +1050,10 @@ def loc_rate(place_data, ax=None, smooth=True, **kwargs):
 
     """
     colormap = kwargs.get("colormap", "viridis")
+    style = kwargs.get("style", "contour")
+    levels = kwargs.get("levels", 5)
+    splits = None
+
     if colormap is "default":
         clist = [(0.0, 0.0, 1.0),\
                 (0.0, 1.0, 0.5),\
@@ -1059,17 +1069,63 @@ def loc_rate(place_data, ax=None, smooth=True, **kwargs):
         fmap = place_data['smoothMap']
     else:
         fmap = place_data['firingMap']
-    pmap= ax.pcolormesh(
-        place_data['xedges'], place_data['yedges'],
-        np.ma.array(fmap, mask=np.isnan(fmap)),
-        cmap=colormap, rasterized=True)
+
+    if style == "digitized":
+        res = ax.pcolormesh(
+            place_data['xedges'], place_data['yedges'],
+            np.ma.array(fmap, mask=np.isnan(fmap)),
+            cmap=colormap, rasterized=True)
+
+    # TODO deal with NaNs better in interpolated
+    elif style == "interpolated":
+        extent = (
+            0, place_data['xedges'].max(),
+            0, place_data['yedges'].max())
+        tp = fmap[:-1, :-1]
+        res = ax.imshow(
+            tp, cmap=colormap,
+            extent=extent, interpolation="bicubic",
+            origin="lower")
+
+    elif style == "contour":
+        dx = np.mean(np.diff(place_data['xedges']))
+        dy = np.mean(np.diff(place_data['yedges']))
+        pad_map = np.pad(fmap[:-1, :-1], ((1, 1), (1, 1)), "edge")
+        splits = np.linspace(
+            np.nanmin(pad_map), np.nanmax(pad_map), levels+1)
+        x_edges = np.append(
+            place_data["xedges"] - dx/2,
+            place_data["xedges"][-1] + dx/2)
+        y_edges = np.append(
+            place_data["yedges"] - dy/2,
+            place_data["yedges"][-1] + dy/2)
+        res = ax.contourf(
+            x_edges, y_edges,
+            np.ma.array(pad_map, mask=np.isnan(pad_map)),
+            levels=splits, cmap=colormap, corner_mask=True)
+
+        # This produces it with no padding
+        # res = ax.contourf(
+        #     place_data['xedges'][:-1] + dx / 2.,
+        #     place_data['yedges'][:-1] + dy / 2.,
+        #     np.ma.array(fmap[:-1, :-1], mask=np.isnan(fmap[:-1, :-1])),
+        #     levels=15, cmap=colormap, corner_mask=True)
+
+    else:
+        logging.error("Unrecognised style passed to loc_rate")
+        return
+
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
-    #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
-    #ax.set_aspect(asp)
     ax.set_aspect('equal')
     ax.invert_yaxis()
-    plt.colorbar(pmap, cax=cax, orientation='vertical', use_gridspec=True)
+    cbar = plt.colorbar(res, cax=cax, orientation='vertical', use_gridspec=True)
+    # cbar.ax.set_ticks(levels)
+    # cbar.ax.set_yticklabels(np.around(levels, decimals=1))
+    if splits is not None:
+        split_text = np.around(splits, decimals=1)
+        cbar.ax.set_yticklabels(split_text)
+
     return ax
 
 def loc_firing(place_data):

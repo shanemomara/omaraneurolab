@@ -464,6 +464,10 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
     return results
 
 
+# TODO consider multiprocessing this here
+# from multiprocessing import Process, Queue
+# TODO could also return a set of results to add to
+# NC control
 def place_cell_summary(collection, dpi=400):
     placedata = []
     graphdata = []
