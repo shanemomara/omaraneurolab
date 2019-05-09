@@ -17,6 +17,7 @@ from neurochat.nc_utils import find_peaks
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import distinct_window_rms
 from neurochat.nc_utils import make_dir_if_not_exists
+from neurochat.nc_utils import log_exception
 from neurochat.nc_plot import print_place_cells
 
 import numpy as np
@@ -216,8 +217,8 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
             p_val = np.percentile(hist[0], mua_percentile)
             _, peaks = find_peaks(hist[0], thresh=p_val)
             corresponding_ranges = [
-                (hist[1][peak] - mua_length*0.5,
-                 hist[1][peak] + mua_length*0.5)
+                (hist[1][peak] - mua_length * 0.5,
+                 hist[1][peak] + mua_length * 0.5)
                 for peak in peaks]
             result['mua'].append(corresponding_ranges)
 
@@ -229,8 +230,8 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
                 num_cells = len(collection)
             mua_indices = np.argwhere(hist[0] == num_cells)
             corresponding_ranges = [
-                (hist[1][index] - mua_length*0.5,
-                 hist[1][index] + mua_length*0.5)
+                (hist[1][index] - mua_length * 0.5,
+                 hist[1][index] + mua_length * 0.5)
                 for index in mua_indices.flatten()]
             result["mua"].append(corresponding_ranges)
 
@@ -442,7 +443,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
 
     # Get the overlapping ranges of SWR and MUA
     def swr_interval(peak):
-        return (peak - 0.5*swr_window, peak + 0.5*swr_window)
+        return (peak - 0.5 * swr_window, peak + 0.5 * swr_window)
 
     def overlapping_swr_mua(mua, swr_peak):
         swr_range = swr_interval(swr_peak)
@@ -475,32 +476,37 @@ def place_cell_summary(collection, dpi=400):
     headdata = []
     thetadata = []
     for i, data in enumerate(collection):
-        data_idx, unit_idx = collection._index_to_data_pos(i)
-        placedata.append(data.place(pixel=3, filter=['b', 3], chop_bound=0))
-        graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
-        wavedata.append(data.wave_property())
-        headdata.append(data.hd_rate())
-        thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
+        try:
+            data_idx, unit_idx = collection._index_to_data_pos(i)
+            placedata.append(data.place(
+                pixel=3, filter=['b', 3], chop_bound=0))
+            graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
+            wavedata.append(data.wave_property())
+            headdata.append(data.hd_rate())
+            thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
 
-        # Save the accumulated information
-        if unit_idx == len(collection.get_units(data_idx)) - 1:
-            print_place_cells(
-                len(collection.get_units(data_idx)),
-                placedata=placedata, graphdata=graphdata,
-                wavedata=wavedata, headdata=headdata,
-                thetadata=thetadata,
-                size_multiplier=4, point_size=dpi/7.0)
-            filename = collection.get_file_dict()["Spike"][data_idx][0]
-            spike_name = os.path.basename(filename)
-            main_dir = os.path.dirname(filename)
-            out_name = os.path.join(main_dir, "plots", spike_name + ".png")
-            logging.info("Saving place cell figure to {}".format(
-                out_name))
-            make_dir_if_not_exists(out_name)
-            savefig(out_name, dpi=dpi)
-            placedata = []
-            graphdata = []
-            wavedata = []
-            headdata = []
-            thetadata = []
+            # Save the accumulated information
+            if unit_idx == len(collection.get_units(data_idx)) - 1:
+                print_place_cells(
+                    len(collection.get_units(data_idx)),
+                    placedata=placedata, graphdata=graphdata,
+                    wavedata=wavedata, headdata=headdata,
+                    thetadata=thetadata,
+                    size_multiplier=4, point_size=dpi / 7.0)
+                filename = collection.get_file_dict()["Spike"][data_idx][0]
+                spike_name = os.path.basename(filename)
+                main_dir = os.path.dirname(filename)
+                out_name = os.path.join(main_dir, "plots", spike_name + ".png")
+                logging.info("Saving place cell figure to {}".format(
+                    out_name))
+                make_dir_if_not_exists(out_name)
+                savefig(out_name, dpi=dpi)
+                placedata = []
+                graphdata = []
+                wavedata = []
+                headdata = []
+                thetadata = []
+        except Exception as e:
+            log_exception(
+                e, "Occured during place cell summary on {}".format(i))
     return
