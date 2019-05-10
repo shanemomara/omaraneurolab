@@ -773,6 +773,53 @@ class NLfp(NBase):
 
         return graph_data
 
+    def phase_at_events(self, event_stamps, **kwargs):
+        """
+        Phase based on times.
+        
+        Parameters
+        ----------
+        event_stamps : array
+            an array of event times
+        **kwargs:
+            keyword arguments
+        
+        Returns
+        -------
+            (array)
+            Phase values for each position
+        """
+        lfp = self.get_samples() * 1000
+        Fs = self.get_sampling_rate()
+        time = self.get_timestamp()
+
+        # Input parameters
+        fwin = kwargs.get('fwin', [6, 12])
+
+        # Filter
+        fmax = fwin[1]
+        fmin = fwin[0]
+        _filter = [5, fmin, fmax, 'bandpass']
+        _prefilt = kwargs.get('filtset', [10, 1.5, 40, 'bandpass'])
+
+        b_lfp = butter_filter(lfp, Fs, *_filter)  # band LFP
+        lfp = butter_filter(lfp, Fs, *_prefilt)
+
+        # Measure phase
+        hilb = sg.hilbert(b_lfp)
+        phase = np.angle(hilb, deg=True)
+        phase[phase < 0] = phase[phase < 0] + 360
+
+        ephase = np.interp(event_stamps, time, phase)
+
+        phases = np.zeros_like(event_stamps)
+        for i, e_time in enumerate(event_stamps):
+            time_idx = int(e_time / Fs)
+            phase = ephase[time_idx]
+            phases[i] = phase
+
+        return phases
+
     def plv(self, event_stamp, **kwargs):
         """
         Calculates phase-locking value of the spike train to underlying LFP signal.
