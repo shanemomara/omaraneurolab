@@ -1407,16 +1407,16 @@ class NSpatial(NAbstract):
         centroid = centroid[::-1]
         
         p_shape = pfield.shape
+        maxes = [xedges.max(), yedges.max()]
         scales = (
-             xedges.max() / p_shape[1],
-             yedges.max() / p_shape[0])
+             maxes[0] / p_shape[1],
+             maxes[1] / p_shape[0])
         co_ords = np.array(np.where(pfield == largest_group))
-
         boundary = [None, None]
         for i in range(2):
             boundary[i] = (
                 co_ords[i].min() * scales[i],
-                co_ords[i].max() * scales[i])
+                np.clip((co_ords[i].max()+1) * scales[i], 0, maxes[i]))
         inside_x = (
             (boundary[1][0] <= spikeLoc[0]) &
             (spikeLoc[0] <= boundary[1][1]))
