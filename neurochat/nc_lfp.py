@@ -812,13 +812,7 @@ class NLfp(NBase):
 
         ephase = np.interp(event_stamps, time, phase)
 
-        phases = np.zeros_like(event_stamps)
-        for i, e_time in enumerate(event_stamps):
-            time_idx = int(e_time / Fs)
-            phase = ephase[time_idx]
-            phases[i] = phase
-
-        return phases
+        return ephase
 
     def plv(self, event_stamp, **kwargs):
         """
