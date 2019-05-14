@@ -25,19 +25,20 @@ def main(dir):
     ndata.set_lfp_file(lfp_file)
     ndata.load()
     ndata.set_unit_no(unit_no)
-    phases, times, positions = ndata.phase_at_spikes()
+    phases, times, positions, boundary = ndata.phase_at_spikes(
+        should_filter=True)
     dim_pos = positions[1]
     # histo_vals = np.histogram2d(
     #     dim_pos, phases, bins=[10, 180])
     # fig = plt.hist2d(dim_pos, phases, bins=[10, 180])
     # fig.invert_xaxis()
     # fig.savefig("out.png")
-    plt.gca().invert_xaxis()
-    plt.scatter(dim_pos, phases)
-    plt.savefig("outscatt.png")
-    # plt.gca().invert_yaxis()
-    # plt.scatter(positions[0], positions[1])
+    # plt.gca().invert_xaxis()
+    # plt.scatter(dim_pos, phases)
     # plt.savefig("outscatt.png")
+    plt.gca().invert_yaxis()
+    plt.scatter(positions[0], positions[1])
+    plt.savefig("outscatt.png")
 
 
 if __name__ == "__main__":

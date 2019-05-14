@@ -1391,6 +1391,15 @@ class NSpatial(NAbstract):
         
         pmap[tmap == 0] = None
         pfield, largest_group = NSpatial.place_field(pmap, thresh, required_neighbours)
+        if largest_group == 0:
+            logging.warning(
+                "Lack high firing neighbours for place field identification")
+            if smooth_place:
+                logging.warning(
+                    "The place field was calculated from smoothed data")
+            else:
+                logging.warning(
+                    "The place field was calculated from raw data")
         centroid = NSpatial.place_field_centroid(pfield, pmap, largest_group)
         #centroid is currently in co-ordinates, convert to pixels
         centroid = centroid * pixel + (pixel * 0.5)
@@ -1417,6 +1426,8 @@ class NSpatial(NAbstract):
         graph_data['yedges'] = yedges
         graph_data['spikeLoc'] = spikeLoc
         graph_data['placeField'] = pfield
+        graph_data['largestPlaceGroup'] = largest_group
+        graph_data['smoothPlace'] = smooth_place
         graph_data['centroid'] = centroid
 
         return graph_data
