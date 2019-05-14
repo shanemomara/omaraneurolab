@@ -671,40 +671,10 @@ class NData():
         phases = self.lfp.phase_at_events(ftimes, **kwargs)
         positions = self.get_event_loc(ftimes, **kwargs)[1]
 
-        # TODO filter this to only consider it within the place field
         if should_filter:
             place_data = self.place(**kwargs)
-            pfield = place_data['placeField']
-            group_num = place_data['largestPlaceGroup']
-            smooth_place = place_data['smoothPlace']
-            x_edges = place_data["xedges"]
-            y_edges = place_data["yedges"]
-            # Get the place field boundaries
-            if smooth_place:
-                fmap = place_data['smoothMap']
-            else:
-                fmap = place_data['firingMap']
-
-            # Filter the data to only be within this
-            p_shape = pfield.shape
-            scales = (
-                x_edges.max() / p_shape[1],
-                y_edges.max() / p_shape[0])
-            co_ords = np.array(np.where(pfield == group_num))
-
-            boundary = [None, None]
-            for i in range(2):
-                boundary[i] = (
-                    co_ords[i].min() * scales[i],
-                    co_ords[i].max() * scales[i])
-            # Can use np where, or maybe
-            inside_x = (
-                (boundary[1][0] <= positions[0]) &
-                (positions[0] <= boundary[1][1]))
-            inside_y = (
-                (boundary[0][0] <= positions[1]) &
-                (positions[1] <= boundary[0][1]))
-            co_ords = np.nonzero(np.logical_and(inside_x, inside_y))
+            boundary = place_data["placeBoundary"]
+            co_ords = place_data["indicesInPlaceField"]
             self.update_results(self.get_results())
             filt_phase = phases[co_ords]
             filt_times = ftimes[co_ords]

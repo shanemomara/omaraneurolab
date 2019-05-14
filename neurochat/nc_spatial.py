@@ -1406,12 +1406,35 @@ class NSpatial(NAbstract):
         #flip x and y
         centroid = centroid[::-1]
         
+        p_shape = pfield.shape
+        scales = (
+             xedges.max() / p_shape[1],
+             yedges.max() / p_shape[0])
+        co_ords = np.array(np.where(pfield == largest_group))
+
+        boundary = [None, None]
+        for i in range(2):
+            boundary[i] = (
+                co_ords[i].min() * scales[i],
+                co_ords[i].max() * scales[i])
+        inside_x = (
+            (boundary[1][0] <= spikeLoc[0]) &
+            (spikeLoc[0] <= boundary[1][1]))
+        inside_y = (
+            (boundary[0][0] <= spikeLoc[1]) &
+            (spikeLoc[1] <= boundary[0][1]))
+        co_ords = np.nonzero(np.logical_and(inside_x, inside_y))
+
         if update:
             _results['Spatial Skaggs'] = self.skaggs_info(fmap, tmap)
             _results['Spatial Sparsity'] = self.spatial_sparsity(fmap, tmap)
             _results['Spatial Coherence'] = np.corrcoef(fmap[tmap != 0].flatten(), smoothMap[tmap != 0].flatten())[0, 1]
             _results['Place field Centroid x'] = centroid[0]
             _results['Place field Centroid y'] = centroid[1]
+            _results['Place field Boundary x'] = boundary[1]
+            _results['Place field Boundary y'] = boundary[0]
+            _results['Number of Spikes in Place Field'] = co_ords[0].size
+            _results['Percentage of Spikes in Place Field'] = co_ords[0].size*100 / ftimes.size
             self.update_result(_results)
 
         smoothMap[tmap == 0] = None
@@ -1427,7 +1450,8 @@ class NSpatial(NAbstract):
         graph_data['spikeLoc'] = spikeLoc
         graph_data['placeField'] = pfield
         graph_data['largestPlaceGroup'] = largest_group
-        graph_data['smoothPlace'] = smooth_place
+        graph_data['placeBoundary'] = boundary
+        graph_data['indicesInPlaceField'] = co_ords
         graph_data['centroid'] = centroid
 
         return graph_data

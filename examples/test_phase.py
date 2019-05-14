@@ -28,16 +28,9 @@ def main(dir):
     phases, times, positions, boundary = ndata.phase_at_spikes(
         should_filter=True)
     dim_pos = positions[1]
-    # histo_vals = np.histogram2d(
-    #     dim_pos, phases, bins=[10, 180])
-    # fig = plt.hist2d(dim_pos, phases, bins=[10, 180])
-    # fig.invert_xaxis()
-    # fig.savefig("out.png")
-    # plt.gca().invert_xaxis()
-    # plt.scatter(dim_pos, phases)
-    # plt.savefig("outscatt.png")
-    plt.gca().invert_yaxis()
-    plt.scatter(positions[0], positions[1])
+    plt.hist2d(dim_pos, phases, bins=[10, 180])
+    plt.savefig("out.png")
+    plt.scatter(dim_pos, phases)
     plt.savefig("outscatt.png")
 
 
