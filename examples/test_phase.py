@@ -19,7 +19,8 @@ def main(dir):
 
     # TODO for some reason there is slight difference in the shapes
     phases, times, positions = ndata.phase_at_spikes()
-    histo_vals = np.histogram2d(positions[0], phases)
+    dim_pos = positions[0]
+    histo_vals = np.histogram2d(dim_pos, phases, bins=[10, 180])
     print(histo_vals)
 
 

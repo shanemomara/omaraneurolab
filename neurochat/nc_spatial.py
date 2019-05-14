@@ -2153,10 +2153,12 @@ class NSpatial(NAbstract):
         -------
         ndarray        
             Index of the events in spatial-timestamps
-        ndarray
-            x-coordinates of the event location
-        ndarray
-            y-ccordinates of the event location
+        [ Two item list containing
+            ndarray
+                x-coordinates of the event location
+            ndarray
+                y-ccordinates of the event location
+        ]
         ndarray
             direction of the animal at the time of the event            
         """
@@ -2164,8 +2166,20 @@ class NSpatial(NAbstract):
         
         time = self.get_time()
         lim = kwargs.get('range', [0, time.max()])
-        vidInd = histogram(ftimes[np.logical_and(ftimes >= lim[0], ftimes < lim[1])], time)[1]
-        retInd = vidInd[vidInd != 0]
+
+        # Sean - Why is zero idx is always thrown away?
+        keep_zero_idx = kwargs.get('keep_zero_idx', False)
+        
+        hist = histogram(
+            ftimes[np.logical_and(
+                    ftimes >= lim[0], ftimes < lim[1])], 
+            time)
+        vidInd = hist[1]
+
+        if keep_zero_idx:
+            retInd = vidInd
+        else:
+            retInd = vidInd[vidInd != 0]
         
         return retInd, [self._pos_x[retInd], self._pos_y[retInd]], self._direction[retInd]
 

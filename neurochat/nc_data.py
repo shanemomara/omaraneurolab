@@ -662,6 +662,9 @@ class NData():
         nc_lfp.NLfp().phase_at_events()
 
         """
+        key = "keep_zero_idx"
+        if not key in kwargs.keys():
+            kwargs[key] = True
         ftimes = self.spike.get_unit_stamp()
         phases = self.lfp.phase_at_events(ftimes, **kwargs)
         positions = self.get_event_loc(ftimes, **kwargs)[1]
