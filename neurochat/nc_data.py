@@ -663,6 +663,7 @@ class NData():
 
         """
         key = "keep_zero_idx"
+        out_data = {}
         if not key in kwargs.keys():
             kwargs[key] = True
         should_filter = kwargs.get("should_filter", True)
@@ -675,14 +676,24 @@ class NData():
             place_data = self.place(**kwargs)
             boundary = place_data["placeBoundary"]
             co_ords = place_data["indicesInPlaceField"]
-            self.update_results(self.get_results())
+            largest_group = place_data["largestPlaceGroup"]
+
             filt_phase = phases[co_ords]
             filt_times = ftimes[co_ords]
             filt_pos = [positions[0][co_ords], positions[1][co_ords]]
-            return filt_phase, filt_times, filt_pos, boundary
+            out_data["good_place"] = (largest_group != 0)
+            out_data["phases"] = filt_phase
+            out_data["times"] = filt_times
+            out_data["positions"] = filt_pos
+            out_data["boundary"] = boundary
+
+        else:
+            out_data["phases"] = phases
+            out_data["times"] = ftimes
+            out_data["positions"] = positions
 
         self.update_results(self.get_results())
-        return phases, ftimes, positions, boundary
+        return out_data
 
     def plv(self, **kwargs):
         """
