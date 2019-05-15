@@ -25,8 +25,12 @@ def main(dir):
     ndata.set_lfp_file(lfp_file)
     ndata.load()
     ndata.set_unit_no(unit_no)
-    phases, times, positions, boundary = ndata.phase_at_spikes(
+    results = ndata.phase_at_spikes(
         should_filter=True)
+    boundary = results["boundary"]
+    positions = results["positions"]
+    phases = results["phases"]
+    print(boundary)
     dim_pos = positions[1]
     plt.hist2d(dim_pos, phases, bins=[10, 180])
     plt.savefig("out.png")
