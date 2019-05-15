@@ -1392,14 +1392,13 @@ class NSpatial(NAbstract):
         pmap[tmap == 0] = None
         pfield, largest_group = NSpatial.place_field(pmap, thresh, required_neighbours)
         if largest_group == 0:
-            logging.warning(
-                "Lack high firing neighbours for place field identification")
             if smooth_place:
-                logging.warning(
-                    "The place field was calculated from smoothed data")
+                info = "where the place field was calculated from smoothed data"
             else:
-                logging.warning(
-                    "The place field was calculated from raw data")
+                info = "where the place field was calculated from raw data"
+            logging.info(
+                "Lack of high firing neighbours to identify place field " +
+                info)
         centroid = NSpatial.place_field_centroid(pfield, pmap, largest_group)
         #centroid is currently in co-ordinates, convert to pixels
         centroid = centroid * pixel + (pixel * 0.5)
@@ -1414,21 +1413,23 @@ class NSpatial(NAbstract):
         co_ords = np.array(np.where(pfield == largest_group))
         boundary = [None, None]
         for i in range(2):
+            j = (i + 1) % 2
             boundary[i] = (
-                co_ords[i].min() * scales[i],
-                np.clip((co_ords[i].max()+1) * scales[i], 0, maxes[i]))
+                co_ords[j].min() * scales[i],
+                np.clip((co_ords[j].max()+1) * scales[i], 0, maxes[i]))
         inside_x = (
-            (boundary[1][0] <= spikeLoc[0]) &
-            (spikeLoc[0] <= boundary[1][1]))
+            (boundary[0][0] <= spikeLoc[0]) &
+            (spikeLoc[0] <= boundary[0][1]))
         inside_y = (
-            (boundary[0][0] <= spikeLoc[1]) &
-            (spikeLoc[1] <= boundary[0][1]))
+            (boundary[1][0] <= spikeLoc[1]) &
+            (spikeLoc[1] <= boundary[1][1]))
         co_ords = np.nonzero(np.logical_and(inside_x, inside_y))
 
         if update:
             _results['Spatial Skaggs'] = self.skaggs_info(fmap, tmap)
             _results['Spatial Sparsity'] = self.spatial_sparsity(fmap, tmap)
             _results['Spatial Coherence'] = np.corrcoef(fmap[tmap != 0].flatten(), smoothMap[tmap != 0].flatten())[0, 1]
+            _results['Found strong place field'] = (largest_group != 0)
             _results['Place field Centroid x'] = centroid[0]
             _results['Place field Centroid y'] = centroid[1]
             _results['Place field Boundary x'] = boundary[1]
