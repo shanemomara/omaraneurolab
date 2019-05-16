@@ -670,7 +670,7 @@ class NData():
 
         ftimes = self.spike.get_unit_stamp()
         phases = self.lfp.phase_at_events(ftimes, **kwargs)
-        positions = self.get_event_loc(ftimes, **kwargs)[1]
+        _, positions, directions = self.get_event_loc(ftimes, **kwargs)
 
         if should_filter:
             place_data = self.place(**kwargs)
@@ -678,19 +678,19 @@ class NData():
             co_ords = place_data["indicesInPlaceField"]
             largest_group = place_data["largestPlaceGroup"]
 
-            filt_phase = phases[co_ords]
-            filt_times = ftimes[co_ords]
-            filt_pos = [positions[0][co_ords], positions[1][co_ords]]
             out_data["good_place"] = (largest_group != 0)
-            out_data["phases"] = filt_phase
-            out_data["times"] = filt_times
-            out_data["positions"] = filt_pos
+            out_data["phases"] = phases[co_ords]
+            out_data["times"] = ftimes[co_ords]
+            out_data["directions"] = directions[co_ords]
+            out_data["positions"] = [
+                positions[0][co_ords], positions[1][co_ords]]
             out_data["boundary"] = boundary
 
         else:
             out_data["phases"] = phases
             out_data["times"] = ftimes
             out_data["positions"] = positions
+            out_data["directions"] = directions
 
         self.update_results(self.get_results())
         return out_data
