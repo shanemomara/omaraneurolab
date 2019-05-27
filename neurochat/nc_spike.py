@@ -347,8 +347,6 @@ class NSpike(NBase):
         
         return _waves
 
-    # For multi-unit analysis, {'SpikeName': cell_no} pairs should be used as function input
-
     def get_unit_stamps_in_ranges(self, ranges):
         """
         Return the unit timestamps in a list of ranges.
@@ -843,19 +841,19 @@ class NSpike(NBase):
         y = corrCount[center:]
         y_fit = np.empty([corrBins.size,])
 
-## This is for the double-exponent dip model
-#        def fit_func(x, a, f, tau1, b, c1, tau2, c2, tau3):
-#            return  a*np.cos(2*np.pi*f*x)*np.exp(-np.abs(x)/tau1)+ b+ \
-#                c1*np.exp(-np.abs(x)/tau2)- c2*np.exp(-np.abs(x)/tau3)
-#
-#        popt, pcov = curve_fit(fit_func, x, y, \
-#                                p0=[m, p_0[0], p_0[1], m, m, p_0[2], m, 0.005], \
-#                                bounds=([0, lb[0], lb[1], 0, 0, lb[2], 0, 0], \
-#                                [m, ub[0], ub[1], m, m, ub[2], m, 0.01]),
-#                                max_nfev=100000)
-#        a, f, tau1, b, c1, tau2, c2, tau3 = popt
+        ## This is for the double-exponent dip model
+        # def fit_func(x, a, f, tau1, b, c1, tau2, c2, tau3):
+        #     return  a*np.cos(2*np.pi*f*x)*np.exp(-np.abs(x)/tau1)+ b+ \
+        #         c1*np.exp(-np.abs(x)/tau2)- c2*np.exp(-np.abs(x)/tau3)
+        
+        # popt, pcov = curve_fit(fit_func, x, y, \
+        #                         p0=[m, p_0[0], p_0[1], m, m, p_0[2], m, 0.005], \
+        #                         bounds=([0, lb[0], lb[1], 0, 0, lb[2], 0, 0], \
+        #                         [m, ub[0], ub[1], m, m, ub[2], m, 0.01]),
+        #                         max_nfev=100000)
+        # a, f, tau1, b, c1, tau2, c2, tau3 = popt
 
-# This is for the single-exponent dip model
+        # This is for the single-exponent dip model
         def fit_func(x, a, f, tau1, b, c, tau2):
             return  a*np.cos(2*np.pi*f*x)*np.exp(-np.abs(x)/tau1)+ b+ \
                 c*np.exp(-(x/tau2)**2)
@@ -914,7 +912,7 @@ class NSpike(NBase):
         y = corrCount[center:]
         y_fit = np.empty([corrBins.size,])
 
-# This is for the double-exponent dip model
+        # This is for the double-exponent dip model
         def fit_func(x, a1, f1, a2, f2, tau1, b, c1, tau2, c2, tau3):
             return  (a1*np.cos(2*np.pi*f1*x)+ a2*np.cos(2*np.pi*f2*x))*np.exp(-np.abs(x)/tau1)+ b+ \
                 c1*np.exp(-np.abs(x)/tau2)- c2*np.exp(-np.abs(x)/tau3)
@@ -926,17 +924,17 @@ class NSpike(NBase):
                                 max_nfev=100000)
         a1, f1, a2, f2, tau1, b, c1, tau2, c2, tau3 = popt
 
-## This is for the single-exponent dip model
-#        def fit_func(x, a1, f1, a2, f2, tau1, b, c, tau2):
-#            return  (a1*np.cos(2*np.pi*f1*x)+ a2*np.cos(2*np.pi*f2*x))*np.exp(-np.abs(x)/tau1)+ b+ \
-#                c*np.exp(-(x/tau2)**2)
-#
-#        popt, pcov = curve_fit(fit_func, x, y, \
-#                                p0=[m, p_0[0], m, p_0[0]/2, p_0[1], m, m, p_0[2]], \
-#                                bounds=([0, lb[0], 0, lb[0]/2, lb[1], 0, -m, lb[2]], \
-#                                [m, ub[0], m, ub[0]/2, ub[1], m, m, ub[2]]),
-#                                max_nfev=100000)
-#        a1, f1, a2, f2, tau1, b, c, tau2 = popt
+        ## This is for the single-exponent dip model
+        # def fit_func(x, a1, f1, a2, f2, tau1, b, c, tau2):
+        #     return  (a1*np.cos(2*np.pi*f1*x)+ a2*np.cos(2*np.pi*f2*x))*np.exp(-np.abs(x)/tau1)+ b+ \
+        #         c*np.exp(-(x/tau2)**2)
+        
+        # popt, pcov = curve_fit(fit_func, x, y, \
+        #                         p0=[m, p_0[0], m, p_0[0]/2, p_0[1], m, m, p_0[2]], \
+        #                         bounds=([0, lb[0], 0, lb[0]/2, lb[1], 0, -m, lb[2]], \
+        #                         [m, ub[0], m, ub[0]/2, ub[1], m, m, ub[2]]),
+        #                         max_nfev=100000)
+        # a1, f1, a2, f2, tau1, b, c, tau2 = popt
 
         temp_fit = fit_func(x, *popt)
         y_fit[center:] = temp_fit
@@ -1029,39 +1027,6 @@ class NSpike(NBase):
             except:
                 logging.error('No plv() method in lfp data specified!')
             
-
-#    def sfc(self, lfp=None, **kwargs):
-#        """
-#        Calculates spike-field coherence of spike train with underlying LFP signal.
-#        
-#        Delegates to NLfp().sfc()
-#        
-#        Parameters
-#        ----------
-#        lfp : NLfp
-#            LFP object which contains the LFP data
-#        **kwargs
-#            Keyword arguments
-# 
-#        Returns
-#        -------
-#        dict
-#            Graphical data of the analysis
-#    
-#        See also
-#        --------
-#        nc_lfp.NLfp().sfc()
-#
-#        """
-#        
-#        if lfp is None:
-#            logging.error('LFP data not specified!')
-#        else:
-#            try:
-#                lfp.sfc(self.get_unit_stamp(), **kwargs)
-#            except:
-#                logging.error('No sfc() method in lfp data specified!')
-
     def spike_lfp_causality(self, lfp=None, **kwargs):
         """
         Analyses spike to underlying LFP causality
@@ -1240,7 +1205,6 @@ class NSpike(NBase):
 
         """
         self._record_info['ADC Fullscale mv'] = adc_fullscale_mv
-
 
     def get_total_spikes(self):
         """
@@ -1769,3 +1733,35 @@ class NSpike(NBase):
             self._set_timestamp(spike_time)
             self._set_waveform(spike_wave)
             self.set_unit_tags(unit_ID)
+
+    # def sfc(self, lfp=None, **kwargs):
+    #     """
+    #     Calculates spike-field coherence of spike train with underlying LFP signal.
+
+    #     Delegates to NLfp().sfc()
+
+    #     Parameters
+    #     ----------
+    #     lfp : NLfp
+    #         LFP object which contains the LFP data
+    #     **kwargs
+    #         Keyword arguments
+
+    #     Returns
+    #     -------
+    #     dict
+    #         Graphical data of the analysis
+
+    #     See also
+    #     --------
+    #     nc_lfp.NLfp().sfc()
+
+    #     """
+
+    #     if lfp is None:
+    #         logging.error('LFP data not specified!')
+    #     else:
+    #         try:
+    #             lfp.sfc(self.get_unit_stamp(), **kwargs)
+    #         except:
+    #             logging.error('No sfc() method in lfp data specified!')
