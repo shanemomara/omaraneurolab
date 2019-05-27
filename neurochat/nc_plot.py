@@ -600,10 +600,15 @@ def spike_phase(phase_data):
     #c_map = mcol.LinearSegmentedColormap('my_colormap', cdict, 256)
     ax.pcolormesh(phase_data['rasterbins'], np.arange(0, phase_data['raster'].shape[0]), \
                   phase_data['raster'], cmap=plt.cm.binary, rasterized=True)
-    # TODO scale rasters value to match rasterbin centres
+    
+    # Alternative idea for plotting, not currently working. 
     # rasters = phase_data['raster']
+    # bin_length = np.mean(np.diff(phase_data['raster'], 0))
+
     # for idx, row in enumerate(rasters):
-    #     rasters[idx] = [j_idx if j == 1 else 0 for j_idx, j in enumerate(row)]
+    #      rasters[idx] = [
+    #          j_idx*(bin_length) +0.5*bin_length if j == 1 else 0 for 
+    #             j_idx, j in enumerate(row)]
     # ax.eventplot(rasters)
     plt.autoscale(enable=True, axis='both', tight=True)
     plt.title('Phase raster')
