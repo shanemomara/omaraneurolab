@@ -572,8 +572,7 @@ class NSpike(NBase):
         for i, (chan, wave) in enumerate(_waves.items()):
             meanWave[:, i] = np.mean(wave, 0)
             stdWave[:, i] = np.std(wave, 0)
-            # This should really be np.diff(np.diff(wave)) for all points bar the first (last is left out)
-            slope = np.diff(wave)
+            slope = np.gradient(wave)[1][:, :-1]
             max_slope = slope.max(1)
             max_val = wave.max(1)
 
