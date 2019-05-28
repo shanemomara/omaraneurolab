@@ -523,11 +523,11 @@ class NSpike(NBase):
                         if data[j] <= 0 and data[j - 1] > 0]
             return peak_loc[0] if peak_loc else 0
 
-        def argthreshold(data, threshold):
+        def argthreshold(data, threshold, start):
             # Get the first point larger than threshold, and the next and
             # previous points are non negative
-            for i in range(4, len(data)-1):
-                if data[i] > threshold and data[i-1] >= 0 and data[i+1] >= 0 :
+            for i in range(start, len(data)-1):
+                if data[i] > threshold and data[i+1] >= 0 :
                     return i
             # Return nan if there is no matches
             return np.nan
@@ -583,17 +583,17 @@ class NSpike(NBase):
                 peak_val = [wave[I, peak_loc[I]] for I in range(num_spikes)]
                 # Threshold value of 4% max dV/dt is from 
                 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2892804/
+                
+                trough1_loc = [argtrough1(slope[I, :], peak_loc[I]) for I in range(num_spikes)]
                 factor = 0.004 * max_slope
                 threshold_loc = [
-                    argthreshold(slope[I], factor[I]) 
+                    argthreshold(slope[I], factor[I], trough1_loc[I]) 
                     for I in range(num_spikes)]
                 for I, loc in enumerate(threshold_loc):
                     if np.isnan(loc):
                         threshold[I, i] = np.nan
                     else:
                         threshold[I, i] = wave[I, loc]
-                
-                trough1_loc = [argtrough1(slope[I, :], peak_loc[I]) for I in range(num_spikes)]
                 trough1_val = [wave[I, trough1_loc[I]] for I in range(num_spikes)]
                 peak_loc = np.array(peak_loc)
                 peak_val = np.array(peak_val)
