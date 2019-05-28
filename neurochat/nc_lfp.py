@@ -1087,6 +1087,14 @@ class NLfp(NBase):
         percentile = kwargs.get("peak_percentile", 99.5)
 
         sample_rate = self.get_sampling_rate()
+        if in_range == None:
+            length = int(self.get_duration() * sample_rate)
+            if (length != self.get_total_samples()):
+                logging.warning(
+                    "Unequal calculated and recorded total lfp samples" +
+                    "Calculated {} and recorded {}".format(
+                        length, self.get_total_samples()))
+            in_range = [0, self.get_total_samples()]
         lfp_samples = self.get_samples()[
             int(sample_rate*in_range[0]):int(sample_rate*in_range[1])]
         lfp_times = self.get_timestamp()[
