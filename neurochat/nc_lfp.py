@@ -1120,6 +1120,101 @@ class NLfp(NBase):
             "lfp times": lfp_times, "lfp samples": filtered_lfp,
             "swr times": peaks, "lfp sample rate": sample_rate}
 
+    def bandpower(self, band, **kwargs):
+        """Compute the average power of the signal x in a specific frequency band.
+
+        Modified from excellent article at https://raphaelvallat.com/bandpower.html
+
+        Parameters
+        ----------
+        band : list
+        Lower and upper frequencies of the band of interest.
+
+        kwargs:
+            sf : float
+            Sampling frequency of the data.
+            method : string
+            Periodogram method: 'welch'
+            window_sec : float
+            Length of each window in seconds.
+            If None, window_sec = (1 / min(band)) * 2.
+            relative : boolean
+            If True, return the relative power (= divided by the total power of the signal).
+            If False (default), return the absolute power.
+
+        Returns
+        ------
+        bp : float
+        Absolute or relative band power.
+        """
+        from scipy.signal import welch
+        from scipy.integrate import simps
+        
+        band = np.asarray(band)
+        low, high = band
+        method = kwargs.get("method", "welch")
+        window_sec = kwargs.get("window_sec", 2 / (low + 0.000001))
+        relative = kwargs.get("relative", False)
+
+        sf = self.get_sampling_rate()
+        lfp_samples = self.get_samples()
+
+        # Compute the modified periodogram (Welch)
+        if method == 'welch':
+            nperseg = int(window_sec * sf)
+            freqs, psd = welch(lfp_samples, sf, nperseg=nperseg)
+
+        # The multaper method is more accurate but we will not use it
+        # Welch's method is still very good
+        # See MNE for the multitaper method
+        # from mne.time_frequency import psd_array_multitaper
+        # elif method == 'multitaper':
+        #     psd, freqs = psd_array_multitaper(lfp_samples, sf, adaptive=True,
+        #                                     normalization='full', verbose=0)
+
+        # Frequency resolution
+        freq_res = freqs[1] - freqs[0]
+
+        # Find index of band in frequency vector
+        idx_band = np.logical_and(freqs >= low, freqs <= high)
+
+        # Integral approximation of the spectrum using parabola (Simpson's rule)
+        bp = simps(psd[idx_band], dx=freq_res)
+
+        if relative:
+            bp /= simps(psd, dx=freq_res)
+        return bp
+
+    def bandpower_ratio(self, first_band, second_band, win_sec, **kwargs):
+        """
+        Calculate the ratio in power between two bandpass filtered signals.
+
+        Note that common ranges are: 
+        delta (0.5–4 Hz), theta (4–8 Hz), alpha (8–12 Hz), 
+        beta (12–30 Hz), and gamma (30–100 Hz).
+
+        Parameters
+        ----------
+        first_band - 1d array
+            lower and upper bands
+        second_band - 1d array
+            lower and upper bands
+        win_sec - float
+            length of the windows to bin lfp into in seconds. 
+            recommend 4 for eg.
+        Returns
+        -------
+        float - the ratio between the power signals.
+
+        See also
+        --------
+        nc_lfp.NLfp().bandpower()
+        """
+        kwargs["window_sec"] = win_sec
+        return (
+            self.bandpower(first_band, **kwargs) / 
+            self.bandpower(second_band, **kwargs))
+
     def save_to_hdf5(self, file_name=None, system=None):
         """
         Stores NLfp() object to HDF5 file
