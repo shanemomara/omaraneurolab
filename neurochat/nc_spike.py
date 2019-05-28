@@ -524,17 +524,19 @@ class NSpike(NBase):
             return peak_loc[0] if peak_loc else 0
 
         def argthreshold(data, threshold):
-            for i in range(7, len(data)):
-                if data[i] > threshold:
+            # Get the first point larger than threshold, and the next and
+            # previous points are non negative
+            for i in range(4, len(data)-1):
+                if data[i] > threshold and data[i-1] >= 0 and data[i+1] >= 0 :
                     return i
             # Return nan if there is no matches
             return np.nan
 
-        def argtrough2(data, peak_loc):
-            data = data.tolist()
-            trough_loc = [j for j in range(7, len(data)) \
-                        if data[j] >= 0 and data[j - 1] < 0 and peak_loc > 0]
-            return trough_loc[0] if trough_loc else 0
+        # def argtrough2(data, peak_loc):
+        #     data = data.tolist()
+        #     trough_loc = [j for j in range(7, len(data)) \
+        #                 if data[j] >= 0 and data[j - 1] < 0 and peak_loc > 0]
+        #     return trough_loc[0] if trough_loc else 0
 
         def argtrough1(data, peak_loc):
             data = data.tolist()
@@ -563,8 +565,8 @@ class NSpike(NBase):
         tot_chans = self.get_total_channels()
         meanWave = np.empty([samples_per_spike, tot_chans])
         stdWave = np.empty([samples_per_spike, tot_chans])
-        meanThreshold = np.empty([tot_chans])
 
+        meanThreshold = np.empty([tot_chans])
         threshold = np.empty([num_spikes, tot_chans])
         width = np.empty([num_spikes, tot_chans])
         amp = np.empty([num_spikes, tot_chans])
@@ -590,9 +592,6 @@ class NSpike(NBase):
                         threshold[I, i] = np.nan
                     else:
                         threshold[I, i] = wave[I, loc]
-                    
-                # threshold[:, i] = [
-                #     wave[I, threshold_loc[I]] if not np.isnan(threshold_loc[I]) else np.nan for I in range(num_spikes)]
                 
                 trough1_loc = [argtrough1(slope[I, :], peak_loc[I]) for I in range(num_spikes)]
                 trough1_val = [wave[I, trough1_loc[I]] for I in range(num_spikes)]
@@ -606,10 +605,10 @@ class NSpike(NBase):
             amp[:, i] = peak_val- trough1_val
             height[:, i] = peak_val- wave.min(1)
         max_chan = amp.mean(0).argmax()
-        meanThreshold = np.nanmean(threshold, 0)
         width = width[:, max_chan]* 10**6/self.get_sampling_rate()
         amp = amp[:, max_chan]
         height = height[:, max_chan]
+        meanThreshold = np.nanmean(threshold, 0)
         threshold = threshold[:, max_chan]
 
         graph_data = {'Mean wave': meanWave, 'Std wave': stdWave,
