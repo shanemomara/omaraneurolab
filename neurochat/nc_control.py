@@ -146,12 +146,11 @@ class NeuroChaT(QtCore.QThread):
             
         """
         try:
-        keys = []
-        for d in self.results:
-            [keys.append(k) for k in list(d.keys()) if k not in keys]
-            logging.warning("Showing keys" + str(keys))
-        results = pd.DataFrame(self.results, columns=keys)
-        results.index = self.cellid
+            keys = []
+            for d in self.results:
+                [keys.append(k) for k in list(d.keys()) if k not in keys]
+            results = pd.DataFrame(self.results, columns=keys)
+            results.index = self.cellid
         except Exception as ex:
             log_exception(
                 ex, "Error in getting results")
@@ -896,6 +895,11 @@ class NeuroChaT(QtCore.QThread):
                 self.close_fig(fig)
                 self.plot_data_to_hdf(name=name+ '/lfp_spectrum_TR/', graph_data=graph_data)
 
+                # TODO consider where to put theta delta
+                self.bandpower_ratio(
+                    [4, 8], [0.5, 4], 4, relative=True,
+                    first_name="Theta", second_name="Delta")
+                self.ndata.update_results(self.lfp.get_results())
             except:
                 logging.error('Error in analyzing lfp spectrum')
 

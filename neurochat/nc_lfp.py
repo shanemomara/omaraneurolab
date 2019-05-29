@@ -904,7 +904,6 @@ class NLfp(NBase):
             offset = np.arange(window[0], window[-1], slide)
             nwin = offset.size
 
-#            STA = np.empty([nwin, win.size])
             fSTA = np.empty([nwin, ind.size])
             STP = np.empty([nwin, ind.size])
             SFC = np.empty([nwin, ind.size])
@@ -994,7 +993,6 @@ class NLfp(NBase):
 
         graph_data = oDict()
         window = np.array(kwargs.get('window', [-0.5, 0.5]))
-#        mode = kwargs.get('mode', None)
 
         if event_stamp is None:
             spike = kwargs.get('spike', None)
@@ -1210,10 +1208,22 @@ class NLfp(NBase):
         --------
         nc_lfp.NLfp().bandpower()
         """
-        kwargs["window_sec"] = win_sec
-        return (
-            self.bandpower(first_band, **kwargs) / 
-            self.bandpower(second_band, **kwargs))
+
+        _results = oDict()
+        name1 = kwargs.get("first_name", "Band 1")
+        name2 = kwargs.get("second_name", "Band 2")
+
+        b1 = self.bandpower(first_band, **kwargs)  
+        b2 = self.bandpower(second_band, **kwargs)
+        bp = b1 / b2
+        key1 = name1 + " Power"
+        key2 = name2 + " Power"
+        key3 = name1 + " " + name2 + " Power Ratio"
+        _results[key1] = b1
+        _results[key2] = b2
+        _results[key3] = bp
+        self.update_result(_results)
+        return bp 
 
     def save_to_hdf5(self, file_name=None, system=None):
         """
@@ -1503,9 +1513,9 @@ class NLfp(NBase):
                 wave_bytes = sample_bytes[sample_offset+ np.arange(valid_samples* bytes_per_sample)]\
                                 .reshape([valid_samples, bytes_per_sample])
                 block_wave = np.dot(wave_bytes, sample_le)
-#                for k in np.arange(valid_samples):
-#                    block_wave[k] = int.from_bytes(sample_bytes[sample_offset+ k*bytes_per_sample+ \
-#                                np.arange(bytes_per_sample)], byteorder='little', signed=False)
+                #    for k in np.arange(valid_samples):
+                #        block_wave[k] = int.from_bytes(sample_bytes[sample_offset+ k*bytes_per_sample+ \
+                #                    np.arange(bytes_per_sample)], byteorder='little', signed=False)
                 np.putmask(block_wave, block_wave > max_ADC_count, block_wave - max_byte_value)
                 block_wave = block_wave*AD_bit_uvolt
                 block_time = block_start +  np.arange(valid_samples)/ sampling_freq
