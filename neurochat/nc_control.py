@@ -145,12 +145,16 @@ class NeuroChaT(QtCore.QThread):
             Parametric results of the analysis
             
         """
-        
+        try:
         keys = []
         for d in self.results:
             [keys.append(k) for k in list(d.keys()) if k not in keys]
+            logging.warning("Showing keys" + str(keys))
         results = pd.DataFrame(self.results, columns=keys)
         results.index = self.cellid
+        except Exception as ex:
+            log_exception(
+                ex, "Error in getting results")
         
         return results
 
