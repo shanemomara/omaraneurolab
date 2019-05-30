@@ -895,9 +895,11 @@ class NeuroChaT(QtCore.QThread):
                 self.close_fig(fig)
                 self.plot_data_to_hdf(name=name+ '/lfp_spectrum_TR/', graph_data=graph_data)
 
-                # TODO consider where to put theta delta
+                # This is from Muessig et al. 2019
+                # Coordinated Emergence of Hippocampal Replay and
+                # Theta Sequences during Post - natal Development   
                 self.bandpower_ratio(
-                    [4, 8], [0.5, 4], 4, relative=True,
+                    [5, 11], [1.5, 4], 1.6, relative=True,
                     first_name="Theta", second_name="Delta")
                 self.ndata.update_results(self.lfp.get_results())
             except:
