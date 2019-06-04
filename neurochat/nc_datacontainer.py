@@ -376,6 +376,13 @@ class NDataContainer():
         directory : str
             The directory to parse through
 
+        **kwargs: keyword arguments
+            tetrode_list : list
+                list of tetrodes to consider
+            data_extension : str default .set
+            cluster_extension : str default .cut
+            pos_extension : str default .txt
+            lfp_extension : str default .eeg
         Returns
         -------
         None
