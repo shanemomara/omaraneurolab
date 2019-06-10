@@ -115,9 +115,9 @@ class NData():
         """
 
         self._results = oDict()
-#        self.spike.reset_results()
-#        self.spatial.reset_results()
-#        self.lfp.reset_results()
+        # self.spike.reset_results()
+        # self.spatial.reset_results()
+        # self.lfp.reset_results()
 
     def get_data_format(self):
         """
@@ -721,31 +721,31 @@ class NData():
 
         return gdata
 
-#    def sfc(self, **kwargs):
-#        """
-#        Calculates spike-field coherence of spike train with underlying LFP signal.
-#
-#        Delegates to NLfp().sfc()
-#
-#        Parameters
-#        ----------
-#        **kwargs
-#            Keyword arguments
-#
-#        Returns
-#        -------
-#        dict
-#            Graphical data of the analysis
-#
-#        See also
-#        --------
-#        nc_lfp.NLfp().sfc()
-#
-#        """
-#
-#        gdata = self.lfp.plv(self.spike.get_unit_stamp(), **kwargs)
-#
-#        return gdata
+    # def sfc(self, **kwargs):
+        # """
+        # Calculates spike-field coherence of spike train with underlying LFP signal.
+
+        # Delegates to NLfp().sfc()
+
+        # Parameters
+        # ----------
+        # **kwargs
+        #     Keyword arguments
+
+        # Returns
+        # -------
+        # dict
+        #     Graphical data of the analysis
+
+        # See also
+        # --------
+        # nc_lfp.NLfp().sfc()
+
+        # """
+
+        # gdata = self.lfp.plv(self.spike.get_unit_stamp(), **kwargs)
+
+        # return gdata
 
     def event_trig_average(self, **kwargs):
         """
