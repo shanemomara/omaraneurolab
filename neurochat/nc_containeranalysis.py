@@ -496,8 +496,10 @@ def place_cell_summary(collection, dpi=400):
                     units=collection.get_units(data_idx))
                 filename = collection.get_file_dict()["Spike"][data_idx][0]
                 spike_name = os.path.basename(filename)
+                parts = spike_name.split(".")
                 main_dir = os.path.dirname(filename)
-                out_name = os.path.join(main_dir, "plots", spike_name + ".png")
+                out_name = os.path.join(
+                    main_dir, "nc_plots", parts[0] + "_" + parts[1] + ".png")
                 logging.info("Saving place cell figure to {}".format(
                     out_name))
                 make_dir_if_not_exists(out_name)
