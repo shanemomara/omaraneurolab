@@ -1390,7 +1390,8 @@ class NSpatial(NAbstract):
             pmap = fmap
         
         pmap[tmap == 0] = None
-        pfield, largest_group = NSpatial.place_field(pmap, thresh, required_neighbours)
+        pfield, largest_group = NSpatial.place_field(
+            pmap, thresh, required_neighbours)
         if largest_group == 0:
             if smooth_place:
                 info = "where the place field was calculated from smoothed data"
@@ -1432,8 +1433,8 @@ class NSpatial(NAbstract):
             _results['Found strong place field'] = (largest_group != 0)
             _results['Place field Centroid x'] = centroid[0]
             _results['Place field Centroid y'] = centroid[1]
-            _results['Place field Boundary x'] = boundary[1]
-            _results['Place field Boundary y'] = boundary[0]
+            _results['Place field Boundary x'] = boundary[0]
+            _results['Place field Boundary y'] = boundary[1]
             _results['Number of Spikes in Place Field'] = co_ords[0].size
             _results['Percentage of Spikes in Place Field'] = co_ords[0].size*100 / ftimes.size
             self.update_result(_results)
@@ -2096,6 +2097,7 @@ class NSpatial(NAbstract):
         where_are_NaNs = np.isnan(pmap)
         pmap[where_are_NaNs] = 0
         pmap = pmap/pmap.max()
+        weights = pmap
         pmap = pmap > thresh
 
         # Pad the place field with a single layer of zeros to compare neighbours
@@ -2135,15 +2137,22 @@ class NSpatial(NAbstract):
         # If there are no large enough fields, label all bins as 0
         uniques, counts = np.unique(ptag[ptag > 0], return_counts=True)
         max_count, largest_group_num = 0, 0
+        reduction = 0
         for unique, count in zip(uniques, counts):
             # Don't consider groups that are small
+            unique = unique - reduction
             if count < required_neighbours:
                 ptag[ptag == unique] = 0
-            # Define the largest group to be the one with the largest area
-            # Could also be the one with largest weight
-            elif count > max_count:
-                max_count = count
-                largest_group_num = unique
+                ptag[ptag > unique] = ptag[ptag > unique] - 1
+                reduction = reduction + 1
+            # Define the largest group to be the one with largest weight
+            # Could also be the one with the largest area
+            else:
+                interest_weights = weights[ptag == unique]
+                weight = np.sum(interest_weights)
+                if weight > max_count:
+                    max_count = weight
+                    largest_group_num = unique
 
         return ptag, largest_group_num
 
