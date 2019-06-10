@@ -949,7 +949,7 @@ class NSpatial(NAbstract):
             self._set_pos_x(spatial_data[:, 1]- np.min(spatial_data[:, 1]))
             self._set_pos_y(spatial_data[:, 2]- np.min(spatial_data[:, 2]))
             self._set_direction(spatial_data[:, 3])
-#            self._set_speed(spatial_data[:, 4]) # Neuralynx data does not have any speed information
+            # Neuralynx data does not have any speed information
             self.smooth_direction()
 
     def smooth_speed(self):
@@ -1181,7 +1181,7 @@ class NSpatial(NAbstract):
         
         firing_rate[np.isnan(firing_rate)] = 0
         Li = firing_rate # Lambda
-#        L = np.sum(firing_rate*visit_time)/ visit_time.sum()
+        # L = np.sum(firing_rate*visit_time)/ visit_time.sum()
         P = visit_time/visit_time.sum()
         return np.sum(P*Li)**2/ np.sum(P*Li**2)
 
@@ -1346,8 +1346,8 @@ class NSpatial(NAbstract):
         required_neighbours = kwargs.get('minPlaceFieldNeighbours', 9)
         smooth_place = kwargs.get('smoothPlace', False)
 
-#        xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
-#        yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
+        # xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
+        # yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
 
         # Update the border to match the requested pixel size
         self.set_border(self.calc_border(**kwargs))

@@ -142,7 +142,7 @@ def largest_waveform(wave_data, ax=None):
 
     return fig
 
-def isi(isi_data):
+def isi(isi_data, axes=[None, None, None], **kwargs):
     """
     Plots Interspike interval histogram and scatter plots of interval-before
     vs interval-after.
@@ -165,24 +165,22 @@ def isi(isi_data):
 
     # Plot ISI
     # histogram
-    fig1 = plt.figure()
-    ax = plt.gca()
+    title = kwargs.get("title1", 'Distribution of inter-spike interval')
+    xlabel = kwargs.get("xlabel1", 'ISI (ms)')
+    ylabel = kwargs.get("ylabel1", 'Spike count')
+    ax, fig1 = _make_ax_if_none(axes[0])
     ax.bar(isi_data['isiBins'], isi_data['isiHist'], color='darkblue', \
            edgecolor='darkblue', rasterized=True)
     ax.plot([5, 5,], [0, isi_data['maxCount']], linestyle='dashed',\
             linewidth=2, color='red')
-    ax.set_title('Distribution of inter-spike interval')
-    ax.set_xlabel('ISI (ms)')
-    ax.set_ylabel('Spike count')
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     max_axis = isi_data['isiBins'].max()
     max_axisLog = np.ceil(np.log10(max_axis))
 
     ## ISI scatterplot
-    fig2 = plt.figure()
-#        fig2.suptitle('Distribution of ISI \n (before and after spike)')
-    # Scatter
-#        ax = fig2.add_subplot(211)
-    ax = plt.gca()
+    ax, fig2 = _make_ax_if_none(axes[1])
     ax.loglog(isi_data['isiBefore'], isi_data['isiAfter'], axes=ax, \
             linestyle=' ', marker='o', markersize=1, \
             markeredgecolor='k', markerfacecolor=None, rasterized=True)
@@ -203,8 +201,7 @@ def isi(isi_data):
     _extent = [xedges[0], xedges[-2], yedges[0], yedges[-2]]
 
 #        ax = fig2.add_subplot(212, aspect= 'equal')
-    fig3 = plt.figure()
-    ax = plt.gca()
+    ax, fig3 = _make_ax_if_none(axes[2])
     c_map = plt.cm.jet
     c_map.set_under('white')
     ax.pcolormesh(xedges[0:-1], yedges[0:-1], joint_count,\
@@ -2022,8 +2019,8 @@ def _make_ax_if_none(ax, **kwargs):
     return ax, fig
 
 def print_place_cells(
-    rows, cols=6, size_multiplier=4, wspace=0.3, hspace=0.3,
-    placedata=None, wavedata=None, graphdata=None,
+    rows, cols=7, size_multiplier=4, wspace=0.3, hspace=0.3,
+    placedata=None, wavedata=None, graphdata=None, isidata=None,
     headdata=None, thetadata=None, point_size=10, units=None):
     fig = plt.figure(
         figsize=(cols * size_multiplier, rows * size_multiplier),
@@ -2061,4 +2058,8 @@ def print_place_cells(
         ax = fig.add_subplot(gs[i, 5])
         theta_cell(thetadata[i], ax=ax, title=None, xlabel=None, ylabel=None)
 
+        ax = fig.add_subplot(gs[i, 6])
+        isi(isidata[i], axes=[ax, None, None], 
+            title1=None, xlabel1=None, ylabel1=None)
+        
     return fig
