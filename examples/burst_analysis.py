@@ -32,11 +32,11 @@ def main(in_dir, tetrode_list, analysis_flags):
     container.setup()
     spike_names = container.get_file_dict()["Spike"]
 
-    # show summary of place
+    # Show summary of place
     if analysis_flags[0]:
         place_cell_summary(container)
 
-    # do burst analysis
+    # Do numerical analysis
     if analysis_flags[1]:
         _results = []
         out_dir = os.path.join(in_dir, "nc_results")
@@ -52,17 +52,27 @@ def main(in_dir, tetrode_list, analysis_flags):
             note_dict["Tetrode"] = int(parts[1])
             note_dict["Unit"] = ndata.get_unit_no()
             ndata.update_results(note_dict)
+            ndata.wave_property()
+            isi = ndata.isi()
             ndata.burst()
+            theta_index = ndata.theta_index()
+            theta_skip_index = ndata.theta_skip_index()
+            ndata.bandpower_ratio(
+                [5, 11], [1.5, 4], 1.6, relative=True,
+                first_name="Theta", second_name="Delta")
             result = copy(ndata.get_results())
             _results.append(result)
-        save_results_to_csv(out_name, _results)
 
-    # # can ignore above if multi run
-    # if analysis_flags[2]:
+            # Do graphical analysis
+            if analysis_flags[2]:
+                lfp_spectrum = ndata.spectrum()
+                # Use skip plot and isi plot
+
+        save_results_to_csv(out_name, _results)
 
 
 if __name__ == "__main__":
     in_dir = r'C:\Users\smartin5\Recordings\11092017'
     tetrode_list = [1, 2, 3, 4, 5, 6, 7, 8]
-    analysis_flags = [False, True, True]
+    analysis_flags = [True, True, False]
     main(in_dir, tetrode_list, analysis_flags)
