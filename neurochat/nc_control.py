@@ -894,14 +894,13 @@ class NeuroChaT(QtCore.QThread):
                 fig = nc_plot.lfp_spectrum_tr(graph_data)
                 self.close_fig(fig)
                 self.plot_data_to_hdf(name=name+ '/lfp_spectrum_TR/', graph_data=graph_data)
-
-                # This is from Muessig et al. 2019
+                
+                # These ranges are from Muessig et al. 2019
                 # Coordinated Emergence of Hippocampal Replay and
-                # Theta Sequences during Post - natal Development   
+                # Theta Sequences during Post - natal Development
                 self.bandpower_ratio(
                     [5, 11], [1.5, 4], 1.6, relative=True,
                     first_name="Theta", second_name="Delta")
-                self.ndata.update_results(self.lfp.get_results())
             except:
                 logging.error('Error in analyzing lfp spectrum')
 

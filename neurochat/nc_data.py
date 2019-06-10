@@ -589,6 +589,27 @@ class NData():
 
         return gdata
 
+    def bandpower_ratio(self, first_band, second_band, win_sec, **kwargs):
+        """
+        Calculate the ratio in power between two bandpass filtered signals.
+
+        Delegates to NLfp.bandpower_ratio()
+        Suggested [5, 11] and [1.5, 4 bands]
+
+
+        Parameters
+        ----------
+        first_band, second_band, win_sec, **kwargs
+
+        See also
+        --------
+        nc_lfp.NLfp.bandpower_ratio()
+        """
+
+        self.lfp.bandpower_ratio(
+            first_band, second_band, win_sec, **kwargs)
+        self.update_results(self.lfp.get_results())
+
     def spectrum(self, **kwargs):
         """
         Analyses frequency spectrum of the LFP signal
