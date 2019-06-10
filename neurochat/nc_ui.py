@@ -36,6 +36,7 @@ from neurochat.nc_uimerge import UiMerge
 #import nc_control
 #reload(nc_control)
 from neurochat.nc_control import NeuroChaT
+from neurochat.nc_utils import make_dir_if_not_exists, log_exception
 
 import pandas as pd
 
@@ -58,7 +59,18 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self._control = NeuroChaT(parent=self)
         self._results_ui = UiResults(self)
         self._mode_dict = self._control.get_all_modes()
-        self._curr_dir = "/home/"
+        self._default_loc = os.path.join(
+            os.path.expanduser("~"), "nc_saved", "last_dir_location.txt")
+        make_dir_if_not_exists(self._default_loc)
+        if os.path.isfile(self._default_loc):
+            with open(self._default_loc, "r") as f:
+                default_dir = f.readline()
+            if os.path.isdir(default_dir):
+                os.chdir(default_dir)
+            else:  
+                self._curr_dir = "/home/" 
+        else:
+            self._curr_dir = "/home/"
         self.setup_ui()
 
     def setup_ui(self):
@@ -552,7 +564,12 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         session information in NeuroChaT configuration file (.ncfg).
 
         """
-
+        try:
+            with open(self._default_loc, "w") as f:
+                f.write(os.getcwd())
+        except Exception as e:
+            log_exception(e, "Failed save last location {} in {}".format(
+                os.getcwd(), self._default_loc))
         reply = QtWidgets.QMessageBox.question(self, "Message", \
             "Save current session before you quit?",\
             QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel,\
@@ -928,7 +945,8 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         else:
             self._get_config()
             self._control.save_config(ncfg_file)
-            logging.info("Session saved in: "+ ncfg_file)
+            logging.info("Session saved in: " + ncfg_file)
+            os.chdir(os.path.dirname(ncfg_file))
 
     def load_session(self):
         """
@@ -941,6 +959,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             logging.error("No saved session selected! Loading failed!")
         else:
             self._control.load_config(ncfg_file)
+            os.chdir(os.path.dirname(ncfg_file))
 
         index = self.file_format_box.findText(self._control.get_data_format())
         if index >= 0:
@@ -948,7 +967,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         mode, mode_id = self._control.get_analysis_mode()
         self.mode_box.setCurrentIndex(mode_id)
 
-        getattr(self, self._control.get_graphic_format()+ '_button').setChecked(True)
+        getattr(self, self._control.get_graphic_format() + '_button').setChecked(True)
         self.graphic_format_select()
 
         index = self._control.get_unit_no()
