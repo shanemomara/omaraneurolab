@@ -492,7 +492,8 @@ def place_cell_summary(collection, dpi=400):
                     placedata=placedata, graphdata=graphdata,
                     wavedata=wavedata, headdata=headdata,
                     thetadata=thetadata,
-                    size_multiplier=4, point_size=dpi / 7.0)
+                    size_multiplier=4, point_size=dpi / 7.0,
+                    units=collection.get_units(data_idx))
                 filename = collection.get_file_dict()["Spike"][data_idx][0]
                 spike_name = os.path.basename(filename)
                 main_dir = os.path.dirname(filename)
