@@ -44,9 +44,10 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
     isi_log_bins = np.linspace(
         np.log10(start), np.log10(stop), num_bins + 1)
     hist, _ = np.histogram(
-        np.log10(np.diff(ndata.spike.get_unit_stamp())), bins=isi_log_bins, density=True)
+        np.log10(np.diff(ndata.spike.get_unit_stamp())), bins=isi_log_bins, density=False)
     # return ndata.isi(bins=isi_log_bins, density=True), isi_log_bins
-    return hist, isi_log_bins
+    return hist / ndata.spike.get_unit_stamp().size, isi_log_bins
+    # return hist, isi_log_bins
 
 
 def main(in_dir, tetrode_list, analysis_flags):
@@ -114,7 +115,7 @@ def main(in_dir, tetrode_list, analysis_flags):
             ax2.plot(isi['isiBinCentres'] / 1000, isi['isiHist'] / 1000)
             ax2.set_xlim([0.001, 1])
             ax2.set_xticks([0.001, 0.01, 0.1, 1])
-        fig1.savefig("logisi.png", dpi=800)
+        fig1.savefig("logisi_d.png", dpi=800)
         fig2.savefig("isi.png", dpi=800)
         pca = PCA(0.95)
         after_pca = pca.fit_transform(isi_hist_matrix)
