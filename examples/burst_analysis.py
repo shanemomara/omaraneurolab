@@ -50,81 +50,132 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
     # return hist, isi_log_bins
 
 
+def cell_classification_stats(in_dir, container, should_plot=False):
+    _results = []
+    out_dir = os.path.join(in_dir, "nc_results")
+    spike_names = container.get_file_dict()["Spike"]
+    for i, ndata in enumerate(container):
+        split_idx = container._index_to_data_pos(i)
+        name = spike_names[split_idx[0]][0]
+        parts = os.path.basename(name).split(".")
+        end_name = parts[0] + "_burst" + ".csv"
+        out_name = os.path.join(
+            out_dir, end_name)
+        make_dir_if_not_exists(out_name)
+        note_dict = oDict()
+        note_dict["Tetrode"] = int(parts[1])
+        note_dict["Unit"] = ndata.get_unit_no()
+        ndata.update_results(note_dict)
+        ndata.wave_property()
+        isi = ndata.isi()
+        ndata.burst(burst_thresh=6)
+        phase_dist = ndata.phase_dist()
+        theta_index = ndata.theta_index()
+        # theta_skip_index = ndata.theta_skip_index()
+        ndata.bandpower_ratio(
+            [5, 11], [1.5, 4], 1.6, relative=True,
+            first_name="Theta", second_name="Delta")
+        result = copy(ndata.get_results())
+        _results.append(result)
+
+        # Do graphical analysis
+        lfp_spectrum = ndata.spectrum()
+        # use phase dist
+
+    save_results_to_csv(out_name, _results)
+
+
+def calculate_isi_hist(container):
+    ax1, fig1 = nc_plot._make_ax_if_none(None)
+    isi_hist_matrix = np.empty((len(container), 60), dtype=float)
+    for i, ndata in enumerate(container):
+        res_isi, bins = log_isi(ndata)
+        isi_hist_matrix[i] = res_isi
+        bin_centres = bins[:-1] + np.mean(np.diff(bins)) / 2
+        ax1.plot(bin_centres, res_isi)
+        ax1.set_xlim([-3, 1])
+        ax1.set_xticks([-3, -2, -1, 0])
+        ax1.axvline(x=np.log10(0.006))
+
+    fig1.savefig("logisi.png", dpi=400)
+    return isi_hist_matrix
+
+
+def calculate_auto_corr(container):
+    ax1, fig1 = nc_plot._make_ax_if_none(None)
+    auto_corr_matrix = np.empty((len(container), 20), dtype=float)
+    for i, ndata in enumerate(container):
+        auto_corr_data = ndata.isi_auto_corr(bins=1, bound=[0, 20])
+        auto_corr_matrix[i] = (auto_corr_data["isiCorr"] /
+                               ndata.spike.get_unit_stamp().size)
+        bins = auto_corr_data['isiAllCorrBins']
+        bin_centres = bins[:-1] + np.mean(np.diff(bins)) / 2
+        ax1.plot(bin_centres / 1000, auto_corr_matrix[i])
+        ax1.set_xlim([0.000, 0.02])
+        ax1.set_xticks([0.000, 0.005, 0.01, 0.015, 0.02])
+        ax1.axvline(x=0.006)
+
+    fig1.savefig("autocorr.png", dpi=400)
+    return auto_corr_matrix
+
+
+def perform_pca(data, n_components=3):
+    pca = PCA(n_components=n_components)
+    # print(after_pca)
+    after_pca = pca.fit_transform(data)
+    print(pca.explained_variance_ratio_)
+    return after_pca, pca
+
+
+def ward_clustering(data, plot_dim1=0, plot_dim2=1):
+    ax, fig = nc_plot._make_ax_if_none(None)
+    dend = shc.dendrogram(
+        shc.linkage(data, method="ward", optimal_ordering=True),
+        ax=ax)
+    fig.savefig("dendogram.png", dpi=400)
+
+    cluster = AgglomerativeClustering(
+        n_clusters=2, affinity="euclidean", linkage="ward")
+    cluster.fit_predict(data)
+
+    ax, fig = nc_plot._make_ax_if_none(None)
+    ax.scatter(
+        data[:, plot_dim1],
+        data[:, plot_dim2],
+        c=cluster.labels_, cmap='rainbow')
+    fig.savefig("PCAclust.png", dpi=400)
+
+
+def pca_clustering(container, n_isi_comps=3, n_auto_comps=2):
+    isi_hist_matrix = calculate_isi_hist(container)
+    isi_after_pca, _ = perform_pca(isi_hist_matrix, n_isi_comps)
+    auto_corr_matrix = calculate_auto_corr(container)
+    corr_after_pca, _ = perform_pca(auto_corr_matrix, n_auto_comps)
+    joint_pca = np.empty(
+        (len(container), n_isi_comps + n_auto_comps), dtype=float)
+    joint_pca[:, :n_isi_comps] = isi_after_pca
+    joint_pca[:, n_isi_comps:n_isi_comps + n_auto_comps] = corr_after_pca
+    ward_clustering(joint_pca, 0, 3)
+
+
 def main(in_dir, tetrode_list, analysis_flags):
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
     container.add_axona_files_from_dir(in_dir, tetrode_list=tetrode_list)
     container.setup()
-    spike_names = container.get_file_dict()["Spike"]
 
     # Show summary of place
     if analysis_flags[0]:
         place_cell_summary(container)
 
     # Do numerical analysis
+    should_plot = analysis_flags[2]
     if analysis_flags[1]:
-        _results = []
-        out_dir = os.path.join(in_dir, "nc_results")
-        for i, ndata in enumerate(container):
-            split_idx = container._index_to_data_pos(i)
-            name = spike_names[split_idx[0]][0]
-            parts = os.path.basename(name).split(".")
-            end_name = parts[0] + "_burst" + ".csv"
-            out_name = os.path.join(
-                out_dir, end_name)
-            make_dir_if_not_exists(out_name)
-            note_dict = oDict()
-            note_dict["Tetrode"] = int(parts[1])
-            note_dict["Unit"] = ndata.get_unit_no()
-            ndata.update_results(note_dict)
-            ndata.wave_property()
-            isi = ndata.isi()
-            ndata.burst(burst_thresh=6)
-            phase_dist = ndata.phase_dist()
-            theta_index = ndata.theta_index()
-            # theta_skip_index = ndata.theta_skip_index()
-            ndata.bandpower_ratio(
-                [5, 11], [1.5, 4], 1.6, relative=True,
-                first_name="Theta", second_name="Delta")
-            result = copy(ndata.get_results())
-            _results.append(result)
-
-            # Do graphical analysis
-            if analysis_flags[2]:
-                lfp_spectrum = ndata.spectrum()
-                # use phase dist
-
-        save_results_to_csv(out_name, _results)
+        cell_classification_stats(in_dir, container, should_plot=should_plot)
 
         # Do PCA based analysis
     if analysis_flags[3]:
-        ax1, fig1 = nc_plot._make_ax_if_none(None)
-        ax2, fig2 = nc_plot._make_ax_if_none(None)
-        isi_hist_matrix = np.empty((len(container), 60), dtype=float)
-        for i, ndata in enumerate(container):
-            split_idx = container._index_to_data_pos(i)
-            res_isi, bins = log_isi(ndata)
-            isi_hist_matrix[i] = res_isi
-            bin_centres = bins[:-1] + np.mean(np.diff(bins))
-            print(bins)
-            ax1.plot(bin_centres, res_isi)
-            ax1.set_xlim([-3, 1])
-            ax1.set_xticks([-3, -2, -1, 0])
-            ax1.axvline(x=np.log10(0.006))
-            isi = ndata.isi()
-            ax2.plot(isi['isiBinCentres'] / 1000, isi['isiHist'] / 1000)
-            ax2.set_xlim([0.001, 1])
-            ax2.set_xticks([0.001, 0.01, 0.1, 1])
-        fig1.savefig("logisi_d.png", dpi=800)
-        fig2.savefig("isi.png", dpi=800)
-        pca = PCA(0.95)
-        after_pca = pca.fit_transform(isi_hist_matrix)
-        print(pca.n_components_)
-        print(pca.explained_variance_ratio_)
-
-        ax, fig = nc_plot._make_ax_if_none(None)
-        dend = shc.dendrogram(shc.linkage(after_pca, method="ward"), ax=ax)
-        fig.savefig("dendogram.png", dpi=800)
+        pca_clustering(container)
 
 
 if __name__ == "__main__":
