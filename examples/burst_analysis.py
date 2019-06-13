@@ -78,9 +78,23 @@ def cell_classification_stats(in_dir, container, should_plot=False):
         result = copy(ndata.get_results())
         _results.append(result)
 
-        # Do graphical analysis
+        if should_plot:
+            plot_loc = os.path.join(
+                in_dir, "nc_plots",
+                parts[0] + parts[1] + str(ndata.get_unit_no()) + "phase.png")
+            make_dir_if_not_exists(plot_loc)
+            fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
+            fig2.savefig(plot_loc)
+            plt.close("all")
+
+    if should_plot:
+        plot_loc = os.path.join(in_dir, "nc_plots", parts[0] + "lfp.png")
+        make_dir_if_not_exists(plot_loc)
+
         lfp_spectrum = ndata.spectrum()
-        # use phase dist
+        fig = nc_plot.lfp_spectrum(lfp_spectrum)
+        fig.savefig(plot_loc)
+        plt.close(fig)
 
     save_results_to_csv(out_name, _results)
 
@@ -167,6 +181,7 @@ def main(in_dir, tetrode_list, analysis_flags):
     # Show summary of place
     if analysis_flags[0]:
         place_cell_summary(container)
+        plt.close("all")
 
     # Do numerical analysis
     should_plot = analysis_flags[2]
@@ -181,5 +196,10 @@ def main(in_dir, tetrode_list, analysis_flags):
 if __name__ == "__main__":
     in_dir = r'C:\Users\smartin5\Recordings\11092017'
     tetrode_list = [1, 2, 3, 4, 5, 6, 7, 8]
-    analysis_flags = [False, False, False, True]
+
+    # Analysis 0 - summary place cell plot
+    # Analysis 1 - csv file of data to classify cells
+    # Analysis 2 - more graphical output
+    # Analysis 3 - PCA and Dendogram and agglomerative clustering
+    analysis_flags = [True, True, True, True]
     main(in_dir, tetrode_list, analysis_flags)
