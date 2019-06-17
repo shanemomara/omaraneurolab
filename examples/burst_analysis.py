@@ -7,6 +7,7 @@ from copy import copy
 
 from sklearn.decomposition import PCA
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.preprocessing import StandardScaler
 import scipy.cluster.hierarchy as shc
 import numpy as np
 import matplotlib.pyplot as plt
@@ -133,10 +134,17 @@ def calculate_auto_corr(container):
     return auto_corr_matrix
 
 
-def perform_pca(data, n_components=3):
+def perform_pca(data, n_components=3, should_scale=True):
+    scaler = StandardScaler()
     pca = PCA(n_components=n_components)
-    # print(after_pca)
-    after_pca = pca.fit_transform(data)
+
+    # Standardise the data to improve PCA performance
+    if should_scale:
+        std_data = scaler.fit_transform(data)
+        after_pca = pca.fit_transform(std_data)
+    else:
+        after_pca = pca.fit_transform(data)
+
     print(pca.explained_variance_ratio_)
     return after_pca, pca
 
@@ -162,9 +170,11 @@ def ward_clustering(data, plot_dim1=0, plot_dim2=1):
 
 def pca_clustering(container, n_isi_comps=3, n_auto_comps=2):
     isi_hist_matrix = calculate_isi_hist(container)
-    isi_after_pca, _ = perform_pca(isi_hist_matrix, n_isi_comps)
+    isi_after_pca, _ = perform_pca(
+        isi_hist_matrix, n_isi_comps, True)
     auto_corr_matrix = calculate_auto_corr(container)
-    corr_after_pca, _ = perform_pca(auto_corr_matrix, n_auto_comps)
+    corr_after_pca, _ = perform_pca(
+        auto_corr_matrix, n_auto_comps, True)
     joint_pca = np.empty(
         (len(container), n_isi_comps + n_auto_comps), dtype=float)
     joint_pca[:, :n_isi_comps] = isi_after_pca
