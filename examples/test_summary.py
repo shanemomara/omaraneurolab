@@ -9,7 +9,7 @@ def main(dir):
     container = NDataContainer(load_on_fly=True)
     container.add_axona_files_from_dir(dir)
     container.setup()
-    nca.place_cell_summary(dir, container)
+    nca.place_cell_summary(container)
 
 
 if __name__ == "__main__":
