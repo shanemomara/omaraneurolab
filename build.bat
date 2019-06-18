@@ -1,5 +1,5 @@
 @echo off
-C:/Users/smartin5/AppData/Local/Programs/Python/Python37/python.exe -m PyInstaller ^
+python3 -m PyInstaller ^
     --noconfirm --log-level WARN ^
     --onefile --nowindow ^
     --hidden-import xlrd ^
