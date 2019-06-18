@@ -22,7 +22,7 @@ from neurochat.nc_plot import print_place_cells
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
-from matplotlib.pyplot import savefig
+from matplotlib.pyplot import savefig, close
 
 
 def spike_positions(collection, should_sort=True, mode="vertical"):
@@ -505,6 +505,7 @@ def place_cell_summary(collection, dpi=400):
                     out_name))
                 make_dir_if_not_exists(out_name)
                 fig.savefig(out_name, dpi=dpi)
+                close("all")
                 placedata = []
                 graphdata = []
                 wavedata = []

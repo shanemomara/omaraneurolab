@@ -2059,7 +2059,9 @@ def print_place_cells(
         theta_cell(thetadata[i], ax=ax, title=None, xlabel=None, ylabel=None)
 
         ax = fig.add_subplot(gs[i, 6])
-        isi(isidata[i], axes=[ax, None, None], 
+        temp_fig, (ax1, ax2) = plt.subplots(2)
+        isi(isidata[i], axes=[ax, ax1, ax2], 
             title1=None, xlabel1=None, ylabel1=None)
+        plt.close(temp_fig)
         
     return fig
