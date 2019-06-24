@@ -1238,6 +1238,8 @@ class NLfp(NBase):
         _results = oDict()
         name1 = kwargs.get("first_name", "Band 1")
         name2 = kwargs.get("second_name", "Band 2")
+        if "window_sec" not in kwargs:
+            kwargs["window_sec"] = win_sec
 
         b1 = self.bandpower(first_band, **kwargs)  
         b2 = self.bandpower(second_band, **kwargs)
