@@ -11,6 +11,7 @@ import re
 import logging
 
 from collections import OrderedDict as oDict
+from copy import deepcopy
 
 from neurochat.nc_utils import chop_edges, corr_coeff, extrema,\
             find, find2d, find_chunk, histogram, histogram2d, \
@@ -78,6 +79,35 @@ class NSpatial(NAbstract):
         """ 
         
         return self.__type        
+
+    def subsample(self, sample_range=None):
+        """
+        Extract a time range from the positions.
+        
+        Parameters
+        ----------
+        sample_range : tuple
+            the time in seconds to extract from the positions.
+        
+        Returns
+        -------
+        NSpike
+            subsampled version of initial spatial object
+        """
+        if sample_range is None:
+            return self
+        new_spatial = deepcopy(self)
+        lower, upper = sample_range
+        times = self._time
+        sample_spatial_idx = (
+            (times <= upper) & (times >= lower)).nonzero()
+        new_spatial._set_time(self._time[sample_spatial_idx])
+        new_spatial._set_pos_x(self._pos_x[sample_spatial_idx])
+        new_spatial._set_pos_y(self._pos_y[sample_spatial_idx])
+        new_spatial._set_direction(self._direction[sample_spatial_idx])
+        new_spatial._set_speed(self._speed[sample_spatial_idx])
+        new_spatial.set_ang_vel(self._ang_vel[sample_spatial_idx])
+        return new_spatial
 
     def set_pixel_size(self, pixel_size):
         """
