@@ -12,6 +12,7 @@ import re
 
 import logging
 from collections import OrderedDict as oDict
+from copy import deepcopy
 
 import numpy as np
 
@@ -367,6 +368,38 @@ class NSpike(NBase):
             if any(lower <= val <= upper for (lower, upper) in ranges)
         ]
         return new_stamps
+
+    def subsample(self, sample_range=None):
+        """
+        Extract a time range from the spikes.
+        
+        Parameters
+        ----------
+        sample_range : tuple
+            the time in seconds to extract from the spikes
+        
+        Returns
+        -------
+        NSpike
+            subsampled version of initial spike object
+        """
+        if sample_range is None:
+            return self
+        new_spike = deepcopy(self)
+        stamps = self.get_timestamp()
+        lower, upper = sample_range
+        sample_spike_idxs = (
+            (stamps <= upper) & (stamps >= lower)).nonzero()
+        new_spike_times = stamps[sample_spike_idxs]
+        new_tags = self.get_unit_tags()[sample_spike_idxs]
+        new_waveform = new_spike.get_waveform()
+        for ch in new_waveform.keys():
+            new_waveform[ch] = new_waveform[ch][sample_spike_idxs, :].squeeze()
+        new_spike._set_timestamp(new_spike_times)
+        new_spike.set_unit_tags(new_tags)
+        new_spike._set_waveform(new_waveform)
+        new_spike._set_duration(upper - lower)
+        return new_spike
 
     def load(self, filename=None, system=None):
         """
