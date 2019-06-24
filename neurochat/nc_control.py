@@ -22,7 +22,6 @@ from neurochat.nc_hdf import Nhdf
 from neurochat.nc_clust import NClust
 from neurochat.nc_config import Configuration
 import neurochat.nc_plot as nc_plot
-from neurochat.nc_datacontainer import NDataContainer
 import neurochat.nc_containeranalysis as nca
 
 import matplotlib.pyplot as plt
