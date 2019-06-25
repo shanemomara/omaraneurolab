@@ -347,7 +347,10 @@ class NSpatial(NAbstract):
             Duration of the experiment
 
         """
+        if len(self._time) == 0:
+            return 0
         return self._time[-1]
+        
     
     def get_pixel_size(self):
         """

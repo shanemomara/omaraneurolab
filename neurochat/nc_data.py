@@ -68,12 +68,18 @@ class NData():
         NData
             subsampled version of initial ndata object
         """
-        new_data = NData()
-        new_data.lfp = self.lfp.subsample(sample_range)
-        new_data.spike = self.spike.subsample(sample_range)
-        new_data.spatial = self.spatial.subsample(sample_range)
+        ndata = NData()
+        if self.lfp.get_duration() != 0:
+            ndata.lfp = self.lfp.subsample(
+                sample_range)
+        if self.spike.get_duration() != 0:
+            ndata.spike = self.spike.subsample(
+                sample_range)
+        if self.spatial.get_duration() != 0:
+            ndata.spatial = self.spatial.subsample(
+                sample_range)
 
-        return new_data
+        return ndata
 
     def get_type(self):
         """
