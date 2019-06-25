@@ -60,7 +60,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self._results_ui = UiResults(self)
         self._mode_dict = self._control.get_all_modes()
         self._default_loc = os.path.join(
-            os.path.expanduser("~"), "nc_saved", "last_dir_location.txt")
+            os.path.expanduser("~"), ".nc_saved", "last_dir_location.txt")
         make_dir_if_not_exists(self._default_loc)
         if os.path.isfile(self._default_loc):
             with open(self._default_loc, "r") as f:
