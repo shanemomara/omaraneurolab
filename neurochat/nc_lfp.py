@@ -1380,7 +1380,7 @@ class NLfp(NBase):
                     self._set_sampling_rate(float(''.join(re.findall(r'\d+.\d+|\d+', line))))
                 if line.startswith('bytes_per_sample'):
                     self._set_bytes_per_sample(int(''.join(line.split()[1:])))
-                if line.startswith('num_'+ file_extension.upper() + '_samples'):
+                if line.startswith('num_'+ file_extension[:3].upper() + '_samples'):
                     self._set_total_samples(int(''.join(line.split()[1:])))
 
             num_samples = self.get_total_samples()
