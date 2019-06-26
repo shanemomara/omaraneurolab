@@ -1179,10 +1179,14 @@ class NLfp(NBase):
         method = kwargs.get("method", "welch")
         window_sec = kwargs.get("window_sec", 2 / (low + 0.000001))
         relative = kwargs.get("relative", False)
-
         sf = self.get_sampling_rate()
         lfp_samples = self.get_samples()
 
+        prefilt = kwargs.get('prefilt', False)
+        _filter = kwargs.get('filtset', [10, 1.5, 40, 'bandpass'])
+
+        if prefilt:
+            lfp_samples = butter_filter(lfp_samples, sf, *_filter)
         # Compute the modified periodogram (Welch)
         if method == 'welch':
             nperseg = int(window_sec * sf)
