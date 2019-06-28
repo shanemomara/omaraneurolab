@@ -56,13 +56,9 @@ def cell_classification_stats(in_dir, container, should_plot=False):
     out_dir = os.path.join(in_dir, "nc_results")
     spike_names = container.get_file_dict()["Spike"]
     for i, ndata in enumerate(container):
-        split_idx = container._index_to_data_pos(i)
-        name = spike_names[split_idx[0]][0]
+        data_idx, unit_idx = container._index_to_data_pos(i)
+        name = spike_names[data_idx][0]
         parts = os.path.basename(name).split(".")
-        end_name = parts[0] + "_burst" + ".csv"
-        out_name = os.path.join(
-            out_dir, end_name)
-        make_dir_if_not_exists(out_name)
         note_dict = oDict()
         note_dict["Tetrode"] = int(parts[1])
         note_dict["Unit"] = ndata.get_unit_no()
@@ -82,22 +78,29 @@ def cell_classification_stats(in_dir, container, should_plot=False):
         if should_plot:
             plot_loc = os.path.join(
                 in_dir, "nc_plots",
-                parts[0] + parts[1] + str(ndata.get_unit_no()) + "phase.png")
+                parts[0] + "_" + parts[1] + "_" +
+                str(ndata.get_unit_no()) + "_phase.png")
             make_dir_if_not_exists(plot_loc)
             fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
             fig2.savefig(plot_loc)
             plt.close("all")
 
-    if should_plot:
-        plot_loc = os.path.join(in_dir, "nc_plots", parts[0] + "lfp.png")
-        make_dir_if_not_exists(plot_loc)
+        if unit_idx == len(container.get_units(data_idx)) - 1:
+            end_name = parts[0] + "_" + parts[1] + "_burst" + ".csv"
+            out_name = os.path.join(
+                out_dir, end_name)
+            make_dir_if_not_exists(out_name)
+            save_results_to_csv(out_name, _results)
+            _results.clear()
+            if should_plot:
+                plot_loc = os.path.join(
+                    in_dir, "nc_plots", parts[0] + "_lfp.png")
+                make_dir_if_not_exists(plot_loc)
 
-        lfp_spectrum = ndata.spectrum()
-        fig = nc_plot.lfp_spectrum(lfp_spectrum)
-        fig.savefig(plot_loc)
-        plt.close(fig)
-
-    save_results_to_csv(out_name, _results)
+                lfp_spectrum = ndata.spectrum()
+                fig = nc_plot.lfp_spectrum(lfp_spectrum)
+                fig.savefig(plot_loc)
+                plt.close(fig)
 
 
 def calculate_isi_hist(container):
