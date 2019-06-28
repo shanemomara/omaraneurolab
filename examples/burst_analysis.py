@@ -145,16 +145,18 @@ def perform_pca(data, n_components=3, should_scale=True):
     else:
         after_pca = pca.fit_transform(data)
 
-    print(pca.explained_variance_ratio_)
+    print("PCA fraction of explained variance", pca.explained_variance_ratio_)
     return after_pca, pca
 
 
-def ward_clustering(data, plot_dim1=0, plot_dim2=1):
+def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
     ax, fig = nc_plot._make_ax_if_none(None)
     dend = shc.dendrogram(
         shc.linkage(data, method="ward", optimal_ordering=True),
         ax=ax)
-    fig.savefig("dendogram.png", dpi=400)
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "dendogram.png")
+    fig.savefig(plot_loc, dpi=400)
 
     cluster = AgglomerativeClustering(
         n_clusters=2, affinity="euclidean", linkage="ward")
@@ -165,13 +167,17 @@ def ward_clustering(data, plot_dim1=0, plot_dim2=1):
         data[:, plot_dim1],
         data[:, plot_dim2],
         c=cluster.labels_, cmap='rainbow')
-    fig.savefig("PCAclust.png", dpi=400)
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "PCAclust.png")
+    fig.savefig(plot_loc, dpi=400)
 
 
-def pca_clustering(container, n_isi_comps=3, n_auto_comps=2):
+def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
+    print("Considering ISIH PCA")
     isi_hist_matrix = calculate_isi_hist(container)
     isi_after_pca, _ = perform_pca(
         isi_hist_matrix, n_isi_comps, True)
+    print("Considering ACH PCA")
     auto_corr_matrix = calculate_auto_corr(container)
     corr_after_pca, _ = perform_pca(
         auto_corr_matrix, n_auto_comps, True)
@@ -179,7 +185,7 @@ def pca_clustering(container, n_isi_comps=3, n_auto_comps=2):
         (len(container), n_isi_comps + n_auto_comps), dtype=float)
     joint_pca[:, :n_isi_comps] = isi_after_pca
     joint_pca[:, n_isi_comps:n_isi_comps + n_auto_comps] = corr_after_pca
-    ward_clustering(joint_pca, 0, 3)
+    ward_clustering(joint_pca, in_dir, 0, 3)
 
 
 def main(in_dir, tetrode_list, analysis_flags):
@@ -200,7 +206,7 @@ def main(in_dir, tetrode_list, analysis_flags):
 
         # Do PCA based analysis
     if analysis_flags[3]:
-        pca_clustering(container)
+        pca_clustering(container, in_dir)
 
 
 if __name__ == "__main__":
