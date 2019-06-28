@@ -19,6 +19,7 @@ import neurochat.nc_plot as nc_plot
 
 
 def save_results_to_csv(filename, in_dicts):
+    """Save a dictionary to a csv"""
     names = in_dicts[0].keys()
     try:
         with open(filename, 'w') as csvfile:
@@ -32,6 +33,7 @@ def save_results_to_csv(filename, in_dicts):
 
 
 def visualise_spacing(N=61, start=5, stop=10000):
+    """Plots a visual of the logspacing in the ISI"""
     # This is equivalent to np.exp(np.linspace)
     x1 = np.logspace(np.log10(start), np.log10(stop), N, base=10)
     y = np.zeros(N)
@@ -42,6 +44,15 @@ def visualise_spacing(N=61, start=5, stop=10000):
 
 
 def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
+    """
+    Compute the log_isi from an NData object
+
+    Params
+    ------
+    start - the start time in seconds for the ISI
+    stop - the stop time in seconds for the ISI
+    num_bins - the number of bins in the ISI
+    """
     isi_log_bins = np.linspace(
         np.log10(start), np.log10(stop), num_bins + 1)
     hist, _ = np.histogram(
@@ -52,6 +63,15 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
 
 
 def cell_classification_stats(in_dir, container, should_plot=False):
+    """
+    Compute a csv of cell stats for each unit in a container
+
+    Params
+    ------
+    in_dir - the data output/input location
+    container - the NDataContainer object to get stats for
+    should_plot - whether to save some plots for this
+    """
     _results = []
     out_dir = os.path.join(in_dir, "nc_results")
     spike_names = container.get_file_dict()["Spike"]
@@ -104,6 +124,7 @@ def cell_classification_stats(in_dir, container, should_plot=False):
 
 
 def calculate_isi_hist(container):
+    """Calculate a matrix of isi_hists for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     isi_hist_matrix = np.empty((len(container), 60), dtype=float)
     for i, ndata in enumerate(container):
@@ -120,6 +141,7 @@ def calculate_isi_hist(container):
 
 
 def calculate_auto_corr(container):
+    """Calculate a matrix of autocorrs for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     auto_corr_matrix = np.empty((len(container), 20), dtype=float)
     for i, ndata in enumerate(container):
@@ -138,6 +160,16 @@ def calculate_auto_corr(container):
 
 
 def perform_pca(data, n_components=3, should_scale=True):
+    """
+    Perform PCA on a set of data (e.g. ndarray)
+
+    Params
+    ------
+    data - input data array
+    n_components - the number of PCA components to compute
+        if this is a float, uses enough components to reach that much variance
+    should_scale - whether to scale the data to unit variance
+    """
     scaler = StandardScaler()
     pca = PCA(n_components=n_components)
 
@@ -153,6 +185,16 @@ def perform_pca(data, n_components=3, should_scale=True):
 
 
 def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
+    """
+    Perform heirarchical clustering using ward's method
+
+    Params
+    ------
+    data - input data array
+    in_dir - where to save the result to
+    plot_dim1 - the PCA dimension to plot
+    plot_dim2 - the other PCA dimesion to plot
+    """
     ax, fig = nc_plot._make_ax_if_none(None)
     dend = shc.dendrogram(
         shc.linkage(data, method="ward", optimal_ordering=True),
@@ -176,6 +218,18 @@ def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
 
 
 def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
+    """
+    Wraps up other functions to do PCA clustering on a container.
+
+    Computes PCA for ISI and AC and then clusters based on these.
+
+    Params
+    ------
+    container - the input NDataContainer to consider
+    in_dir - the directory to save information to
+    n_isi_comps - the number of principal components for isi
+    n_auto_comps - the number of principla components for auto_corr
+    """
     print("Considering ISIH PCA")
     isi_hist_matrix = calculate_isi_hist(container)
     isi_after_pca, _ = perform_pca(
@@ -192,6 +246,7 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
 
 
 def main(in_dir, tetrode_list, analysis_flags):
+    """Summarise all tetrodes in in_dir"""
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
     container.add_axona_files_from_dir(in_dir, tetrode_list=tetrode_list)
