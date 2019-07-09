@@ -123,7 +123,7 @@ def cell_classification_stats(in_dir, container, should_plot=False):
                 plt.close(fig)
 
 
-def calculate_isi_hist(container):
+def calculate_isi_hist(container, in_dir):
     """Calculate a matrix of isi_hists for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     isi_hist_matrix = np.empty((len(container), 60), dtype=float)
@@ -136,11 +136,13 @@ def calculate_isi_hist(container):
         ax1.set_xticks([-3, -2, -1, 0])
         ax1.axvline(x=np.log10(0.006))
 
-    fig1.savefig("logisi.png", dpi=400)
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "logisi.png")
+    fig1.savefig(plot_loc, dpi=400)
     return isi_hist_matrix
 
 
-def calculate_auto_corr(container):
+def calculate_auto_corr(container, in_dir):
     """Calculate a matrix of autocorrs for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     auto_corr_matrix = np.empty((len(container), 20), dtype=float)
@@ -155,7 +157,9 @@ def calculate_auto_corr(container):
         ax1.set_xticks([0.000, 0.005, 0.01, 0.015, 0.02])
         ax1.axvline(x=0.006)
 
-    fig1.savefig("autocorr.png", dpi=400)
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "autocorr.png")
+    fig1.savefig(plot_loc, dpi=400)
     return auto_corr_matrix
 
 
@@ -231,11 +235,11 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     n_auto_comps - the number of principla components for auto_corr
     """
     print("Considering ISIH PCA")
-    isi_hist_matrix = calculate_isi_hist(container)
+    isi_hist_matrix = calculate_isi_hist(container, in_dir)
     isi_after_pca, _ = perform_pca(
         isi_hist_matrix, n_isi_comps, True)
     print("Considering ACH PCA")
-    auto_corr_matrix = calculate_auto_corr(container)
+    auto_corr_matrix = calculate_auto_corr(container, in_dir)
     corr_after_pca, _ = perform_pca(
         auto_corr_matrix, n_auto_comps, True)
     joint_pca = np.empty(
