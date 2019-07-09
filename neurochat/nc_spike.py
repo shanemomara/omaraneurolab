@@ -665,7 +665,6 @@ class NSpike(NBase):
 
         _results["Mean ISI"] = isi.mean()
         _results["Std ISI"] = isi.std()
-        _results["Number of Spikes"] = unitStamp.size
         _results["Refractory violation"] = (
             below_refractory.size / unitStamp.size)
 
