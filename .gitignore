@@ -12,9 +12,6 @@ notebooks/.ipynb_checkpoints/
 notebooks/Tests.ipynb
 notebooks/*.png
 
-# Undeletable file
-how-cfg-g
-
 # Build related files
 build/
 dist/
@@ -23,4 +20,5 @@ dist/
 # vscode
 .vscode/
 
+# A general folder to place ignored items
 ignore/*
