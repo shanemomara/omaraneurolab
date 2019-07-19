@@ -1218,8 +1218,7 @@ class NLfp(NBase):
         Calculate the ratio in power between two bandpass filtered signals.
 
         Note that common ranges are: 
-        delta (0.5–4 Hz), theta (4–8 Hz), alpha (8–12 Hz), 
-        beta (12–30 Hz), and gamma (30–100 Hz).
+        delta (1.5–4 Hz), theta (5-11 Hz) 
 
         Parameters
         ----------
@@ -1230,6 +1229,10 @@ class NLfp(NBase):
         win_sec - float
             length of the windows to bin lfp into in seconds. 
             recommend 4 for eg.
+        kwargs:
+            first_name - str name of band 1, default "Band 1"
+            second_name - str name of band 2, default "Band 2"
+
         Returns
         -------
         float - the ratio between the power signals.
