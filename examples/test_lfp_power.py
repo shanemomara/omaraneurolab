@@ -53,37 +53,34 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     fig = nc_plot.lfp_spectrum_tr(graphData)
     fig.savefig(os.path.join(in_dir, "spec_tr" + str(i) + ".png"))
 
-    voltages = new_data.lfp.get_samples()
-    times = new_data.lfp.get_timestamp()
-    fig, ax = plt.subplots()
-    ax.hist2d(times, voltages, bins=100)
-    fig.savefig(os.path.join(in_dir, "time_volt" + str(i) + ".png"))
-    plt.close("all")
-
     return new_data.get_results()
 
 
-def main(in_dir, lfp_file, analysis_flags, parsed):
+def main(parsed):
     max_lfp = parsed.max_freq
-    filt = parsed.prefilt
+    filt = not parsed.nofilt
+    loc = parsed.loc
+    if not loc:
+        print("Please pass a file in through CLI")
+        exit(-1)
 
-    f_path = os.path.join(in_dir, lfp_file)
+    in_dir = os.path.dirname(loc)
     ndata = NData()
-    ndata.lfp.load(f_path)
+    ndata.lfp.load(loc)
+    out_dir = os.path.join(in_dir, "nc_results")
 
-    print("Saving results to {}".format(
-        os.path.join(in_dir, "nc_results")))
-    make_dir_if_not_exists(os.path.join(in_dir, "nc_results", "dummy.txt"))
+    print("Saving results to {}".format(out_dir))
+    make_dir_if_not_exists(os.path.join(out_dir, "dummy.txt"))
 
-    if analysis_flags[0]:
-        out_name = os.path.join(in_dir, "nc_results", "full_signal.png")
+    with open(os.path.join(out_dir, "results.txt"), "w") as f:
+        out_name = os.path.join(out_dir, "full_signal.png")
         plot_lfp_signal(
             ndata.lfp, 1.5, max_lfp, out_name, filt=False)
-        out_name = os.path.join(in_dir, "nc_results", "full_signal_filt.png")
+        out_name = os.path.join(
+            in_dir, "nc_results", "full_signal_filt.png")
         plot_lfp_signal(
             ndata.lfp, 1.5, max_lfp, out_name, filt=True)
 
-    if analysis_flags[1]:
         splits = [
             (0, 600), (600, 1200),
             (1200, ndata.lfp.get_duration()),
@@ -92,53 +89,23 @@ def main(in_dir, lfp_file, analysis_flags, parsed):
         for i, split in enumerate(splits):
             new_data = ndata.subsample(split)
             results = lfp_power(
-                new_data, i, max_lfp,
-                os.path.join(in_dir, "nc_results"),
-                prefilt=filt)
+                new_data, i, max_lfp, out_dir, prefilt=filt)
             print("For {} results are {}".format(i, results))
+            f.write("{}: {}\n".format(i, results))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parse a program location")
     parser.add_argument(
-        "--prefilt", "-pf", action="store_true",
+        "--nofilt", "-nf", action="store_true",
         help="Should pre filter lfp before power and spectral analysis")
     parser.add_argument(
         "--max_freq", "-mf", type=int, default=40,
         help="The maximum lfp frequency to consider"
     )
+    parser.add_argument(
+        "--loc", type=str, help="Lfp file location"
+    )
     parsed = parser.parse_args()
 
-    # print("Dealing with nt\n")
-    # in_dir = r'C:\Users\smartin5\Recordings\ER\26062019-nt'
-    # lfp_file = "26062019-nt-LFP.eeg"
-    # file = os.path.join(in_dir, lfp_file)
-    # ndata = NData()
-    # ndata.lfp.load(file)
-    # main(ndata, [True, True])
-
-    # in_dir = r'C:\Users\smartin5\Recordings\ER\22062019-nt'
-    # lfp_file = "22062019-LFP.eeg"
-    # file = os.path.join(in_dir, lfp_file)
-    # ndata = NData()
-    # ndata.lfp.load(file)
-    # main(ndata, [True, True], parsed)
-
-    # print("\nDealing with bt\n")
-    # in_dir = r'C:\Users\smartin5\Recordings\ER\25062019-bt'
-    # lfp_file = "25062019-bt-LFP.eeg"
-    # file = os.path.join(in_dir, lfp_file)
-    # ndata = NData()
-    # ndata.lfp.load(file)
-    # main(ndata, [True, True], parsed)
-
-    # in_dir = r'C:\Users\smartin5\Recordings\ER\23062019-bt'
-    # lfp_file = "23062019-bt-LFP.eeg13"
-    # file = os.path.join(in_dir, lfp_file)
-    # ndata = NData()
-    # ndata.lfp.load(file)
-    # main(ndata, [True, True], parsed)
-
-    in_dir = r'C:\Users\smartin5\Recordings\ER\23072019-bt'
-    lfp_file = "23072019-bt-LFPsaline.eeg"
-    main(in_dir, lfp_file, [True, True], parsed)
+    main(parsed)
