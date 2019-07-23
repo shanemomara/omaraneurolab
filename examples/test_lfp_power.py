@@ -1,7 +1,10 @@
 import sys
 import os
 import argparse
+from collections import OrderedDict
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.integrate import simps
 
 sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
 try:
@@ -32,6 +35,30 @@ def plot_lfp_signal(lfp, lower, upper, out_name, filt=True, nsamples=None):
     plt.close()
 
 
+def raw_lfp_power(lfp, splits, lower, upper, prefilt=False):
+    """
+    This can be used to get the power before splitting up the signal.
+
+    Minor differences between this and filtering after splitting
+    """
+
+    lfp_samples = lfp.get_samples()
+    fs = lfp.get_sampling_rate()
+    if prefilt:
+        lfp_samples = butter_filter(
+            lfp_samples, fs, 10, lower, upper, 'bandpass')
+
+    results = OrderedDict()
+    for i, (l, u) in enumerate(splits):
+        start_idx = int(l * fs)
+        end_idx = int(u * fs)
+        power = simps(
+            np.square(lfp_samples[start_idx:end_idx]),
+            lfp.get_timestamp()[start_idx:end_idx])
+        results["Raw power {}".format(i)] = power
+    return results
+
+
 def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     # 1.6 or 2 give similar
     filtset = [10, 1.5, max_f, 'bandpass']
@@ -53,6 +80,19 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     fig = nc_plot.lfp_spectrum_tr(graphData)
     fig.savefig(os.path.join(in_dir, "spec_tr" + str(i) + ".png"))
 
+    lfp_samples = new_data.lfp.get_samples()
+    fs = new_data.lfp.get_sampling_rate()
+    if prefilt:
+        lfp_samples = butter_filter(
+            lfp_samples, fs, 10, 1.5, max_f, 'bandpass')
+
+    results = OrderedDict()
+    power = simps(
+        np.square(lfp_samples),
+        new_data.lfp.get_timestamp())
+    results["Raw power"] = power
+
+    new_data.update_results(results)
     return new_data.get_results()
 
 
@@ -68,6 +108,11 @@ def main(parsed):
     ndata = NData()
     ndata.lfp.load(loc)
     out_dir = os.path.join(in_dir, "nc_results")
+
+    if ndata.lfp.get_duration() == 0:
+        print("Failed to correctly load lfp at {}".format(
+            loc))
+        exit(-1)
 
     print("Saving results to {}".format(out_dir))
     make_dir_if_not_exists(os.path.join(out_dir, "dummy.txt"))
@@ -85,6 +130,11 @@ def main(parsed):
             (0, 600), (600, 1200),
             (1200, ndata.lfp.get_duration()),
             (0, ndata.lfp.get_duration())]
+
+        p_results = raw_lfp_power(
+            ndata.lfp, splits, 1.5, max_lfp, prefilt=filt)
+        print("Power results are {}".format(p_results))
+        f.write(str(p_results))
 
         for i, split in enumerate(splits):
             new_data = ndata.subsample(split)
