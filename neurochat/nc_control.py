@@ -898,7 +898,7 @@ class NeuroChaT(QtCore.QThread):
                 # Coordinated Emergence of Hippocampal Replay and
                 # Theta Sequences during Post - natal Development
                 self.bandpower_ratio(
-                    [5, 11], [1.5, 4], 1.6, relative=True,
+                    [5, 11], [1.5, 4], 1.6,
                     first_name="Theta", second_name="Delta")
             except:
                 logging.error('Error in analyzing lfp spectrum')

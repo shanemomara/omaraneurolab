@@ -1178,7 +1178,6 @@ class NLfp(NBase):
         low, high = band
         method = kwargs.get("method", "welch")
         window_sec = kwargs.get("window_sec", 2 / (low + 0.000001))
-        relative = kwargs.get("relative", False)
         sf = self.get_sampling_rate()
         lfp_samples = self.get_samples()
 
@@ -1208,10 +1207,9 @@ class NLfp(NBase):
 
         # Integral approximation of the spectrum using parabola (Simpson's rule)
         bp = simps(psd[idx_band], dx=freq_res)
-
-        if relative:
-            bp /= simps(psd, dx=freq_res)
-        return bp
+        tp = simps(psd, dx=freq_res)
+        output = {"bandpower": bp, "total_power": tp, "relative_power": bp/tp} 
+        return output
 
     def bandpower_ratio(self, first_band, second_band, win_sec, **kwargs):
         """
@@ -1250,13 +1248,17 @@ class NLfp(NBase):
 
         b1 = self.bandpower(first_band, **kwargs)  
         b2 = self.bandpower(second_band, **kwargs)
-        bp = b1 / b2
+        if b1["total_power"] != b2["total_power"]:
+            logging.error(
+                "Differing total power in lfp bandpower ratio calculations")
+        bp = b1["bandpower"] / b2["bandpower"]
         key1 = name1 + " Power"
         key2 = name2 + " Power"
         key3 = name1 + " " + name2 + " Power Ratio"
-        _results[key1] = b1
-        _results[key2] = b2
+        _results[key1] = b1["bandpower"]
+        _results[key2] = b2["bandpower"]
         _results[key3] = bp
+        _results["Total Power"] = b1["total_power"]
         self.update_result(_results)
         return bp 
 
