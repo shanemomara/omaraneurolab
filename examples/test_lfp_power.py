@@ -4,7 +4,7 @@ import argparse
 from collections import OrderedDict
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.integrate import simps
+import entropy
 
 sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
 try:
@@ -30,7 +30,7 @@ def plot_lfp_signal(
     else:
         filtered_lfp = lfp.get_samples()
 
-    fig, axes = plt.subplots(3, 1, figsize=(16, 4))
+    fig, axes = plt.subplots(3, 1, figsize=(32, 4))
     for i in range(nsplits):
         start = i * (nsamples // nsplits)
         end = (i + 1) * (nsamples // nsplits)
@@ -39,7 +39,7 @@ def plot_lfp_signal(
             filtered_lfp[start:end], color='k')
         axes[i].set_ylim([-0.7, 0.7])
     plt.tight_layout()
-    fig.savefig(out_name)
+    fig.savefig(out_name, dpi=400)
     plt.close(fig)
 
 
@@ -71,9 +71,9 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     filtset = [10, 1.5, max_f, 'bandpass']
 
     new_data.bandpower_ratio(
-        [5, 11], [1.5, 4], 1.6, prefilt=prefilt,
+        [5, 11], [1.5, 4], 1.6, band_total=prefilt,
         first_name="Theta", second_name="Delta",
-        filtset=filtset)
+        totalband=filtset[1:3])
 
     graphData = new_data.spectrum(
         window=1.6, noverlap=1, nfft=1000, ptype='psd', prefilt=prefilt,
@@ -96,14 +96,48 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     return new_data.get_results()
 
 
-def lfp_distribution(filename, upper, out_dir, prefilt=False):
+def lfp_entropy(lfp, splits, lower, upper, prefilt=False, etype="sample"):
+    results = OrderedDict()
+    lfp_samples = lfp.get_samples()
+    fs = lfp.get_sampling_rate()
+
+    if prefilt:
+        lfp_samples = butter_filter(
+            lfp_samples, fs, 10, lower, upper, 'bandpass')
+
+    for i, (l, u) in enumerate(splits):
+        start_idx = int(l * fs)
+        end_idx = int(u * fs)
+        sample = lfp_samples[start_idx:end_idx]
+        if etype == "svd":
+            power = entropy.svd_entropy(sample, order=3, delay=1)
+        elif etype == "spectral":
+            power = entropy.spectral_entropy(
+                sample, 100, method='welch', normalize=True)
+        elif etype == "sample":
+            power = entropy.sample_entropy(sample, order=3)
+        elif etype == "perm":
+            power = entropy.perm_entropy(sample, order=3, normalize=True)
+        else:
+            print("Error: unrecognised entropy type {}".format(
+                etype
+            ))
+            exit(-1)
+        results["Entropy {}".format(i)] = power
+
+    return results
+
+
+def lfp_distribution(filename, upper, out_dir, splits, prefilt=False):
     lfp_s_array = []
     lfp_t_array = []
     data = NData()
     avg = OrderedDict()
+    ent = OrderedDict()
 
     for j in range(4):
         avg["Avg power {}".format(j)] = 0
+        ent["Avg entropy {}".format(j)] = 0
 
     for i in range(32):
         end = str(i + 1)
@@ -120,15 +154,16 @@ def lfp_distribution(filename, upper, out_dir, prefilt=False):
         lfp_s_array.append(lfp_samples)
         lfp_t_array.append(data.lfp.get_timestamp())
 
-        splits = [
-            (0, 600), (600, 1200),
-            (1200, data.lfp.get_duration()),
-            (0, data.lfp.get_duration())]
         p_result = raw_lfp_power(
             data.lfp, splits, 1.5, upper, prefilt=prefilt)
         for j in range(len(splits)):
             avg["Avg power {}".format(j)] += (
                 p_result["Raw power {}".format(j)] / 32)
+        p_result = lfp_entropy(
+            data.lfp, splits, 1.5, upper, prefilt=prefilt)
+        for j in range(len(splits)):
+            ent["Avg entropy {}".format(j)] += (
+                p_result["Entropy {}".format(j)] / 32)
 
     samples = np.concatenate(lfp_s_array)
     times = np.concatenate(lfp_t_array)
@@ -138,7 +173,7 @@ def lfp_distribution(filename, upper, out_dir, prefilt=False):
     fig.colorbar(h[3])
     fig.savefig(os.path.join(out_dir, "dist.png"))
 
-    return avg
+    return avg, ent
 
 
 def main(parsed):
@@ -146,6 +181,12 @@ def main(parsed):
     filt = not parsed.nofilt
     loc = parsed.loc
     eeg_num = parsed.eeg_num
+    split_s = parsed.splits
+
+    splits = []
+    for i in range(len(split_s) // 2):
+        splits.append((split_s[i * 2], split_s[i * 2 + 1]))
+
     if not loc:
         print("Please pass a file in through CLI")
         exit(-1)
@@ -177,19 +218,16 @@ def main(parsed):
         plot_lfp_signal(
             ndata.lfp, 1.5, max_lfp, out_name, filt=True)
 
-        splits = [
-            (0, 600), (600, 1200),
-            (1200, ndata.lfp.get_duration()),
-            (0, ndata.lfp.get_duration())]
-
         p_results = raw_lfp_power(
             ndata.lfp, splits, 1.5, max_lfp, prefilt=filt)
         print("Power results are {}".format(p_results))
-        f.write(str(p_results))
+        f.write(str(p_results) + "\n")
 
-        result = lfp_distribution(loc, max_lfp, out_dir, prefilt=filt)
-        print(result)
-        f.write(str(result))
+        result = lfp_distribution(loc, max_lfp, out_dir, splits, prefilt=filt)
+        print(result[0])
+        f.write(str(result[0]) + "\n")
+        print(result[1])
+        f.write(str(result[1]) + "\n")
 
         for i, split in enumerate(splits):
             new_data = ndata.subsample(split)
@@ -213,6 +251,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--eeg_num", "-en", type=str, help="EEG number", default="1"
+    )
+    parser.add_argument(
+        "--splits", "-s", nargs="*", type=int, help="Splits",
+        default=[0, 600, 600, 1200, 1200, 1800]
     )
     parsed = parser.parse_args()
 
