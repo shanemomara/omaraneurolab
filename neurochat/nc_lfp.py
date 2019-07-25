@@ -777,14 +777,14 @@ class NLfp(NBase):
     def phase_at_events(self, event_stamps, **kwargs):
         """
         Phase based on times.
-        
+
         Parameters
         ----------
         event_stamps : array
             an array of event times
         **kwargs:
             keyword arguments
-        
+
         Returns
         -------
             (array)
@@ -1057,12 +1057,12 @@ class NLfp(NBase):
     def subsample(self, sample_range=None):
         """
         Extract a time range from the lfp.
-        
+
         Parameters
         ----------
         sample_range : tuple
             the time in seconds to extract from the lfp
-        
+
         Returns
         -------
         NLfp
@@ -1098,7 +1098,7 @@ class NLfp(NBase):
         ----------
         in_range : tuple
             A range in seconds
-        
+
         kwargs
         ------
         swr_lower : float
@@ -1125,7 +1125,8 @@ class NLfp(NBase):
         sample_rate = lfp.get_sampling_rate()
         # Estimate SWR events
         filtered_lfp = butter_filter(
-            lfp.get_samples(), sample_rate, 10, swr_lower, swr_higher, 'bandpass')
+            lfp.get_samples(), sample_rate, 10,
+            swr_lower, swr_higher, 'bandpass')
         rms_window_size = floor((rms_window_size_ms / 1000) * sample_rate)
         rms_envelope = window_rms(filtered_lfp, rms_window_size, mode="same")
         p_val = np.percentile(rms_envelope, percentile)
@@ -1140,14 +1141,15 @@ class NLfp(NBase):
         """
 
         return {
-            "lfp times": lfp.get_timestamp(), 
+            "lfp times": lfp.get_timestamp(),
             "lfp samples": filtered_lfp,
             "swr times": peaks, "lfp sample rate": sample_rate}
 
     def bandpower(self, band, **kwargs):
         """Compute the average power of the signal x in a specific frequency band.
 
-        Modified from excellent article at https://raphaelvallat.com/bandpower.html
+        Modified from excellent article at
+        https://raphaelvallat.com/bandpower.html
 
         Parameters
         ----------
@@ -1155,25 +1157,26 @@ class NLfp(NBase):
         Lower and upper frequencies of the band of interest.
 
         kwargs:
-            sf : float
-            Sampling frequency of the data.
             method : string
-            Periodogram method: 'welch'
+                Periodogram method: 'welch'
             window_sec : float
-            Length of each window in seconds.
-            If None, window_sec = (1 / min(band)) * 2.
-            relative : boolean
-            If True, return the relative power (= divided by the total power of the signal).
-            If False (default), return the absolute power.
+                Length of each window in seconds.
+                If None, window_sec = (1 / min(band)) * 2.
+            band_total : bool
+                Whether to band the total power
+                Default False
+            total_band: List
+                low and high frequency values for the filter
+                Default [1.5, 40]
 
         Returns
         ------
-        bp : float
-        Absolute or relative band power.
+        bp : Dict
+            "bandpower", "total_power" and "relative_power".
         """
         from scipy.signal import welch
         from scipy.integrate import simps
-        
+
         band = np.asarray(band)
         low, high = band
         method = kwargs.get("method", "welch")
@@ -1181,11 +1184,11 @@ class NLfp(NBase):
         sf = self.get_sampling_rate()
         lfp_samples = self.get_samples()
 
-        prefilt = kwargs.get('prefilt', False)
-        _filter = kwargs.get('filtset', [10, 1.5, 40, 'bandpass'])
+        band_total = kwargs.get('band_total', False)
+        _filter = kwargs.get('total_band', [1.5, 40])
 
-        if prefilt:
-            lfp_samples = butter_filter(lfp_samples, sf, *_filter)
+        # if prefilt:
+        #     lfp_samples = butter_filter(lfp_samples, sf, *_filter)
         # Compute the modified periodogram (Welch)
         if method == 'welch':
             nperseg = int(window_sec * sf)
@@ -1207,16 +1210,27 @@ class NLfp(NBase):
 
         # Integral approximation of the spectrum using parabola (Simpson's rule)
         bp = simps(psd[idx_band], dx=freq_res)
-        tp = simps(psd, dx=freq_res)
-        output = {"bandpower": bp, "total_power": tp, "relative_power": bp/tp} 
+
+        if band_total:
+            idx_band = np.logical_and(
+                freqs >= _filter[0],
+                freqs <= _filter[1])
+            tp = simps(psd[idx_band], dx=freq_res)
+        else:
+            tp = simps(psd, dx=freq_res)
+
+        output = {
+            "bandpower": bp,
+            "total_power": tp,
+            "relative_power": bp/tp}
         return output
 
     def bandpower_ratio(self, first_band, second_band, win_sec, **kwargs):
         """
         Calculate the ratio in power between two bandpass filtered signals.
 
-        Note that common ranges are: 
-        delta (1.5–4 Hz), theta (5-11 Hz) 
+        Note that common ranges are:
+        delta (1.5–4 Hz), theta (5-11 Hz)
 
         Parameters
         ----------
@@ -1225,7 +1239,7 @@ class NLfp(NBase):
         second_band - 1d array
             lower and upper bands
         win_sec - float
-            length of the windows to bin lfp into in seconds. 
+            length of the windows to bin lfp into in seconds.
             recommend 4 for eg.
         kwargs:
             first_name - str name of band 1, default "Band 1"
@@ -1246,7 +1260,7 @@ class NLfp(NBase):
         if "window_sec" not in kwargs:
             kwargs["window_sec"] = win_sec
 
-        b1 = self.bandpower(first_band, **kwargs)  
+        b1 = self.bandpower(first_band, **kwargs)
         b2 = self.bandpower(second_band, **kwargs)
         if b1["total_power"] != b2["total_power"]:
             logging.error(
@@ -1256,11 +1270,13 @@ class NLfp(NBase):
         key2 = name2 + " Power"
         key3 = name1 + " " + name2 + " Power Ratio"
         _results[key1] = b1["bandpower"]
+        _results[key1 + " (Relative)"] = b1["relative_power"]
         _results[key2] = b2["bandpower"]
+        _results[key2 + " (Relative)"] = b2["relative_power"]
         _results[key3] = bp
         _results["Total Power"] = b1["total_power"]
         self.update_result(_results)
-        return bp 
+        return bp
 
     def save_to_hdf5(self, file_name=None, system=None):
         """
