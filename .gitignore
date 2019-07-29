@@ -22,3 +22,5 @@ dist/
 
 # A general folder to place ignored items
 ignore/*
+
+neurochat.egg-info/
