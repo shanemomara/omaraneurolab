@@ -852,7 +852,7 @@ class Configuration(object):
         """
 
         with open(self.filename, 'r') as f:
-            cfgData = yaml.load(f)
+            cfgData = yaml.load(f, Loader=yaml.FullLoader)
             settings = cfgData.get('settings')
             for key, val in settings.items():
                 self.__setattr__(key, val)
