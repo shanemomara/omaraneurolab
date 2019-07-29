@@ -1745,8 +1745,17 @@ class NSpatial(NAbstract):
 
             half_max = np.amin(rateInterp)+ (np.amax(rateInterp)- np.amin(rateInterp))/2
             d = np.sign(half_max - rateInterp[0:-1]) - np.sign(half_max - rateInterp[1:])
-            left_idx = find(d > 0)[0]
-            right_idx = find(d < 0)[-1]
+            left_possible = find(d > 0)
+            if len(left_possible) > 0:
+                left_idx = left_possible[0]
+            else:
+                left_idx = None
+            
+            right_possible = find(d < 0)
+            if len(right_possible) > 0:
+                right_idx = right_possible[-1]
+            else:
+                right_idx = None
             _results['HD Half Width'] = None if (not left_idx or not right_idx or left_idx > right_idx) \
                                         else binInterp[right_idx]- binInterp[left_idx]
 
