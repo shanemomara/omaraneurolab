@@ -128,7 +128,9 @@ def lfp_entropy(lfp, splits, lower, upper, prefilt=False, etype="sample"):
     return results
 
 
-def lfp_distribution(filename, upper, out_dir, splits, prefilt=False):
+def lfp_distribution(
+        filename, upper, out_dir, splits,
+        prefilt=False, get_entropy=False):
     lfp_s_array = []
     lfp_t_array = []
     data = NData()
@@ -137,7 +139,8 @@ def lfp_distribution(filename, upper, out_dir, splits, prefilt=False):
 
     for j in range(4):
         avg["Avg power {}".format(j)] = 0
-        ent["Avg entropy {}".format(j)] = 0
+        if get_entropy:
+            ent["Avg entropy {}".format(j)] = 0
 
     for i in range(32):
         end = str(i + 1)
@@ -159,11 +162,12 @@ def lfp_distribution(filename, upper, out_dir, splits, prefilt=False):
         for j in range(len(splits)):
             avg["Avg power {}".format(j)] += (
                 p_result["Raw power {}".format(j)] / 32)
-        p_result = lfp_entropy(
-            data.lfp, splits, 1.5, upper, prefilt=prefilt)
-        for j in range(len(splits)):
-            ent["Avg entropy {}".format(j)] += (
-                p_result["Entropy {}".format(j)] / 32)
+        if get_entropy:
+            p_result = lfp_entropy(
+                data.lfp, splits, 1.5, upper, prefilt=prefilt)
+            for j in range(len(splits)):
+                ent["Avg entropy {}".format(j)] += (
+                    p_result["Entropy {}".format(j)] / 32)
 
     samples = np.concatenate(lfp_s_array)
     times = np.concatenate(lfp_t_array)
@@ -182,6 +186,7 @@ def main(parsed):
     loc = parsed.loc
     eeg_num = parsed.eeg_num
     split_s = parsed.splits
+    out_loc = parsed.out_loc
 
     splits = []
     for i in range(len(split_s) // 2):
@@ -199,7 +204,7 @@ def main(parsed):
     in_dir = os.path.dirname(load_loc)
     ndata = NData()
     ndata.lfp.load(load_loc)
-    out_dir = os.path.join(in_dir, "nc_results")
+    out_dir = os.path.join(in_dir, out_loc)
 
     if ndata.lfp.get_duration() == 0:
         print("Failed to correctly load lfp at {}".format(
@@ -255,6 +260,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--splits", "-s", nargs="*", type=int, help="Splits",
         default=[0, 600, 600, 1200, 1200, 1800]
+    )
+    parser.add_argument(
+        "--out_loc", "-o", type=str, default="nc_results",
+        help="Name of directory to store results in"
     )
     parsed = parser.parse_args()
 
