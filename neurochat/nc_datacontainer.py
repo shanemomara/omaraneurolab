@@ -367,14 +367,19 @@ class NDataContainer():
             return None
 
     # Created by Sean Martin with help from Matheus Cafalchio
-    def add_axona_files_from_dir(self, directory, **kwargs):
+    def add_axona_files_from_dir(
+            self, directory, recursive=False, verbose=False, **kwargs):
         """
-        Go through a directory, extracting files from it
+        Go through a directory, extracting files from it.
 
         Parameters
         ----------
         directory : str
             The directory to parse through
+        recursive : bool, optional. Defaults to False.
+            Whether to recurse through dirs
+        verbose: bool, optional. Defaults to False.
+            Whether to print the files being added.
 
         **kwargs: keyword arguments
             tetrode_list : list
@@ -383,6 +388,7 @@ class NDataContainer():
             cluster_extension : str default .cut
             pos_extension : str default .txt
             lfp_extension : str default .eeg
+
         Returns
         -------
         None
@@ -395,8 +401,11 @@ class NDataContainer():
         pos_extension = kwargs.get("pos_extension", ".txt")
         lfp_extension = kwargs.get("lfp_extension", ".eeg")
 
-        files = get_all_files_in_dir(directory, data_extension)
-        txt_files = get_all_files_in_dir(directory, pos_extension)
+        files = get_all_files_in_dir(
+            directory, data_extension, recursive=recursive, verbose=verbose)
+        txt_files = get_all_files_in_dir(
+            directory, pos_extension, recursive=recursive, verbose=verbose)
+
         for filename in files:
             filename = filename[:-len(data_extension)]
             for tetrode in tetrode_list:
@@ -413,6 +422,7 @@ class NDataContainer():
                     if fname[:len(filename)] == filename:
                         pos_name = fname
                         break
+
                 else:
                     logging.info(
                         "Skipping this - no position file for {}".format(filename))
