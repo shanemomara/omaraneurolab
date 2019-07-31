@@ -8,6 +8,7 @@ This module implements plotting functions for NeuroChaT analyses.
 import itertools
 import math
 import logging
+import gc
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1005,7 +1006,7 @@ def loc_spike(place_data, ax=None, **kwargs):
     default_point_size = max(
         place_data['yedges'].max() - place_data['yedges'].min(),
         place_data['xedges'].max() - place_data['xedges'].min()
-    ) / 10
+    ) / 4
 
     color = kwargs.get("color", RED)
     point_size = kwargs.get("point_size", default_point_size)
@@ -1016,7 +1017,7 @@ def loc_spike(place_data, ax=None, **kwargs):
 
     ax.plot(place_data['posX'], place_data['posY'], color='black', zorder=1)
     ax.scatter(place_data['spikeLoc'][0], place_data['spikeLoc'][1], \
-               s=point_size, marker='.', color=color, zorder=2)
+               s=point_size, marker='o', color=color, zorder=2)
     ax.set_ylim([0, place_data['yedges'].max()])
     ax.set_xlim([0, place_data['xedges'].max()])
     #asp = np.diff(ax.get_xlim())[0] / np.diff(ax.get_ylim())[0]
@@ -2065,6 +2066,9 @@ def print_place_cells(
         temp_fig, (ax1, ax2) = plt.subplots(2)
         isi(isidata[i], axes=[ax, ax1, ax2], 
             title1=None, xlabel1=None, ylabel1=None)
+        
         plt.close(temp_fig)
+        plt.close("all")
+        gc.collect()
         
     return fig

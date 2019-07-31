@@ -8,6 +8,7 @@ import logging
 from itertools import compress
 from math import floor, ceil
 import os
+import gc
 
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_data import NData
@@ -469,7 +470,7 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
 # from multiprocessing import Process, Queue
 # TODO could also return a set of results to add to
 # NC control
-def place_cell_summary(collection, dpi=400):
+def place_cell_summary(collection, dpi=200):
     placedata = []
     graphdata = []
     wavedata = []
@@ -506,6 +507,7 @@ def place_cell_summary(collection, dpi=400):
                 make_dir_if_not_exists(out_name)
                 fig.savefig(out_name, dpi=dpi)
                 close("all")
+                gc.collect()
                 placedata = []
                 graphdata = []
                 wavedata = []
