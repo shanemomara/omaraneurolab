@@ -881,11 +881,16 @@ class NSpike(NBase):
             return  a*np.cos(2*np.pi*f*x)*np.exp(-np.abs(x)/tau1)+ b+ \
                 c*np.exp(-(x/tau2)**2)
 
-        popt, pcov = curve_fit(fit_func, x, y, \
-							p0=[m, p_0[0], p_0[1], m, m, p_0[2]], \
-							bounds=([0, lb[0], lb[1], 0, -m, lb[2]], \
-							[m, ub[0], ub[1], m, m, ub[2]]),\
-							max_nfev=100000)
+        try:
+            popt, pcov = curve_fit(
+                fit_func, x, y,
+                p0=[m, p_0[0], p_0[1], m, m, p_0[2]], 
+                bounds=([0, lb[0], lb[1], 0, -m, lb[2]],
+                [m, ub[0], ub[1], m, m, ub[2]]),
+                max_nfev=100000)
+        except Exception as e:
+            logging.error("Failed curve_fit in theta_index: {} ".format(e))
+            return None
         a, f, tau1, b, c, tau2 = popt
 
         y_fit[center:] = fit_func(x, *popt)
