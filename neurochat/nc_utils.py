@@ -1060,7 +1060,9 @@ def has_ext(filename, ext):
         ext = "." + ext
     return filename[-len(ext):].lower() == ext.lower()
 
-def get_all_files_in_dir(in_dir, ext=None, return_absolute=True):
+
+def get_all_files_in_dir(
+        in_dir, ext=None, return_absolute=True, recursive=False, verbose=False):
     """
     Get all files in the directory with the given extension.
     
@@ -1068,18 +1070,53 @@ def get_all_files_in_dir(in_dir, ext=None, return_absolute=True):
     ----------
     in_dir : str
         The absolute path to the directory
-    ext : str
-        Default None, the extension of files to get
-    return_absolute : bool
-        Whether to return the absolute filename or not
+    ext : str, optional. Defaults to True.
+        The extension of files to get.
+    return_absolute : bool, optional. Defaults to True.
+        Whether to return the absolute filename or not.
+    recursive: bool, optional. Defaults to False.
+        Whether to recurse through directories.
+    verbose: bool, optional. Defaults to False.
+        Whether to print the files found.
+
+    Returns
+    -------
+    List : A list of filenames
     """
     if not isdir(in_dir):
         print("Non existant directory " + str(in_dir))
         return []
-    ok_file = lambda f : isfile(join(in_dir, f)) and has_ext(f, ext)
-    convert_to_path = lambda f : join(in_dir, f) if return_absolute else f
-    onlyfiles = [
-        convert_to_path(f) for f in sorted(listdir(in_dir)) if ok_file(f)]
+
+    def ok_file(in_dir, f): 
+        return isfile(join(in_dir, f)) and has_ext(f, ext)
+
+    def convert_to_path(in_dir, f): 
+        return join(in_dir, f) if return_absolute else f
+
+    if verbose:
+        print("Adding following files from {}".format(in_dir))
+
+    if recursive:
+        onlyfiles = []
+        for root, _, filenames in os.walk(in_dir):
+            for filename in filenames:
+                if ok_file(root, filename):
+                    to_add = convert_to_path(root, filename)
+                    if verbose:
+                        print(to_add)
+                    onlyfiles.append(to_add)
+
+    else:
+        onlyfiles = [
+            convert_to_path(in_dir, f) for f in sorted(listdir(in_dir))
+            if ok_file(in_dir, f)
+        ]
+        if verbose:
+            for f in onlyfiles:
+                print(f)
+
+    if verbose:
+        print()
     return onlyfiles
 
 def make_dir_if_not_exists(location):
