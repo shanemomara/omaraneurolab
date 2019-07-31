@@ -470,51 +470,119 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
 # from multiprocessing import Process, Queue
 # TODO could also return a set of results to add to
 # NC control
-def place_cell_summary(collection, dpi=200):
+def place_cell_summary(
+        collection, dpi=150, out_dirname="nc_plots",
+        filter_place_cells=True, filter_low_freq=True):
     placedata = []
     graphdata = []
     wavedata = []
     headdata = []
     thetadata = []
     isidata = []
+    good_units = []
+
     for i, data in enumerate(collection):
         try:
             data_idx, unit_idx = collection._index_to_data_pos(i)
-            placedata.append(data.place())
-            graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
-            wavedata.append(data.wave_property())
-            headdata.append(data.hd_rate())
-            thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
-            isidata.append(data.isi(bins=int(350 / 2), bound=[0, 350]))
+            filename = collection.get_file_dict()["Spike"][data_idx][0]
+            unit_number = collection.get_units(data_idx)[unit_idx]
+            print("Working on {} unit {}".format(
+                filename, unit_number))
+
+            count = data.spike.get_unit_spikes_count()
+            duration = data.spike.get_duration()
+            good = True
+
+            if filter_low_freq and (count / duration) < 0.1:
+                print("Reject spike frequency {}".format(count / duration))
+                good = False
+
+            elif filter_place_cells:
+                skaggs = data.loc_shuffle(nshuff=300)
+                bad_skaggs = skaggs['refSkaggs'] <= skaggs['skaggs95']
+                bad_sparsity = skaggs['refSparsity'] >= skaggs['sparsity05']
+                bad_cohere = skaggs['refCoherence'] <= skaggs['coherence95']
+
+                if bad_skaggs or bad_sparsity or bad_cohere:
+                    good = False
+                    first_str_part = "Reject "
+
+                else:
+                    good_units.append(unit_idx)
+                    first_str_part = "Accept "
+
+                print((
+                    first_str_part +
+                    "Skaggs {:2f} | {:2f}, " +
+                    "Sparsity {:2f} | {:2f}, " +
+                    "Coherence {:2f} | {:2f}").format(
+                    skaggs['refSkaggs'],
+                    skaggs['skaggs95'],
+                    skaggs['refSparsity'],
+                    skaggs['sparsity05'],
+                    skaggs['refCoherence'],
+                    skaggs['coherence95']))
+            if good:
+                placedata.append(data.place())
+                graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
+                wavedata.append(data.wave_property())
+                headdata.append(data.hd_rate())
+                thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
+                isidata.append(data.isi(bins=int(350 / 2), bound=[0, 350]))
 
             # Save the accumulated information
             if unit_idx == len(collection.get_units(data_idx)) - 1:
-                fig = print_place_cells(
-                    len(collection.get_units(data_idx)),
-                    placedata=placedata, graphdata=graphdata,
-                    wavedata=wavedata, headdata=headdata,
-                    thetadata=thetadata, isidata=isidata,
-                    size_multiplier=4, point_size=dpi / 7.0,
-                    units=collection.get_units(data_idx))
-                filename = collection.get_file_dict()["Spike"][data_idx][0]
                 spike_name = os.path.basename(filename)
                 parts = spike_name.split(".")
                 main_dir = os.path.dirname(filename)
-                out_name = os.path.join(
-                    main_dir, "nc_plots", parts[0] + "_" + parts[1] + ".png")
-                logging.info("Saving place cell figure to {}".format(
-                    out_name))
-                make_dir_if_not_exists(out_name)
-                fig.savefig(out_name, dpi=dpi)
-                close("all")
-                gc.collect()
-                placedata = []
-                graphdata = []
-                wavedata = []
-                headdata = []
-                thetadata = []
-                isidata = []
+
+                if filter_place_cells:
+                    named_units = [
+                        collection.get_units(data_idx)[j]
+                        for j in good_units]
+                else:
+                    named_units = collection.get_units(data_idx)
+
+                if len(named_units) > 0:
+                    if filter_place_cells:
+                        print((
+                            "Plotting summary for {} " +
+                            "spatial units {}").format(
+                            spike_name, named_units))
+                    else:
+                        print((
+                            "Plotting summary for {} " +
+                            "units {}").format(
+                            spike_name, named_units))
+
+                    fig = print_place_cells(
+                        len(named_units),
+                        placedata=placedata, graphdata=graphdata,
+                        wavedata=wavedata, headdata=headdata,
+                        thetadata=thetadata, isidata=isidata,
+                        size_multiplier=4, point_size=dpi / 7.0,
+                        units=named_units)
+                    out_name = os.path.join(
+                        main_dir, out_dirname,
+                        parts[0] + "_" + parts[1] + ".png")
+                    print("Saving place cell figure to {}".format(
+                        out_name))
+                    make_dir_if_not_exists(out_name)
+                    fig.savefig(out_name, dpi=dpi)
+                    close("all")
+                    gc.collect()
+
+                    placedata = []
+                    graphdata = []
+                    wavedata = []
+                    headdata = []
+                    thetadata = []
+                    isidata = []
+                    good_units = []
+
         except Exception as e:
             log_exception(
-                e, "Occured during place cell summary on {}".format(i))
+                e, "Occured during place cell summary on data" +
+                   " {} unit {} name {} in {}".format(
+                       data_idx, unit_number, spike_name, main_dir))
     return

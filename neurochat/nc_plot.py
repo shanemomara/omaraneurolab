@@ -2022,10 +2022,11 @@ def _make_ax_if_none(ax, **kwargs):
         ax = plt.gca(**kwargs)
     return ax, fig
 
+
 def print_place_cells(
-    rows, cols=7, size_multiplier=4, wspace=0.3, hspace=0.3,
-    placedata=None, wavedata=None, graphdata=None, isidata=None,
-    headdata=None, thetadata=None, point_size=10, units=None):
+        rows, cols=7, size_multiplier=4, wspace=0.3, hspace=0.3,
+        placedata=None, wavedata=None, graphdata=None, isidata=None,
+        headdata=None, thetadata=None, point_size=10, units=None):
     fig = plt.figure(
         figsize=(cols * size_multiplier, rows * size_multiplier),
         tight_layout=False)
@@ -2034,41 +2035,47 @@ def print_place_cells(
     for i in range(rows):
         # Plot the spike position
         place_data = placedata[i]
-        ax = fig.add_subplot(gs[i, 0])
-        if units == None:
-            color = get_axona_colours(i)
-        else:
-            color = get_axona_colours(units[i]-1)
-        loc_spike(
-            place_data, ax=ax, color=color,
-            point_size=point_size)
+        if place_data is not None:
+            ax = fig.add_subplot(gs[i, 0])
+            if units == None:
+                color = get_axona_colours(i)
+            else:
+                color = get_axona_colours(units[i] - 1)
+            loc_spike(
+                place_data, ax=ax, color=color,
+                point_size=point_size)
 
-        # Plot the rate map
-        ax = fig.add_subplot(gs[i, 1])
-        loc_rate(place_data, ax=ax, smooth=True)
+            # Plot the rate map
+            ax = fig.add_subplot(gs[i, 1])
+            loc_rate(place_data, ax=ax, smooth=True)
 
         head_data = headdata[i]
-        ax = fig.add_subplot(gs[i, 2], projection='polar')
-        hd_rate(head_data, ax=ax, title=None)
+        if head_data is not None:
+            ax = fig.add_subplot(gs[i, 2], projection='polar')
+            hd_rate(head_data, ax=ax, title=None)
 
         # Plot wave property
-        ax = fig.add_subplot(gs[i, 3])
-        largest_waveform(wavedata[i], ax=ax)
+        if wavedata[i] is not None:
+            ax = fig.add_subplot(gs[i, 3])
+            largest_waveform(wavedata[i], ax=ax)
 
         # Plot -10 to 10 autocorrelation
-        ax = fig.add_subplot(gs[i, 4])
-        isi_corr(graphdata[i], ax=ax, title=None, xlabel=None, ylabel=None)
+        if graphdata[i] is not None:
+            ax = fig.add_subplot(gs[i, 4])
+            isi_corr(graphdata[i], ax=ax, title=None, xlabel=None, ylabel=None)
 
-        ax = fig.add_subplot(gs[i, 5])
-        theta_cell(thetadata[i], ax=ax, title=None, xlabel=None, ylabel=None)
+        if thetadata[i] is not None:
+            ax = fig.add_subplot(gs[i, 5])
+            theta_cell(thetadata[i], ax=ax, title=None,
+                       xlabel=None, ylabel=None)
 
-        ax = fig.add_subplot(gs[i, 6])
-        temp_fig, (ax1, ax2) = plt.subplots(2)
-        isi(isidata[i], axes=[ax, ax1, ax2], 
-            title1=None, xlabel1=None, ylabel1=None)
-        
-        plt.close(temp_fig)
+        if isidata[i] is not None:
+            ax = fig.add_subplot(gs[i, 6])
+            temp_fig, (ax1, ax2) = plt.subplots(2)
+            isi(isidata[i], axes=[ax, ax1, ax2],
+                title1=None, xlabel1=None, ylabel1=None)
+            plt.close(temp_fig)
+
         plt.close("all")
         gc.collect()
-        
     return fig
