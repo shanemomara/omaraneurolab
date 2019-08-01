@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import entropy
 
-sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
 try:
     import neurochat.nc_plot as nc_plot
     from neurochat.nc_utils import butter_filter, make_dir_if_not_exists

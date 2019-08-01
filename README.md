@@ -10,5 +10,4 @@ A fork of an analysis toolset for Neuroscience.
 
 ## Ideas
 
-1. Cache the non moving periods of the subjects movement to avoid many calculations
 2. Polynomial regression on phase vs position plots/

@@ -26,125 +26,6 @@ from scipy.optimize import linear_sum_assignment
 from matplotlib.pyplot import savefig, close
 
 
-def spike_positions(collection, should_sort=True, mode="vertical"):
-    """
-    Get the spike positions for a number of units.
-
-    Parameters
-    ----------
-    collection : NDataContainer or NData list or NData object
-
-
-    Returns
-    -------
-    positions : list of positions of the rat when the cell spiked
-
-    """
-    if isinstance(collection, NDataContainer) and should_sort:
-        collection.sort_units_spatially(mode=mode)
-
-    if isinstance(collection, NData):
-        positions = collection.get_event_loc(collection.get_unit_stamp())[1]
-        if mode == "vertical":
-            positions = positions[1]
-        elif mode == "horizontal":
-            positions = positions[0]
-        else:
-            logging.error("nca: mode only supports vertical or horizontal")
-    else:
-        positions = []
-        for data in collection:
-            position = data.get_event_loc(data.get_unit_stamp())[1]
-            if mode == "vertical":
-                position = position[1]
-            elif mode == "horizontal":
-                position = position[0]
-            else:
-                logging.error("nca: mode only supports vertical or horizontal")
-            positions.append(position)
-
-    return positions
-
-
-def smooth_speeds(collection, allow_multiple=False):
-    """
-    Smooth all the speed data in the collection.
-
-    Parameters
-    ----------
-    collection : NDataContainer
-        Container to get the information from
-    allows_multiple : bool
-        Allow smoothing multiple times, default False
-
-    Returns
-    -------
-    None
-
-    """
-    if collection._smoothed_speed and not allow_multiple:
-        logging.warning(
-            "NDataContainer has already been speed smoothed, not smoothing")
-
-    for i in range(collection.get_num_data()):
-        data = collection.get_data(i)
-        data.smooth_speed()
-        collection._smoothed_speed = True
-
-
-def spike_times(collection, filter_speed=False, **kwargs):
-    """
-    Return a list of all spike times in the collection.
-
-    Parameters
-    ----------
-    collection : NDataContainer or NData
-        Either the container or data object to get spike times from
-    filter_speed : bool
-        If true, don't consider spike times when the rat is non moving
-    kwargs
-        should_smooth : bool
-            Smooth the speed data if true
-        ranges : list
-            List of tuples indicating time ranges to get spikes in
-
-    Returns
-    -------
-    list
-        The list of spike times if collection is NData
-        or a 2d list containing a list of times for each collection item
-
-    """
-    should_smooth = kwargs.get("should_smooth", False)
-    ranges = kwargs.get("ranges", None)
-
-    if isinstance(collection, NData):
-        if ranges is not None:
-            time_data = collection.get_unit_stamps_in_ranges(ranges)
-        elif filter_speed:
-            ranges = collection.non_moving_periods(**kwargs)
-            time_data = collection.get_unit_stamps_in_ranges(ranges)
-        else:
-            times = collection.get_unit_stamp()
-
-    else:
-        if should_smooth:
-            smooth_speeds(collection)
-            kwargs["should_smooth"] = False
-
-        times = []
-        for data in collection:
-            if ranges is not None:
-                time_data = data.get_unit_stamps_in_ranges(ranges)
-            elif filter_speed:
-                ranges = data.non_moving_periods(**kwargs)
-                time_data = data.get_unit_stamps_in_ranges(ranges)
-            else:
-                time_data = data.get_unit_stamp()
-            times.append(time_data)
-    return times
-
-
 def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     """
     For each recording in the collection, detect periods of MUA.
@@ -464,6 +345,125 @@ def replay(collection, run_idx, sleep_idx, **kwargs):
 
     # Zoom in on these ranges
     return results
+
+
+def spike_positions(collection, should_sort=True, mode="vertical"):
+    """
+    Get the spike positions for a number of units.
+
+    Parameters
+    ----------
+    collection : NDataContainer or NData list or NData object
+
+
+    Returns
+    -------
+    positions : list of positions of the rat when the cell spiked
+
+    """
+    if isinstance(collection, NDataContainer) and should_sort:
+        collection.sort_units_spatially(mode=mode)
+
+    if isinstance(collection, NData):
+        positions = collection.get_event_loc(collection.get_unit_stamp())[1]
+        if mode == "vertical":
+            positions = positions[1]
+        elif mode == "horizontal":
+            positions = positions[0]
+        else:
+            logging.error("nca: mode only supports vertical or horizontal")
+    else:
+        positions = []
+        for data in collection:
+            position = data.get_event_loc(data.get_unit_stamp())[1]
+            if mode == "vertical":
+                position = position[1]
+            elif mode == "horizontal":
+                position = position[0]
+            else:
+                logging.error("nca: mode only supports vertical or horizontal")
+            positions.append(position)
+
+    return positions
+
+
+def smooth_speeds(collection, allow_multiple=False):
+    """
+    Smooth all the speed data in the collection.
+
+    Parameters
+    ----------
+    collection : NDataContainer
+        Container to get the information from
+    allows_multiple : bool
+        Allow smoothing multiple times, default False
+
+    Returns
+    -------
+    None
+
+    """
+    if collection._smoothed_speed and not allow_multiple:
+        logging.warning(
+            "NDataContainer has already been speed smoothed, not smoothing")
+
+    for i in range(collection.get_num_data()):
+        data = collection.get_data(i)
+        data.smooth_speed()
+        collection._smoothed_speed = True
+
+
+def spike_times(collection, filter_speed=False, **kwargs):
+    """
+    Return a list of all spike times in the collection.
+
+    Parameters
+    ----------
+    collection : NDataContainer or NData
+        Either the container or data object to get spike times from
+    filter_speed : bool
+        If true, don't consider spike times when the rat is non moving
+    kwargs
+        should_smooth : bool
+            Smooth the speed data if true
+        ranges : list
+            List of tuples indicating time ranges to get spikes in
+
+    Returns
+    -------
+    list
+        The list of spike times if collection is NData
+        or a 2d list containing a list of times for each collection item
+
+    """
+    should_smooth = kwargs.get("should_smooth", False)
+    ranges = kwargs.get("ranges", None)
+
+    if isinstance(collection, NData):
+        if ranges is not None:
+            time_data = collection.get_unit_stamps_in_ranges(ranges)
+        elif filter_speed:
+            ranges = collection.non_moving_periods(**kwargs)
+            time_data = collection.get_unit_stamps_in_ranges(ranges)
+        else:
+            times = collection.get_unit_stamp()
+
+    else:
+        if should_smooth:
+            smooth_speeds(collection)
+            kwargs["should_smooth"] = False
+
+        times = []
+        for data in collection:
+            if ranges is not None:
+                time_data = data.get_unit_stamps_in_ranges(ranges)
+            elif filter_speed:
+                ranges = data.non_moving_periods(**kwargs)
+                time_data = data.get_unit_stamps_in_ranges(ranges)
+            else:
+                time_data = data.get_unit_stamp()
+            times.append(time_data)
+    return times
 
 
 # TODO consider multiprocessing this here

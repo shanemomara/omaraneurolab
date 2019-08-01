@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
-
 import csv
 import os
 from copy import copy

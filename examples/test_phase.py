@@ -1,10 +1,8 @@
-import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 from neurochat.nc_data import NData
 from neurochat.nc_datacontainer import NDataContainer
-import neurochat.nc_plot as nc_plot
 from neurochat.nc_utils import make_dir_if_not_exists
 
 

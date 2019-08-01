@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(1, r'C:\Users\smartin5\Repos\myNeurochat')
-
 from neurochat.nc_datacontainer import NDataContainer
 import neurochat.nc_containeranalysis as nca
 
