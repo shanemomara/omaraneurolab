@@ -41,17 +41,16 @@ def plot_lfp_signal(
     plt.tight_layout()
     fig.savefig(out_name, dpi=400)
     plt.close(fig)
+    return filtered_lfp
 
 
-def raw_lfp_power(lfp, splits, lower, upper, prefilt=False):
+def raw_lfp_power(lfp_samples, fs, splits, lower, upper, prefilt=False):
     """
     This can be used to get the power before splitting up the signal.
 
     Minor differences between this and filtering after splitting
     """
 
-    lfp_samples = lfp.get_samples()
-    fs = lfp.get_sampling_rate()
     if prefilt:
         lfp_samples = butter_filter(
             lfp_samples, fs, 10, lower, upper, 'bandpass')
@@ -96,10 +95,9 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
     return new_data.get_results()
 
 
-def lfp_entropy(lfp, splits, lower, upper, prefilt=False, etype="sample"):
+def lfp_entropy(
+        lfp_samples, fs, splits, lower, upper, prefilt=False, etype="sample"):
     results = OrderedDict()
-    lfp_samples = lfp.get_samples()
-    fs = lfp.get_sampling_rate()
 
     if prefilt:
         lfp_samples = butter_filter(
@@ -110,20 +108,20 @@ def lfp_entropy(lfp, splits, lower, upper, prefilt=False, etype="sample"):
         end_idx = int(u * fs)
         sample = lfp_samples[start_idx:end_idx]
         if etype == "svd":
-            power = entropy.svd_entropy(sample, order=3, delay=1)
+            et = entropy.svd_entropy(sample, order=3, delay=1)
         elif etype == "spectral":
-            power = entropy.spectral_entropy(
+            et = entropy.spectral_entropy(
                 sample, 100, method='welch', normalize=True)
         elif etype == "sample":
-            power = entropy.sample_entropy(sample, order=3)
+            et = entropy.sample_entropy(sample, order=3)
         elif etype == "perm":
-            power = entropy.perm_entropy(sample, order=3, normalize=True)
+            et = entropy.perm_entropy(sample, order=3, normalize=True)
         else:
             print("Error: unrecognised entropy type {}".format(
                 etype
             ))
             exit(-1)
-        results["Entropy {}".format(i)] = power
+        results["Entropy {}".format(i)] = et
 
     return results
 
@@ -137,7 +135,7 @@ def lfp_distribution(
     avg = OrderedDict()
     ent = OrderedDict()
 
-    for j in range(4):
+    for j in range(len(splits)):
         avg["Avg power {}".format(j)] = 0
         if get_entropy:
             ent["Avg entropy {}".format(j)] = 0
@@ -158,13 +156,13 @@ def lfp_distribution(
         lfp_t_array.append(data.lfp.get_timestamp())
 
         p_result = raw_lfp_power(
-            data.lfp, splits, 1.5, upper, prefilt=prefilt)
+            lfp_samples, fs, splits, 1.5, upper, prefilt=False)
         for j in range(len(splits)):
             avg["Avg power {}".format(j)] += (
                 p_result["Raw power {}".format(j)] / 32)
         if get_entropy:
             p_result = lfp_entropy(
-                data.lfp, splits, 1.5, upper, prefilt=prefilt)
+                lfp_samples, fs, splits, 1.5, upper, prefilt=False)
             for j in range(len(splits)):
                 ent["Avg entropy {}".format(j)] += (
                     p_result["Entropy {}".format(j)] / 32)
@@ -180,22 +178,49 @@ def lfp_distribution(
     return avg, ent
 
 
+def result_to_csv(result, out_dir):
+    def arr_to_str(name, arr):
+        out_str = name
+        for val in arr:
+            out_str = "{},{:2f}".format(out_str, val)
+        return out_str
+
+    with open(os.path.join(out_dir, "results.csv"), "w") as f:
+        for key, val in result.items():
+            out_str = arr_to_str(key, val.values())
+            print(out_str)
+            f.write(out_str + "\n")
+
+
 def main(parsed):
+    # Extract parsed args
     max_lfp = parsed.max_freq
     filt = not parsed.nofilt
     loc = parsed.loc
     eeg_num = parsed.eeg_num
     split_s = parsed.splits
     out_loc = parsed.out_loc
+    every_min = parsed.every_min
+    recording_dur = parsed.recording_dur
+    get_entropy = parsed.entropy
 
-    splits = []
-    for i in range(len(split_s) // 2):
-        splits.append((split_s[i * 2], split_s[i * 2 + 1]))
-
+    # Do setup
     if not loc:
         print("Please pass a file in through CLI")
         exit(-1)
 
+    if every_min:
+        splits = [(60 * i, 60 * (i + 1)) for i in range(recording_dur)]
+        splits.append((0, 600))
+        splits.append((600, 1200))
+        splits.append((1200, 1800))
+
+    else:
+        splits = []
+        for i in range(len(split_s) // 2):
+            splits.append((split_s[i * 2], split_s[i * 2 + 1]))
+
+    splits.append((0, recording_dur * 60))
     if eeg_num != "1":
         load_loc = loc + eeg_num
     else:
@@ -214,39 +239,61 @@ def main(parsed):
     print("Saving results to {}".format(out_dir))
     make_dir_if_not_exists(os.path.join(out_dir, "dummy.txt"))
 
-    with open(os.path.join(out_dir, "results.txt"), "w") as f:
-        out_name = os.path.join(out_dir, "full_signal.png")
-        plot_lfp_signal(
-            ndata.lfp, 1.5, max_lfp, out_name, filt=False)
-        out_name = os.path.join(
-            in_dir, "nc_results", "full_signal_filt.png")
-        plot_lfp_signal(
-            ndata.lfp, 1.5, max_lfp, out_name, filt=True)
+    # Plot signals
+    out_name = os.path.join(out_dir, "full_signal.png")
+    plot_lfp_signal(
+        ndata.lfp, 1.5, max_lfp, out_name, filt=False)
+    out_name = os.path.join(
+        in_dir, out_dir, "full_signal_filt.png")
+    filtered_lfp = plot_lfp_signal(
+        ndata.lfp, 1.5, max_lfp, out_name, filt=True)
+    if not filt:
+        filtered_lfp = ndata.lfp
 
-        p_results = raw_lfp_power(
-            ndata.lfp, splits, 1.5, max_lfp, prefilt=filt)
-        print("Power results are {}".format(p_results))
-        f.write(str(p_results) + "\n")
+    # Calculate measures on this tetrode
+    fs = ndata.lfp.get_sampling_rate()
+    p_results = raw_lfp_power(
+        filtered_lfp, fs, splits, 1.5, max_lfp, prefilt=False)
 
-        result = lfp_distribution(loc, max_lfp, out_dir, splits, prefilt=filt)
-        print(result[0])
-        f.write(str(result[0]) + "\n")
-        print(result[1])
-        f.write(str(result[1]) + "\n")
+    # if get_entropy:
+    #     e_results = lfp_entropy(
+    #         filtered_lfp, fs, splits, 1.5, max_lfp, prefilt=False)
 
-        for i, split in enumerate(splits):
-            new_data = ndata.subsample(split)
-            results = lfp_power(
-                new_data, i, max_lfp, out_dir, prefilt=filt)
-            print("For {} results are {}".format(i, results))
-            f.write("{}: {}\n".format(i, results))
+    # Calculate measures over the dist
+    d_result = lfp_distribution(
+        loc, max_lfp, out_dir, splits[-4:],
+        prefilt=filt, get_entropy=get_entropy)
+
+    if get_entropy:
+        results = {
+            "power": p_results,
+            # "entropy": e_results,
+            "avg_power": d_result[0],
+            "avg_entropy": d_result[1]
+        }
+    else:
+        results = {
+            "power": p_results,
+            "avg_power": d_result[0]
+        }
+
+    # Output the results
+    result_to_csv(results, out_dir)
+
+    # This is for theta and delta power
+    # for i, split in enumerate(splits):
+    #     new_data = ndata.subsample(split)
+    #     results = lfp_power(
+    #         new_data, i, max_lfp, out_dir, prefilt=filt)
+    #     print("For {} results are {}".format(i, results))
+    #     f.write("{}: {}\n".format(i, results))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parse a program location")
     parser.add_argument(
         "--nofilt", "-nf", action="store_true",
-        help="Should pre filter lfp before power and spectral analysis")
+        help="Should not pre filter lfp before power and spectral analysis")
     parser.add_argument(
         "--max_freq", "-mf", type=int, default=40,
         help="The maximum lfp frequency to consider"
@@ -263,7 +310,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--out_loc", "-o", type=str, default="nc_results",
-        help="Name of directory to store results in"
+        help="Relative name of directory to store results in"
+    )
+    parser.add_argument(
+        "--every_min", "-em", action="store_true",
+        help="Calculate lfp every minute"
+    )
+    parser.add_argument(
+        "--recording_dur", "-d", type=int, default=30,
+        help="How long in minutes the recording lasted"
+    )
+    parser.add_argument(
+        "--entropy", "-e", action="store_true",
+        help="Calculate entropy"
     )
     parsed = parser.parse_args()
 
