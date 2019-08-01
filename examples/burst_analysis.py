@@ -1,3 +1,4 @@
+"""Burst analysis of cells."""
 import csv
 import os
 from copy import copy
@@ -53,7 +54,8 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
     isi_log_bins = np.linspace(
         np.log10(start), np.log10(stop), num_bins + 1)
     hist, _ = np.histogram(
-        np.log10(np.diff(ndata.spike.get_unit_stamp())), bins=isi_log_bins, density=False)
+        np.log10(np.diff(ndata.spike.get_unit_stamp())),
+        bins=isi_log_bins, density=False)
     # return ndata.isi(bins=isi_log_bins, density=True), isi_log_bins
     return hist / ndata.spike.get_unit_stamp().size, isi_log_bins
     # return hist, isi_log_bins
@@ -255,7 +257,7 @@ def main(in_dir, tetrode_list, analysis_flags):
 
     # Show summary of place
     if analysis_flags[0]:
-        place_cell_summary(container)
+        place_cell_summary(container, dpi=200)
         plt.close("all")
 
     # Do numerical analysis
@@ -263,7 +265,7 @@ def main(in_dir, tetrode_list, analysis_flags):
     if analysis_flags[1]:
         cell_classification_stats(in_dir, container, should_plot=should_plot)
 
-        # Do PCA based analysis
+    # Do PCA based analysis
     if analysis_flags[3]:
         pca_clustering(container, in_dir)
 

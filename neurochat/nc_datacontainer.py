@@ -23,7 +23,7 @@ class NDataContainer():
     """
     Class for storing multiple file locations for ndata objects.
 
-    Additionally the ndata objects themselves can be stored
+    Additionally the ndata objects themselves can be stored.
     """
 
     def __init__(self, share_positions=False, load_on_fly=False):
@@ -440,7 +440,7 @@ class NDataContainer():
         """
         Merge the data from multiple indices together into the first index.
 
-        WORK IN PROGRESS - ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY
+        ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY - DOES NOT MERGE LFP.
         Only call this after loading the data, and not while loading on the fly
 
         Parameters
@@ -627,7 +627,7 @@ class NDataContainer():
 
     # Methods from here on should be for private class use
     def _pretty_string(self):
-        """Alternative printing should be prettier."""
+        """Alternative string representation should be prettier."""
         all_str_info = []
         for i in range(self.get_num_data()):
             str_info = self.get_index_info(i)
@@ -639,6 +639,7 @@ class NDataContainer():
         return "\n".join(all_str_info)
 
     def _full_string(self):
+        """Full string representation of the container."""
         string = (
             "NData Container Object with {} objects:\n" +
             "Set to Load on Fly? {}\n" +

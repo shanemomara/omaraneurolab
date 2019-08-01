@@ -466,11 +466,32 @@ def spike_times(collection, filter_speed=False, **kwargs):
     return times
 
 
-# TODO consider multiprocessing this here
-# from multiprocessing import Process, Queue
 def place_cell_summary(
         collection, dpi=150, out_dirname="nc_plots",
         filter_place_cells=True, filter_low_freq=True):
+    """
+    Quick Png spatial information summary of each cell in collection.
+
+    Parameters
+    ----------
+    collection : NDataCollection
+        The collection to plot summaries of.
+    dpi : int, default 150
+        Dpi of the output figures.
+    out_dirname : str, default "nc_plots
+        The relative name of the dir to save pngs to
+    filter_place_cells: bool, default True
+        Whether to filter out non spatial cells from the plots.
+        Considered non spatial if shuffled Skaggs, Coherency or Sparsity
+        is similar to actual values.
+    filter_low_freq: bool, default True
+        Filter out cells with spike freq less than 0.1Hz
+
+    Returns
+    -------
+    None
+    """
+
     placedata = []
     graphdata = []
     wavedata = []
