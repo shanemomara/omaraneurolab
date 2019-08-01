@@ -26,6 +26,319 @@ from scipy.optimize import linear_sum_assignment
 from matplotlib.pyplot import savefig, close
 
 
+def place_cell_summary(
+        collection, dpi=150, out_dirname="nc_plots",
+        filter_place_cells=True, filter_low_freq=True):
+    """
+    Quick Png spatial information summary of each cell in collection.
+
+    Parameters
+    ----------
+    collection : NDataCollection
+        The collection to plot summaries of.
+    dpi : int, default 150
+        Dpi of the output figures.
+    out_dirname : str, default "nc_plots
+        The relative name of the dir to save pngs to
+    filter_place_cells: bool, default True
+        Whether to filter out non spatial cells from the plots.
+        Considered non spatial if shuffled Skaggs, Coherency or Sparsity
+        is similar to actual values.
+    filter_low_freq: bool, default True
+        Filter out cells with spike freq less than 0.1Hz
+
+    Returns
+    -------
+    None
+    """
+
+    placedata = []
+    graphdata = []
+    wavedata = []
+    headdata = []
+    thetadata = []
+    isidata = []
+    good_units = []
+
+    for i, data in enumerate(collection):
+        try:
+            data_idx, unit_idx = collection._index_to_data_pos(i)
+            filename = collection.get_file_dict()["Spike"][data_idx][0]
+            unit_number = collection.get_units(data_idx)[unit_idx]
+            print("Working on {} unit {}".format(
+                filename, unit_number))
+
+            count = data.spike.get_unit_spikes_count()
+            duration = data.spike.get_duration()
+            good = True
+
+            if filter_low_freq and (count / duration) < 0.1:
+                print("Reject spike frequency {}".format(count / duration))
+                good = False
+
+            elif filter_place_cells:
+                skaggs = data.loc_shuffle(nshuff=300)
+                bad_skaggs = skaggs['refSkaggs'] <= skaggs['skaggs95']
+                bad_sparsity = skaggs['refSparsity'] >= skaggs['sparsity05']
+                bad_cohere = skaggs['refCoherence'] <= skaggs['coherence95']
+
+                if bad_skaggs or bad_sparsity or bad_cohere:
+                    good = False
+                    first_str_part = "Reject "
+
+                else:
+                    good_units.append(unit_idx)
+                    first_str_part = "Accept "
+
+                print((
+                    first_str_part +
+                    "Skaggs {:2f} | {:2f}, " +
+                    "Sparsity {:2f} | {:2f}, " +
+                    "Coherence {:2f} | {:2f}").format(
+                    skaggs['refSkaggs'],
+                    skaggs['skaggs95'],
+                    skaggs['refSparsity'],
+                    skaggs['sparsity05'],
+                    skaggs['refCoherence'],
+                    skaggs['coherence95']))
+            if good:
+                placedata.append(data.place())
+                graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
+                wavedata.append(data.wave_property())
+                headdata.append(data.hd_rate())
+                thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
+                isidata.append(data.isi(bins=int(350 / 2), bound=[0, 350]))
+
+            # Save the accumulated information
+            if unit_idx == len(collection.get_units(data_idx)) - 1:
+                spike_name = os.path.basename(filename)
+                parts = spike_name.split(".")
+                main_dir = os.path.dirname(filename)
+
+                if filter_place_cells:
+                    named_units = [
+                        collection.get_units(data_idx)[j]
+                        for j in good_units]
+                else:
+                    named_units = collection.get_units(data_idx)
+
+                if len(named_units) > 0:
+                    if filter_place_cells:
+                        print((
+                            "Plotting summary for {} " +
+                            "spatial units {}").format(
+                            spike_name, named_units))
+                    else:
+                        print((
+                            "Plotting summary for {} " +
+                            "units {}").format(
+                            spike_name, named_units))
+
+                    fig = print_place_cells(
+                        len(named_units),
+                        placedata=placedata, graphdata=graphdata,
+                        wavedata=wavedata, headdata=headdata,
+                        thetadata=thetadata, isidata=isidata,
+                        size_multiplier=4, point_size=dpi / 7.0,
+                        units=named_units)
+                    out_name = os.path.join(
+                        main_dir, out_dirname,
+                        parts[0] + "_" + parts[1] + ".png")
+                    print("Saving place cell figure to {}".format(
+                        out_name))
+                    make_dir_if_not_exists(out_name)
+                    fig.savefig(out_name, dpi=dpi)
+                    close("all")
+                    gc.collect()
+
+                    placedata = []
+                    graphdata = []
+                    wavedata = []
+                    headdata = []
+                    thetadata = []
+                    isidata = []
+                    good_units = []
+
+        except Exception as e:
+            log_exception(
+                e, "Occured during place cell summary on data" +
+                   " {} unit {} name {} in {}".format(
+                       data_idx, unit_number, spike_name, main_dir))
+    return
+
+
+def replay(collection, run_idx, sleep_idx, **kwargs):
+    """
+    Run and sleep session comparison.
+
+    Set the units of interest in the collection before running.
+
+    Parameters
+    ----------
+    collection : NDataContainer
+        The collection of run and sleep data
+    run_idx : int
+        The index in the collection for the run data
+    sleep_idx : int
+        The index in the collection for the sleep data
+
+    kwargs
+    ------
+    sorting_mode : str
+        "vertical" or "horizontal" order for spatial sorting
+    swr_window : float
+        Lenth of SWR event around peak in seconds
+    match_clusters : bool
+        If true, set the units being used in sleep to those
+        most similar from run
+
+    kwargs are also passed into
+    nc_lfp.sharp_wave_ripples and
+    multi_unit_activity and
+    nc_spatial.non_moving_periods
+
+    Returns
+    -------
+    dict
+        Graphical and numerical analysis results
+
+    See also
+    --------
+    nc_lfp.sharp_wave_ripples
+    nc_spatial.non_moving_periods
+    multi_unit_activity
+
+    """
+    results = {}
+
+    # Parse the kwargs
+    sorting_mode = kwargs.get("sorting_mode", "vertical")
+    swr_window = kwargs.get("swr_window", 0.2)
+    match_clusters = kwargs.get("match_clusters", True)
+
+    # Sort the run data spatially
+    truth_arr = [False for i in range(collection.get_num_data())]
+    truth_arr[run_idx] = True
+    collection.sort_units_spatially(truth_arr, mode=sorting_mode)
+
+    # Match up cells between the recordings
+    if match_clusters:
+        evaluate_clusters(collection, run_idx, sleep_idx, set_units=True)
+
+    # Find the longest period of continuous sleep
+    sleep = collection.get_data(sleep_idx)
+    sleep_subsample = collection.subsample(sleep_idx)
+    sample_rate = sleep.lfp.get_sampling_rate()
+    non_moving_periods = np.array(
+        sleep.non_moving_periods(**kwargs)) * sample_rate
+
+    # Could take multiple periods instead of just the longest
+    sorted_periods = sorted(
+        non_moving_periods, key=lambda x: x[1] - x[0], reverse=True)
+    longest_sleep_period = sorted_periods[0]
+    raw_spike_times = spike_times(
+        sleep_subsample,
+        ranges=[longest_sleep_period / sample_rate])
+
+    # Estimate SWR
+    result_swr = sleep.lfp.sharp_wave_ripples(
+        in_range=longest_sleep_period / sample_rate, **kwargs)
+
+    # Estimate MUA bursts
+    result_mua = multi_unit_activity(
+        sleep_subsample, longest_sleep_period / sample_rate,
+        strip=True, **kwargs)
+
+    results.update(result_swr)
+    results.update(result_mua)
+    results["spike times"] = raw_spike_times
+    results["num cells"] = len(sleep_subsample)
+
+    # Get the overlapping ranges of SWR and MUA
+    def swr_interval(peak):
+        return (peak - 0.5 * swr_window, peak + 0.5 * swr_window)
+
+    def overlapping_swr_mua(mua, swr_peak):
+        swr_range = swr_interval(swr_peak)
+        overlapping = (
+            (swr_range[0] < mua[0] < swr_range[1]) or
+            (swr_range[0] < mua[1] < swr_range[1])
+        )
+        return overlapping
+
+    overlap = [
+        mua_range for mua_range in results["mua"]
+        if any(overlapping_swr_mua(mua_range, peak)
+               for peak in results["swr times"])
+    ]
+
+    results["overlap swr mua"] = overlap
+
+    return results
+
+
+def evaluate_clusters(collection, idx1, idx2, set_units=False):
+    """
+    Find which units are closest in terms of clustering.
+
+    Uses the Hungarian (Munkres) cost optimisation based on Hellinger distance
+    between the clusters.
+
+    Parameters
+    ----------
+    collection : NDataCollection
+        The collection to find similar cells in
+    idx1 : int
+        The first data point in the collection to consider
+    idx2 : int
+        The second data point in the collection to consider
+
+    Returns
+    -------
+    dict
+        For each unit in data[idx1] (key), a tuple consisting of the
+        best matching unit from data[idx2] and the distance for this (val)
+
+    """
+    nclust1 = NClust()
+    nclust2 = NClust()
+
+    sub_col1 = collection.subsample(idx1)
+    info1 = sub_col1.get_file_dict()["Spike"][0]
+    nclust1.load(info1[0], info1[2])
+
+    sub_col2 = collection.subsample(idx2)
+    info2 = sub_col2.get_file_dict()["Spike"][0]
+    nclust2.load(info2[0], info2[2])
+
+    distance_shape = (
+        len(sub_col1.get_units()[0]), len(sub_col2.get_units()[0]))
+    distances = np.zeros(shape=distance_shape)
+    # Build a matrix of distances for each unit
+    for idx1, unit1 in enumerate(sub_col1.get_units()[0]):
+        for idx2, unit2 in enumerate(sub_col2.get_units()[0]):
+            _, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
+            distances[idx1, idx2] = dh
+            # print(
+            #     "{} {}: Bhattacharyya {} Hellinger {}".format(
+            #         unit1, unit2, bc, dh))
+
+    # Solve the linear sum assignment problem based on the Hungarian method
+    solution = linear_sum_assignment(distances)
+    best_matches = {}
+    for i, j in zip(solution[0], solution[1]):
+        best_matches[sub_col1.get_units()[0][i]] = (
+            sub_col2.get_units()[0][j], distances[i, j])
+
+    print("Best assignment is {}".format(best_matches))
+
+    if set_units:
+        run_units = [key for key in best_matches.keys()]
+        best_units = [val[0] for _, val in best_matches.items()]
+        collection.set_units([run_units, best_units])
+    return best_matches
+
+
 def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     """
     For each recording in the collection, detect periods of MUA.
@@ -174,177 +487,30 @@ def count_units_in_bins(
     return result
 
 
-def evaluate_clusters(collection, idx1, idx2, set_units=False):
+def smooth_speeds(collection, allow_multiple=False):
     """
-    Find which units are closest in terms of clustering.
-
-    Uses the Hungarian (Munkres) cost optimisation based on Hellinger distance
-    between the clusters.
-
-    Parameters
-    ----------
-    collection : NDataCollection
-        The collection to find similar cells in
-    idx1 : int
-        The first data point in the collection to consider
-    idx2 : int
-        The second data point in the collection to consider
-
-    Returns
-    -------
-    dict
-        For each unit in data[idx1] (key), a tuple consisting of the
-        best matching unit from data[idx2] and the distance for this (val)
-
-    """
-    nclust1 = NClust()
-    nclust2 = NClust()
-
-    sub_col1 = collection.subsample(idx1)
-    info1 = sub_col1.get_file_dict()["Spike"][0]
-    nclust1.load(info1[0], info1[2])
-
-    sub_col2 = collection.subsample(idx2)
-    info2 = sub_col2.get_file_dict()["Spike"][0]
-    nclust2.load(info2[0], info2[2])
-
-    distance_shape = (
-        len(sub_col1.get_units()[0]), len(sub_col2.get_units()[0]))
-    distances = np.zeros(shape=distance_shape)
-    # Build a matrix of distances for each unit
-    for idx1, unit1 in enumerate(sub_col1.get_units()[0]):
-        for idx2, unit2 in enumerate(sub_col2.get_units()[0]):
-            _, dh = nclust1.cluster_similarity(nclust2, unit1, unit2)
-            distances[idx1, idx2] = dh
-            # print(
-            #     "{} {}: Bhattacharyya {} Hellinger {}".format(
-            #         unit1, unit2, bc, dh))
-
-    # Solve the linear sum assignment problem based on the Hungarian method
-    solution = linear_sum_assignment(distances)
-    best_matches = {}
-    for i, j in zip(solution[0], solution[1]):
-        best_matches[sub_col1.get_units()[0][i]] = (
-            sub_col2.get_units()[0][j], distances[i, j])
-
-    print("Best assignment is {}".format(best_matches))
-
-    if set_units:
-        run_units = [key for key in best_matches.keys()]
-        best_units = [val[0] for _, val in best_matches.items()]
-        collection.set_units([run_units, best_units])
-    return best_matches
-
-
-def replay(collection, run_idx, sleep_idx, **kwargs):
-    """
-    Run and sleep session comparison.
-
-    Set the units of interest in the collection before running.
+    Smooth all the speed data in the collection.
 
     Parameters
     ----------
     collection : NDataContainer
-        The collection of run and sleep data
-    run_idx : int
-        The index in the collection for the run data
-    sleep_idx : int
-        The index in the collection for the sleep data
-
-    kwargs
-    ------
-    sorting_mode : str
-        "vertical" or "horizontal" order for spatial sorting
-    swr_window : float
-        Lenth of SWR event around peak in seconds
-    match_clusters : bool
-        If true, set the units being used in sleep to those
-        most similar from run
-
-    kwargs are also passed into
-    nc_lfp.sharp_wave_ripples and
-    multi_unit_activity and
-    nc_spatial.non_moving_periods
+        Container to get the information from
+    allows_multiple : bool
+        Allow smoothing multiple times, default False
 
     Returns
     -------
-    dict
-        Graphical and numerical analysis results
-
-    See also
-    --------
-    nc_lfp.sharp_wave_ripples
-    nc_spatial.non_moving_periods
-    multi_unit_activity
+    None
 
     """
-    results = {}
+    if collection._smoothed_speed and not allow_multiple:
+        logging.warning(
+            "NDataContainer has already been speed smoothed, not smoothing")
 
-    # Parse the kwargs
-    sorting_mode = kwargs.get("sorting_mode", "vertical")
-    swr_window = kwargs.get("swr_window", 0.2)
-    match_clusters = kwargs.get("match_clusters", True)
-
-    # Sort the run data spatially
-    truth_arr = [False for i in range(collection.get_num_data())]
-    truth_arr[run_idx] = True
-    collection.sort_units_spatially(truth_arr, mode=sorting_mode)
-
-    # Match up cells between the recordings
-    if match_clusters:
-        evaluate_clusters(collection, run_idx, sleep_idx, set_units=True)
-
-    # Find the longest period of continuous sleep
-    sleep = collection.get_data(sleep_idx)
-    sleep_subsample = collection.subsample(sleep_idx)
-    sample_rate = sleep.lfp.get_sampling_rate()
-    non_moving_periods = np.array(
-        sleep.non_moving_periods(**kwargs)) * sample_rate
-
-    # Could take multiple periods instead of just the longest
-    sorted_periods = sorted(
-        non_moving_periods, key=lambda x: x[1] - x[0], reverse=True)
-    longest_sleep_period = sorted_periods[0]
-    raw_spike_times = spike_times(
-        sleep_subsample,
-        ranges=[longest_sleep_period / sample_rate])
-
-    # Estimate SWR
-    result_swr = sleep.lfp.sharp_wave_ripples(
-        in_range=longest_sleep_period / sample_rate, **kwargs)
-
-    # Estimate MUA bursts
-    result_mua = multi_unit_activity(
-        sleep_subsample, longest_sleep_period / sample_rate,
-        strip=True, **kwargs)
-
-    results.update(result_swr)
-    results.update(result_mua)
-    results["spike times"] = raw_spike_times
-    results["num cells"] = len(sleep_subsample)
-
-    # Get the overlapping ranges of SWR and MUA
-    def swr_interval(peak):
-        return (peak - 0.5 * swr_window, peak + 0.5 * swr_window)
-
-    def overlapping_swr_mua(mua, swr_peak):
-        swr_range = swr_interval(swr_peak)
-        overlapping = (
-            (swr_range[0] < mua[0] < swr_range[1]) or
-            (swr_range[0] < mua[1] < swr_range[1])
-        )
-        return overlapping
-
-    overlap = [
-        mua_range for mua_range in results["mua"]
-        if any(overlapping_swr_mua(mua_range, peak)
-               for peak in results["swr times"])
-    ]
-
-    results["overlap swr mua"] = overlap
-
-    # Zoom in on these ranges
-    return results
+    for i in range(collection.get_num_data()):
+        data = collection.get_data(i)
+        data.smooth_speed()
+        collection._smoothed_speed = True
 
 
 def spike_positions(collection, should_sort=True, mode="vertical"):
@@ -385,32 +551,6 @@ def spike_positions(collection, should_sort=True, mode="vertical"):
             positions.append(position)
 
     return positions
-
-
-def smooth_speeds(collection, allow_multiple=False):
-    """
-    Smooth all the speed data in the collection.
-
-    Parameters
-    ----------
-    collection : NDataContainer
-        Container to get the information from
-    allows_multiple : bool
-        Allow smoothing multiple times, default False
-
-    Returns
-    -------
-    None
-
-    """
-    if collection._smoothed_speed and not allow_multiple:
-        logging.warning(
-            "NDataContainer has already been speed smoothed, not smoothing")
-
-    for i in range(collection.get_num_data()):
-        data = collection.get_data(i)
-        data.smooth_speed()
-        collection._smoothed_speed = True
 
 
 def spike_times(collection, filter_speed=False, **kwargs):
@@ -464,144 +604,3 @@ def spike_times(collection, filter_speed=False, **kwargs):
                 time_data = data.get_unit_stamp()
             times.append(time_data)
     return times
-
-
-def place_cell_summary(
-        collection, dpi=150, out_dirname="nc_plots",
-        filter_place_cells=True, filter_low_freq=True):
-    """
-    Quick Png spatial information summary of each cell in collection.
-
-    Parameters
-    ----------
-    collection : NDataCollection
-        The collection to plot summaries of.
-    dpi : int, default 150
-        Dpi of the output figures.
-    out_dirname : str, default "nc_plots
-        The relative name of the dir to save pngs to
-    filter_place_cells: bool, default True
-        Whether to filter out non spatial cells from the plots.
-        Considered non spatial if shuffled Skaggs, Coherency or Sparsity
-        is similar to actual values.
-    filter_low_freq: bool, default True
-        Filter out cells with spike freq less than 0.1Hz
-
-    Returns
-    -------
-    None
-    """
-
-    placedata = []
-    graphdata = []
-    wavedata = []
-    headdata = []
-    thetadata = []
-    isidata = []
-    good_units = []
-
-    for i, data in enumerate(collection):
-        try:
-            data_idx, unit_idx = collection._index_to_data_pos(i)
-            filename = collection.get_file_dict()["Spike"][data_idx][0]
-            unit_number = collection.get_units(data_idx)[unit_idx]
-            print("Working on {} unit {}".format(
-                filename, unit_number))
-
-            count = data.spike.get_unit_spikes_count()
-            duration = data.spike.get_duration()
-            good = True
-
-            if filter_low_freq and (count / duration) < 0.1:
-                print("Reject spike frequency {}".format(count / duration))
-                good = False
-
-            elif filter_place_cells:
-                skaggs = data.loc_shuffle(nshuff=300)
-                bad_skaggs = skaggs['refSkaggs'] <= skaggs['skaggs95']
-                bad_sparsity = skaggs['refSparsity'] >= skaggs['sparsity05']
-                bad_cohere = skaggs['refCoherence'] <= skaggs['coherence95']
-
-                if bad_skaggs or bad_sparsity or bad_cohere:
-                    good = False
-                    first_str_part = "Reject "
-
-                else:
-                    good_units.append(unit_idx)
-                    first_str_part = "Accept "
-
-                print((
-                    first_str_part +
-                    "Skaggs {:2f} | {:2f}, " +
-                    "Sparsity {:2f} | {:2f}, " +
-                    "Coherence {:2f} | {:2f}").format(
-                    skaggs['refSkaggs'],
-                    skaggs['skaggs95'],
-                    skaggs['refSparsity'],
-                    skaggs['sparsity05'],
-                    skaggs['refCoherence'],
-                    skaggs['coherence95']))
-            if good:
-                placedata.append(data.place())
-                graphdata.append(data.isi_corr(bins=1, bound=[-10, 10]))
-                wavedata.append(data.wave_property())
-                headdata.append(data.hd_rate())
-                thetadata.append(data.theta_index(bins=2, bound=[-350, 350]))
-                isidata.append(data.isi(bins=int(350 / 2), bound=[0, 350]))
-
-            # Save the accumulated information
-            if unit_idx == len(collection.get_units(data_idx)) - 1:
-                spike_name = os.path.basename(filename)
-                parts = spike_name.split(".")
-                main_dir = os.path.dirname(filename)
-
-                if filter_place_cells:
-                    named_units = [
-                        collection.get_units(data_idx)[j]
-                        for j in good_units]
-                else:
-                    named_units = collection.get_units(data_idx)
-
-                if len(named_units) > 0:
-                    if filter_place_cells:
-                        print((
-                            "Plotting summary for {} " +
-                            "spatial units {}").format(
-                            spike_name, named_units))
-                    else:
-                        print((
-                            "Plotting summary for {} " +
-                            "units {}").format(
-                            spike_name, named_units))
-
-                    fig = print_place_cells(
-                        len(named_units),
-                        placedata=placedata, graphdata=graphdata,
-                        wavedata=wavedata, headdata=headdata,
-                        thetadata=thetadata, isidata=isidata,
-                        size_multiplier=4, point_size=dpi / 7.0,
-                        units=named_units)
-                    out_name = os.path.join(
-                        main_dir, out_dirname,
-                        parts[0] + "_" + parts[1] + ".png")
-                    print("Saving place cell figure to {}".format(
-                        out_name))
-                    make_dir_if_not_exists(out_name)
-                    fig.savefig(out_name, dpi=dpi)
-                    close("all")
-                    gc.collect()
-
-                    placedata = []
-                    graphdata = []
-                    wavedata = []
-                    headdata = []
-                    thetadata = []
-                    isidata = []
-                    good_units = []
-
-        except Exception as e:
-            log_exception(
-                e, "Occured during place cell summary on data" +
-                   " {} unit {} name {} in {}".format(
-                       data_idx, unit_number, spike_name, main_dir))
-    return
