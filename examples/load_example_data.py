@@ -1,3 +1,4 @@
+"""Can set up this file to provide example data for tests."""
 import os
 from neurochat.nc_data import NData
 

@@ -254,21 +254,20 @@ def main(parsed):
     p_results = raw_lfp_power(
         filtered_lfp, fs, splits, 1.5, max_lfp, prefilt=False)
 
-    # if get_entropy:
-    #     e_results = lfp_entropy(
-    #         filtered_lfp, fs, splits, 1.5, max_lfp, prefilt=False)
+    if get_entropy:
+        e_results = lfp_entropy(
+            filtered_lfp, fs, splits[-4:], 1.5, max_lfp, prefilt=False)
 
     # Calculate measures over the dist
     d_result = lfp_distribution(
         loc, max_lfp, out_dir, splits[-4:],
-        prefilt=filt, get_entropy=get_entropy)
+        prefilt=filt, get_entropy=False)
 
     if get_entropy:
         results = {
             "power": p_results,
-            # "entropy": e_results,
+            "entropy": e_results,
             "avg_power": d_result[0],
-            "avg_entropy": d_result[1]
         }
     else:
         results = {

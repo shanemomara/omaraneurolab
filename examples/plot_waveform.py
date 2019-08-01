@@ -1,3 +1,4 @@
+"""Simple example to plot the waveform of a cell."""
 from load_example_data import load_data
 
 import matplotlib.pyplot as plt

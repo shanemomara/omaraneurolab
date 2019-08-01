@@ -468,8 +468,6 @@ def spike_times(collection, filter_speed=False, **kwargs):
 
 # TODO consider multiprocessing this here
 # from multiprocessing import Process, Queue
-# TODO could also return a set of results to add to
-# NC control
 def place_cell_summary(
         collection, dpi=150, out_dirname="nc_plots",
         filter_place_cells=True, filter_low_freq=True):

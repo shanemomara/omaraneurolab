@@ -1,3 +1,4 @@
+"""Plot all spatial cells in an Axona directory."""
 from neurochat.nc_datacontainer import NDataContainer
 import neurochat.nc_containeranalysis as nca
 
