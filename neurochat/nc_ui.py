@@ -490,7 +490,11 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         """
 
         self.setWindowTitle(_translate("MainWindow", "NeuroChaT", None))
-        self.setWindowIcon(QtGui.QIcon("icon_48.png"))
+        # <-- absolute dir the script is in
+        script_dir = os.path.dirname(__file__)
+        rel_path = "../NeuroChat.png"
+        abs_file_path = os.path.join(script_dir, rel_path)
+        self.setWindowIcon(QtGui.QIcon(abs_file_path))
 
     def start(self):
         """
