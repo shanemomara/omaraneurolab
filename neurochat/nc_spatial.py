@@ -1449,14 +1449,14 @@ class NSpatial(NAbstract):
         pmap[tmap == 0] = None
         pfield, largest_group = NSpatial.place_field(
             pmap, thresh, required_neighbours)
-        if largest_group == 0:
-            if smooth_place:
-                info = "where the place field was calculated from smoothed data"
-            else:
-                info = "where the place field was calculated from raw data"
-            logging.info(
-                "Lack of high firing neighbours to identify place field " +
-                info)
+        # if largest_group == 0:
+        #     if smooth_place:
+        #         info = "where the place field was calculated from smoothed data"
+        #     else:
+        #         info = "where the place field was calculated from raw data"
+        #     logging.info(
+        #         "Lack of high firing neighbours to identify place field " +
+        #         info)
         centroid = NSpatial.place_field_centroid(pfield, pmap, largest_group)
         #centroid is currently in co-ordinates, convert to pixels
         centroid = centroid * pixel + (pixel * 0.5)
