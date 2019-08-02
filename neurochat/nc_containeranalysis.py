@@ -350,6 +350,11 @@ def multi_unit_activity(collection, time_range=None, strip=False, **kwargs):
     ----------
     collection : NDataContainer
         The collection of units to detect Muti unit activity.
+    time_range : tuple, default None
+        Optional time range to consider for the MUA.
+    strip: bool, default False
+        If working with one data object in the collection, 
+        remove the surrounding array in output dict.
 
     kwargs
     ------
