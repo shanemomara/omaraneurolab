@@ -127,13 +127,15 @@ def lfp_entropy(
 
 def lfp_distribution(
         filename, upper, out_dir, splits,
-        prefilt=False, get_entropy=False):
+        prefilt=False, get_entropy=False, return_all=False):
     lfp_s_array = []
     lfp_t_array = []
     data = NData()
     avg = OrderedDict()
     ent = OrderedDict()
 
+    if return_all:
+        power_arr = np.zeros(shape=(32, len(splits)))
     for j in range(len(splits)):
         avg["Avg power {}".format(j)] = 0
         if get_entropy:
@@ -159,6 +161,7 @@ def lfp_distribution(
         for j in range(len(splits)):
             avg["Avg power {}".format(j)] += (
                 p_result["Raw power {}".format(j)] / 32)
+            power_arr[i, j] = p_result["Raw power {}".format(j)]
         if get_entropy:
             p_result = lfp_entropy(
                 lfp_samples, fs, splits, 1.5, upper, prefilt=False)
@@ -174,6 +177,8 @@ def lfp_distribution(
     fig.colorbar(h[3])
     fig.savefig(os.path.join(out_dir, "dist.png"))
 
+    if return_all:
+        return avg, ent, power_arr
     return avg, ent
 
 
@@ -201,7 +206,8 @@ def main(parsed):
     out_loc = parsed.out_loc
     every_min = parsed.every_min
     recording_dur = parsed.recording_dur
-    get_entropy = parsed.entropy
+    get_entropy = parsed.get_entropy
+    return_all = parsed.g_all
 
     # Do setup
     if not loc:
@@ -261,13 +267,14 @@ def main(parsed):
     # Calculate measures over the dist
     d_result = lfp_distribution(
         loc, max_lfp, out_dir, splits[-4:],
-        prefilt=filt, get_entropy=False)
+        prefilt=filt, get_entropy=get_entropy, return_all=return_all)
 
     if get_entropy:
         results = {
             "power": p_results,
             "entropy": e_results,
             "avg_power": d_result[0],
+            "avg_entropy": d_result[1]
         }
     else:
         results = {
@@ -277,6 +284,7 @@ def main(parsed):
 
     # Output the results
     result_to_csv(results, out_dir)
+    return results, d_result[-1]
 
     # This is for theta and delta power
     # for i, split in enumerate(splits):
@@ -287,7 +295,7 @@ def main(parsed):
     #     f.write("{}: {}\n".format(i, results))
 
 
-if __name__ == "__main__":
+def main_cfg():
     parser = argparse.ArgumentParser(description="Parse a program location")
     parser.add_argument(
         "--nofilt", "-nf", action="store_true",
@@ -319,9 +327,91 @@ if __name__ == "__main__":
         help="How long in minutes the recording lasted"
     )
     parser.add_argument(
-        "--entropy", "-e", action="store_true",
+        "--get_entropy", "-e", action="store_true",
         help="Calculate entropy"
+    )
+    parser.add_argument(
+        "--g_all", "-a", action="store_true",
+        help="Get all values instead of just average"
     )
     parsed = parser.parse_args()
 
     main(parsed)
+
+
+def main_py():
+    root = "C:\\Users\\smartin5\\Recordings\\ER\\"
+    from types import SimpleNamespace
+    args = SimpleNamespace(
+        max_freq=40,
+        nofilt=False,
+        loc=os.path.join(root, "29072019-bt\\29072019-bt-1st30min-LFP.eeg"),
+        eeg_num="13",
+        splits=[],
+        out_loc="firstt",
+        every_min=False,
+        recording_dur=1800,
+        get_entropy=False,
+        g_all=True
+    )
+    _, all1 = main(args)
+
+    args = SimpleNamespace(
+        max_freq=40,
+        nofilt=False,
+        loc=os.path.join(
+            root, "30072019-bt\\30072019-bt-1st30min-LFP-DSER.eeg"),
+        eeg_num="13",
+        splits=[],
+        out_loc="firstt",
+        every_min=False,
+        recording_dur=1800,
+        get_entropy=False,
+        g_all=True
+    )
+    _, all2 = main(args)
+
+    args = SimpleNamespace(
+        max_freq=40,
+        nofilt=False,
+        loc=os.path.join(root, "29072019-bt\\29072019-bt-last30min-LFP.eeg"),
+        eeg_num="13",
+        splits=[],
+        out_loc="lastt",
+        every_min=False,
+        recording_dur=1800,
+        get_entropy=False,
+        g_all=True
+    )
+    _, all3 = main(args)
+
+    args = SimpleNamespace(
+        max_freq=40,
+        nofilt=False,
+        loc=os.path.join(
+            root, "30072019-bt\\30072019-bt-last30min-LFP-DSER.eeg"),
+        eeg_num="13",
+        splits=[],
+        out_loc="lastt",
+        every_min=False,
+        recording_dur=1800,
+        get_entropy=False,
+        g_all=True
+    )
+    _, all4 = main(args)
+
+    difference = all2 - all1
+    print(difference.flatten() * 1000)
+    print("Mean difference is {:4f}".format(np.mean(difference)))
+    print("Std deviation is {:4f}".format(np.std(difference)))
+
+    difference = all4 - all3
+    print(difference.flatten() * 1000)
+    print("Mean difference is {:4f}".format(np.mean(difference)))
+    print("Std deviation is {:4f}".format(np.std(difference)))
+    return
+
+
+if __name__ == "__main__":
+    # main_cfg()
+    main_py()
