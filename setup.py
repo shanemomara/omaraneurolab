@@ -27,8 +27,7 @@ INSTALL_REQUIRES = [
     'scikit_learn >= 0.20.2',
     'PyYAML >= 4.2b1',
     'xlrd',
-    'openpyxl',
-    'pyinstaller'
+    'openpyxl'
 ]
 
 PACKAGES = [
