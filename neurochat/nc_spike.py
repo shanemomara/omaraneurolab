@@ -577,6 +577,7 @@ class NSpike(NBase):
             return w_end- w_start
 
         num_spikes = self.get_unit_spikes_count()
+        _result['Number of Spikes'] = num_spikes
         _result['Mean Spiking Freq'] = num_spikes/ self.get_duration()
         _waves = self.get_unit_waves()
         samples_per_spike = self.get_samples_per_spike()
