@@ -16,7 +16,7 @@ import numpy as np
 
 from neurochat.nc_data import NData
 from neurochat.nc_utils import get_all_files_in_dir
-from neurochat.nc_utils import has_ext
+from neurochat.nc_utils import has_ext, log_exception
 
 
 class NDataContainer():
@@ -730,14 +730,18 @@ class NDataContainer():
         """Return the data object with corresponding unit at index."""
         data_index, unit_index = self._index_to_data_pos(index)
         if self._load_on_fly:
-            if data_index == self._last_data_pt[0]:
-                result = self._last_data_pt[1]
-            else:
-                result = NData()
-                for key, vals in self.get_file_dict().items():
-                    descriptor = vals[data_index]
-                    self._load(key, descriptor, idx=data_index, ndata=result)
-                self._last_data_pt = (data_index, result)
+            try:
+                if data_index == self._last_data_pt[0]:
+                    result = self._last_data_pt[1]
+                else:
+                    result = NData()
+                    for key, vals in self.get_file_dict().items():
+                        descriptor = vals[data_index]
+                        self._load(key, descriptor,
+                                   idx=data_index, ndata=result)
+                    self._last_data_pt = (data_index, result)
+            except Exception as e:
+                log_exception(e, "During loading data")
         else:
             result = self.get_data(data_index)
         if len(self.get_units()) > 0:
