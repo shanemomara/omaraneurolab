@@ -895,15 +895,18 @@ def hd_spike_time_lapse(hd_data):
     nfig = int(np.ceil(nkey/4))
     for _ in range(nfig):
         f, ax = plt.subplots(2, 2, subplot_kw=dict(projection='polar'))
+        plt.subplots_adjust(top=0.9, hspace=0.55)
         fig.append(f)
         axs.extend(list(ax.flatten()))
-
-    kcount = 0
-    for key in keys:
-        axs[kcount] = hd_spike(hd_data[key], ax=axs[kcount])
-        axs[kcount].set_title(key)
-        kcount += 1
-
+        
+    for i, ax in enumerate(axs):
+        if i < len(keys):
+            key = keys[i]
+            nice_key = _nice_lapse_key(key)
+            ax = hd_spike(hd_data[key], ax=ax)
+            ax.set_title(nice_key, y=1, fontsize=10)
+        else:
+            ax.set_visible(False)
     return fig
 
 def hd_rate_time_lapse(hd_data):
@@ -930,15 +933,26 @@ def hd_rate_time_lapse(hd_data):
     nfig = int(np.ceil(nkey/4))
     for _ in range(nfig):
         f, ax = plt.subplots(2, 2, subplot_kw=dict(projection='polar'))
+        plt.subplots_adjust(top=0.9, hspace=0.55)
         fig.append(f)
         axs.extend(list(ax.flatten()))
-
-    kcount = 0
-    for key in keys:
-        axs[kcount] = hd_rate(hd_data[key], ax=axs[kcount])
-        axs[kcount].set_title(key)
-        kcount += 1
+        
+    for i, ax in enumerate(axs):
+        if i < len(keys):
+            key = keys[i]
+            nice_key = _nice_lapse_key(key)
+            ax = hd_rate(hd_data[key], ax=ax)
+            ax.set_title(nice_key, y=1, fontsize=10)
+        else:
+            ax.set_visible(False)
     return fig
+
+def _nice_lapse_key(key):
+    parts = key.split("To")
+    end = parts[1][-3:] if parts[1][-3:].lower() == "end" else (
+        parts[1][0] + " " + parts[1][-3:])
+    nice_key = parts[0] + " to " + end
+    return nice_key
 
 def hd_time_shift(hd_shift_data):
     """
@@ -1159,7 +1173,7 @@ def loc_firing(place_data):
     ax.set_xlabel('cm')
     #ax.set_ylabel('YLoc')
 #    fig.colorbar(cax)
-    plt.tight_layout()
+    fig.set_tight_layout(True)
     return fig
 
 # Created by Sean Martin: 14/02/2019
@@ -1191,7 +1205,7 @@ def loc_firing_and_place(place_data, smooth=True):
     ax3 = loc_place_field(place_data, ax=fig.add_subplot(133, sharey=ax1))
     ax3.set_xlabel('cm')
 
-    plt.tight_layout(pad=0.7)
+    fig.set_tight_layout(True, pad=0.7)
     return fig
 
 # Created by Sean Martin: 13/02/2019
