@@ -1381,7 +1381,7 @@ class NLfp(NBase):
             while True:
                 line = f.readline()
                 try:
-                    line = line.decode('UTF-8')
+                    line = line.decode('latin-1')
                 except:
                     break
 
@@ -1407,6 +1407,8 @@ class NLfp(NBase):
                     self._set_bytes_per_sample(int(''.join(line.split()[1:])))
                 if line.startswith('num_'+ file_extension[:3].upper() + '_samples'):
                     self._set_total_samples(int(''.join(line.split()[1:])))
+                if line.startswith("data_start"):
+                    break
 
             num_samples = self.get_total_samples()
             bytes_per_sample = self.get_bytes_per_sample()

@@ -1522,7 +1522,7 @@ class NSpike(NBase):
             while True:
                 line = f.readline()
                 try:
-                    line = line.decode('UTF-8')
+                    line = line.decode('latin-1')
                 except:
                     break
 
@@ -1554,6 +1554,8 @@ class NSpike(NBase):
                     self._set_bytes_per_sample(int(''.join(line.split()[1:])))
                 if line.startswith('num_spikes'):
                     self._set_total_spikes(int(''.join(line.split()[1:])))
+                if line.startswith('data_start'):
+                    break
 
             num_spikes = self.get_total_spikes()
             bytes_per_timestamp = self.get_timestamp_bytes()
