@@ -12,8 +12,8 @@ LONG_DESCRIPTION = """NeuroChaT is a neuroscience toolbox written in Python.
 DISTNAME = 'neurochat'
 MAINTAINER = 'Md Nurul Islam and Sean Martin'
 MAINTAINER_EMAIL = 'martins7@tcd.ie'
-URL = 'https://github.com/flabby99/NeuroChaT'
-DOWNLOAD_URL = 'https://github.com/flabby99/NeuroChaT'
+URL = 'https://github.com/seankmartin/NeuroChaT'
+DOWNLOAD_URL = 'https://github.com/seankmartin/NeuroChaT'
 VERSION = '1.0'
 
 INSTALL_REQUIRES = [
