@@ -16,6 +16,8 @@ in NeuroChaT.
 import os
 import sys
 import logging
+import webbrowser
+
 
 from PyQt5 import QtCore, QtWidgets, QtGui
 
@@ -223,6 +225,10 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.angle_act.triggered.connect(self.angle_calculation)
         self.multi_place_cell_act.triggered.connect(self.place_cell_plots)
 
+        self.view_help_act.triggered.connect(self.view_help)
+        # self.tutorial_act.triggered.connect(self.tutorial)
+        self.about_nc_act.triggered.connect(self.about_nc)
+
         self.verify_units_act.triggered.connect(self.verify_units)
         self.evaluate_act.triggered.connect(self.cluster_evaluate)
         self.compare_units_act.triggered.connect(self.compare_units)
@@ -304,8 +310,8 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 
         self.view_help_act = self.help_menu.addAction("NeuroChaT documentation")
         self.view_help_act.setShortcut(QtGui.QKeySequence("F1"))
-        self.tutorial_act = self.help_menu.addAction("NeuroChaT tutorial")
-        self.help_menu.addSeparator()
+        # self.tutorial_act = self.help_menu.addAction("NeuroChaT tutorial")
+        # self.help_menu.addSeparator()
         self.about_nc_act = self.help_menu.addAction("About NeuroChaT")
 
     def selectGraphicFormatUi(self):
@@ -891,6 +897,19 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             else:
                 logging.error('The input data format not supported!')
             self._control.set_lfp_file(lfp_file)
+    
+    def view_help(self):
+        script_dir = os.path.dirname(__file__)
+        rel_path = "../docs/index.html"
+        url = os.path.join(script_dir, rel_path)
+        webbrowser.open_new(url)
+
+    def tutorial(self):
+        pass
+    
+    def about_nc(self):
+        url = "https://github.com/seankmartin/NeuroChaT/wiki"
+        webbrowser.open_new(url)
 
     def _set_dictation(self):
         """
