@@ -2042,7 +2042,7 @@ class NSpatial(NAbstract):
         dfit_result = linfit(shift, delta)
         deltaFit = dfit_result['yfit']
         sortInd = np.argsort(deltaFit)
-        _results['HD ATI'] = np.interp(0, deltaFit[sortInd], shift[sortInd])*1000 if dfit_result['Pearson R'] >= 0.85 else None
+        _results['HD ATI'] = np.interp(0, deltaFit[sortInd], shift[sortInd])*1000 if dfit_result['Pearson R'] >= 0.85 else np.nan
 
         graph_data['deltaFit'] = deltaFit
         imax = sg.argrelmax(skaggsUpsamp)[0]
