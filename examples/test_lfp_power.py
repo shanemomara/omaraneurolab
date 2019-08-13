@@ -16,7 +16,8 @@ except Exception as e:
 
 def plot_lfp_signal(
         lfp, lower, upper, out_name,
-        filt=True, nsamples=None, nsplits=3):
+        filt=True, nsamples=None, offset=0,
+        nsplits=3, figsize=(32, 4), ylim=(-0.4, 0.4)):
     fs = lfp.get_sampling_rate()
 
     if nsamples is None:
@@ -29,14 +30,18 @@ def plot_lfp_signal(
     else:
         filtered_lfp = lfp.get_samples()
 
-    fig, axes = plt.subplots(3, 1, figsize=(32, 4))
+    fig, axes = plt.subplots(nsplits, 1, figsize=figsize)
     for i in range(nsplits):
-        start = i * (nsamples // nsplits)
-        end = (i + 1) * (nsamples // nsplits)
-        axes[i].plot(
+        start = int(offset + i * (nsamples // nsplits))
+        end = int(offset + (i + 1) * (nsamples // nsplits))
+        if nsplits == 1:
+            ax = axes
+        else:
+            ax = axes[i]
+        ax.plot(
             lfp.get_timestamp()[start:end],
             filtered_lfp[start:end], color='k')
-        axes[i].set_ylim([-0.7, 0.7])
+        ax.set_ylim(ylim)
     plt.tight_layout()
     fig.savefig(out_name, dpi=400)
     plt.close(fig)
@@ -295,6 +300,24 @@ def main(parsed):
     #     f.write("{}: {}\n".format(i, results))
 
 
+def quick_test(load_loc):
+    in_dir = os.path.dirname(load_loc)
+    ndata = NData()
+    ndata.lfp.load(load_loc)
+    out_loc = "nc_signal"
+    out_dir = os.path.join(in_dir, out_loc)
+    out_name = os.path.join(out_dir, "full_signal.png")
+    make_dir_if_not_exists(out_name)
+    out_name = os.path.join(
+        in_dir, out_dir, "full_signal_filt.png")
+    filtered_lfp = plot_lfp_signal(
+        ndata.lfp, 5, 11, out_name, filt=True,
+        offset=ndata.lfp.get_sampling_rate() * 50,
+        nsamples=ndata.lfp.get_sampling_rate() * 50,
+        nsplits=1, ylim=(-0.3, 0.3),
+        figsize=(20, 8))
+
+
 def main_cfg():
     parser = argparse.ArgumentParser(description="Parse a program location")
     parser.add_argument(
@@ -351,7 +374,7 @@ def main_py():
         out_loc="firstt",
         every_min=False,
         recording_dur=1800,
-        get_entropy=False,
+        get_entropy=True,
         g_all=True
     )
     _, all1 = main(args)
@@ -366,7 +389,7 @@ def main_py():
         out_loc="firstt",
         every_min=False,
         recording_dur=1800,
-        get_entropy=False,
+        get_entropy=True,
         g_all=True
     )
     _, all2 = main(args)
@@ -380,7 +403,7 @@ def main_py():
         out_loc="lastt",
         every_min=False,
         recording_dur=1800,
-        get_entropy=False,
+        get_entropy=True,
         g_all=True
     )
     _, all3 = main(args)
@@ -395,7 +418,7 @@ def main_py():
         out_loc="lastt",
         every_min=False,
         recording_dur=1800,
-        get_entropy=False,
+        get_entropy=True,
         g_all=True
     )
     _, all4 = main(args)
@@ -414,4 +437,13 @@ def main_py():
 
 if __name__ == "__main__":
     # main_cfg()
-    main_py()
+    # main_py()
+
+    root = r"F:\cla-r-07022019"
+    name = "cla-r-07022019-L2.eeg"
+    load_loc = os.path.join(root, name)
+    quick_test(load_loc)
+    root = r"F:\cla-r-08022019"
+    name = "cla-r-08022019-L2.eeg"
+    load_loc = os.path.join(root, name)
+    quick_test(load_loc)
