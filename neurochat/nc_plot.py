@@ -406,6 +406,7 @@ def plv(plv_data):
 
     fig2.suptitle('Frequency analysis of spike-triggered lfp metrics')
 
+    plt.subplots_adjust(wspace=0.3, hspace=0.35)
     return fig1, fig2
 
 def plv_tr(plv_data):
@@ -546,7 +547,7 @@ def plv_bs(plv_data):
         ax.set_xlabel('Frequency (Hz)')
 
     fig2.suptitle('Frequency analysis of spike-triggered lfp metrics (bootstrap)')
-
+    plt.subplots_adjust(wspace=0.3, hspace=0.35)
     return fig1, fig2
 
 def spike_phase(phase_data):
@@ -1205,7 +1206,8 @@ def loc_firing_and_place(place_data, smooth=True):
     ax3 = loc_place_field(place_data, ax=fig.add_subplot(133, sharey=ax1))
     ax3.set_xlabel('cm')
 
-    fig.set_tight_layout(True, pad=0.7)
+    fig.set_tight_layout(True)
+    plt.subplots_adjust(wspace=0.25)
     return fig
 
 # Created by Sean Martin: 13/02/2019
@@ -1312,11 +1314,15 @@ def loc_spike_time_lapse(place_data):
         fig.append(f)
         axs.extend(list(ax.flatten()))
 
-    kcount = 0
-    for key in keys:
-        loc_spike(place_data[key], ax=axs[kcount])
-        axs[kcount].set_title(key)
-        kcount += 1
+    for i, ax in enumerate(axs):
+        if i < len(keys):
+            key = keys[i]
+            loc_spike(place_data[key], ax=ax)
+            nice_key = _nice_lapse_key(key)
+            ax.set_title(nice_key)
+        else:
+            ax.set_visible(False)
+
     return fig
 
 def loc_rate_time_lapse(place_data):
@@ -1347,11 +1353,14 @@ def loc_rate_time_lapse(place_data):
         fig.append(f)
         axs.extend(list(ax.flatten()))
 
-    kcount = 0
-    for key in keys:
-        loc_rate(place_data[key], ax=axs[kcount])
-        axs[kcount].set_title(key)
-        kcount += 1
+    for i, ax in enumerate(axs):
+        if i < len(keys):
+            key = keys[i]
+            loc_rate(place_data[key], ax=ax)
+            nice_key = _nice_lapse_key(key)
+            ax.set_title(nice_key)
+        else:
+            ax.set_visible(False)
 
     return fig
 
@@ -1411,6 +1420,7 @@ def loc_shuffle(loc_shuffle_data):
         ax.set_ylabel('Count')
 
     fig1.suptitle('Distribution of locational firing specificity indices')
+    plt.subplots_adjust(hspace=0.35, wspace=0.23)
 
     return fig1
 
@@ -1639,7 +1649,7 @@ def border(border_data):
     ax.set_xlabel('Angular distance')
     ax.set_ylabel('Active pixel count')
     plt.autoscale(enable=True, axis='both', tight=True)
-
+    plt.subplots_adjust(hspace=0.5)
     fig2 = plt.figure()
     ax = plt.gca()
     pcm = ax.pcolormesh(border_data['cBinsInterp'], border_data['dBinsInterp'], \
