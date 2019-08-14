@@ -1580,7 +1580,7 @@ class NSpike(NBase):
             max_ADC_count = 2**(8*bytes_per_sample - 1) - 1
             max_byte_value = 2**(8*bytes_per_sample)
 
-            with open(set_file, 'r') as f_set:
+            with open(set_file, 'r', encoding='latin-1') as f_set:
                 lines = f_set.readlines()
                 gain_lines = dict([tuple(map(int, re.findall(r'\d+.\d+|\d+', line)[0].split()))\
                             for line in lines if 'gain_ch_' in line])
