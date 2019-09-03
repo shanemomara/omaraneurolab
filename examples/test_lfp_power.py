@@ -69,7 +69,7 @@ def raw_lfp_power(lfp_samples, fs, splits, lower, upper, prefilt=False):
     return results
 
 
-def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
+def lfp_power(new_data, i, max_f, in_dir, prefilt=False, should_plot=True):
     # 1.6 or 2 give similar
     filtset = [10, 1.5, max_f, 'bandpass']
 
@@ -78,23 +78,18 @@ def lfp_power(new_data, i, max_f, in_dir, prefilt=False):
         first_name="Theta", second_name="Delta",
         totalband=filtset[1:3])
 
-    graphData = new_data.spectrum(
-        window=1.6, noverlap=1, nfft=1000, ptype='psd', prefilt=prefilt,
-        filtset=filtset, fmax=max_f, db=False, tr=False)
-    fig = nc_plot.lfp_spectrum(graphData)
-    fig.savefig(os.path.join(in_dir, "spec" + str(i) + ".png"))
+    if should_plot:
+        graphData = new_data.spectrum(
+            window=1.6, noverlap=1, nfft=1000, ptype='psd', prefilt=prefilt,
+            filtset=filtset, fmax=max_f, db=False, tr=False)
+        fig = nc_plot.lfp_spectrum(graphData)
+        fig.savefig(os.path.join(in_dir, "spec" + str(i) + ".png"))
 
-    graphData = new_data.spectrum(
-        window=1.6, noverlap=1, nfft=1000, ptype='psd', prefilt=prefilt,
-        filtset=filtset, fmax=max_f, db=True, tr=True)
-    fig = nc_plot.lfp_spectrum_tr(graphData)
-    fig.savefig(os.path.join(in_dir, "spec_tr" + str(i) + ".png"))
-
-    lfp_samples = new_data.lfp.get_samples()
-    fs = new_data.lfp.get_sampling_rate()
-    if prefilt:
-        lfp_samples = butter_filter(
-            lfp_samples, fs, 10, 1.5, max_f, 'bandpass')
+        graphData = new_data.spectrum(
+            window=1.6, noverlap=1, nfft=1000, ptype='psd', prefilt=prefilt,
+            filtset=filtset, fmax=max_f, db=True, tr=True)
+        fig = nc_plot.lfp_spectrum_tr(graphData)
+        fig.savefig(os.path.join(in_dir, "spec_tr" + str(i) + ".png"))
 
     return new_data.get_results()
 
@@ -132,7 +127,8 @@ def lfp_entropy(
 
 def lfp_distribution(
         filename, upper, out_dir, splits,
-        prefilt=False, get_entropy=False, return_all=False):
+        prefilt=False, get_entropy=False,
+        get_theta=False, return_all=False):
     lfp_s_array = []
     lfp_t_array = []
     data = NData()
@@ -187,21 +183,64 @@ def lfp_distribution(
     return avg, ent
 
 
-def result_to_csv(result, out_dir):
+def lfp_theta_dist(filename, max_f, splits, prefilt=False):
+    data = NData()
+    filtset = [10, 1.5, max_f, 'bandpass']
+    # This is for theta and delta power
+    power_arr = np.zeros(shape=(6, 32, len(splits)))
+    for i in range(32):
+        end = str(i + 1)
+        if end == "1":
+            load_loc = filename
+        else:
+            load_loc = filename + end
+        data.lfp.load(load_loc)
+        for j, split in enumerate(splits):
+            new_data = data.subsample(split)
+            new_data.bandpower_ratio(
+                [5, 11], [1.5, 4], 1.33, band_total=prefilt,
+                first_name="Theta", second_name="Delta",
+                totalband=filtset[1:3])
+            t_result = new_data.get_results()
+            power_arr[0, i, j] = t_result["Theta Power"]
+            power_arr[1, i, j] = t_result["Delta Power"]
+            power_arr[2, i, j] = t_result["Theta Delta Power Ratio"]
+            power_arr[3, i, j] = t_result["Theta Power (Relative)"]
+            power_arr[4, i, j] = t_result["Delta Power (Relative)"]
+            power_arr[5, i, j] = t_result["Total Power"]
+
+    return power_arr
+
+
+def result_to_csv(result, out_dir, out_name="results.csv"):
     def arr_to_str(name, arr):
         out_str = name
         for val in arr:
-            out_str = "{},{:2f}".format(out_str, val)
+            if isinstance(val, str):
+                out_str = "{},{}".format(out_str, val)
+            else:
+                out_str = "{},{:2f}".format(out_str, val)
         return out_str
 
-    with open(os.path.join(out_dir, "results.csv"), "w") as f:
+    out_loc = os.path.join(out_dir, out_name)
+    make_dir_if_not_exists(out_loc)
+    with open(out_loc, "w") as f:
         for key, val in result.items():
-            out_str = arr_to_str(key, val.values())
-            print(out_str)
+            if isinstance(val, dict):
+                out_str = arr_to_str(key, val.values())
+            elif isinstance(val, np.ndarray):
+                out_str = arr_to_str(key, val.flatten())
+            elif isinstance(val, list):
+                out_str = arr_to_str(key, val)
+            else:
+                print("Unrecognised type {} quitting".format(
+                    type(val)
+                ))
+                exit(-1)
             f.write(out_str + "\n")
 
 
-def main(parsed):
+def main(parsed, opt_merge=None):
     # Extract parsed args
     max_lfp = parsed.max_freq
     filt = not parsed.nofilt
@@ -230,6 +269,7 @@ def main(parsed):
         for i in range(len(split_s) // 2):
             splits.append((split_s[i * 2], split_s[i * 2 + 1]))
 
+    # Always include the full recording in this
     splits.append((0, recording_dur * 60))
     if eeg_num != "1":
         load_loc = loc + eeg_num
@@ -289,36 +329,52 @@ def main(parsed):
 
     # Output the results
     result_to_csv(results, out_dir)
-    return results, d_result[-1]
 
-    # This is for theta and delta power
-    # for i, split in enumerate(splits):
-    #     new_data = ndata.subsample(split)
-    #     results = lfp_power(
-    #         new_data, i, max_lfp, out_dir, prefilt=filt)
-    #     print("For {} results are {}".format(i, results))
-    #     f.write("{}: {}\n".format(i, results))
+    t_results = lfp_theta_dist(
+        loc, max_lfp, splits, prefilt=filt)
+
+    return results, d_result[-1], t_results
 
 
-def quick_test(load_loc):
+def plot_sample_of_signal(
+        load_loc, out_dir=None, name=None, offseta=0, length=50):
+    """Plot a small filtered sample of the LFP signal."""
     in_dir = os.path.dirname(load_loc)
     ndata = NData()
     ndata.lfp.load(load_loc)
-    out_loc = "nc_signal"
-    out_dir = os.path.join(in_dir, out_loc)
-    out_name = os.path.join(out_dir, "full_signal.png")
+
+    if out_dir is None:
+        out_loc = "nc_signal"
+        out_dir = os.path.join(in_dir, out_loc)
+
+    if name is None:
+        name = "full_signal_filt.png"
+
+    out_name = os.path.join(out_dir, name)
     make_dir_if_not_exists(out_name)
-    out_name = os.path.join(
-        in_dir, out_dir, "full_signal_filt.png")
-    filtered_lfp = plot_lfp_signal(
+    plot_lfp_signal(
         ndata.lfp, 5, 11, out_name, filt=True,
-        offset=ndata.lfp.get_sampling_rate() * 50,
-        nsamples=ndata.lfp.get_sampling_rate() * 50,
+        offset=ndata.lfp.get_sampling_rate() * offseta,
+        nsamples=ndata.lfp.get_sampling_rate() * length,
         nsplits=1, ylim=(-0.3, 0.3),
         figsize=(20, 8))
 
 
+def main_plot():
+    """Main control of plotting through python options."""
+    root = r"C:\Users\smartin5\Recordings\ER"
+    name = "29082019-bt2\\29082019-bt2-2nd-LFP.eeg"
+    load_loc = os.path.join(root, name)
+    plot_sample_of_signal(
+        load_loc, out_dir="nc_results", name="Sal", offseta=400)
+    name = "30082019-bt2\\30082019-bt2-2nd-LFP.eeg"
+    load_loc = os.path.join(root, name)
+    plot_sample_of_signal(
+        load_loc, out_dir="nc_results", name="Ser", offseta=400)
+
+
 def main_cfg():
+    """Main control through cmd options."""
     parser = argparse.ArgumentParser(description="Parse a program location")
     parser.add_argument(
         "--nofilt", "-nf", action="store_true",
@@ -363,87 +419,91 @@ def main_cfg():
 
 
 def main_py():
+    """Main control through python options."""
     root = "C:\\Users\\smartin5\\Recordings\\ER\\"
     from types import SimpleNamespace
-    args = SimpleNamespace(
-        max_freq=40,
-        nofilt=False,
-        loc=os.path.join(root, "29072019-bt\\29072019-bt-1st30min-LFP.eeg"),
-        eeg_num="13",
-        splits=[],
-        out_loc="firstt",
-        every_min=False,
-        recording_dur=1800,
-        get_entropy=True,
-        g_all=True
-    )
-    _, all1 = main(args)
+    ent = False
+    arr_raw_pow = []
+    arr_band_pow = []
 
-    args = SimpleNamespace(
-        max_freq=40,
-        nofilt=False,
-        loc=os.path.join(
-            root, "30072019-bt\\30072019-bt-1st30min-LFP-DSER.eeg"),
-        eeg_num="13",
-        splits=[],
-        out_loc="firstt",
-        every_min=False,
-        recording_dur=1800,
-        get_entropy=True,
-        g_all=True
-    )
-    _, all2 = main(args)
+    names_list = [
+        ("29072019-bt\\29072019-bt-1st30min-LFP.eeg", "firstt", "bt1_1_sal"),
+        ("30072019-bt\\30072019-bt-1st30min-LFP-DSER.eeg", "firstt", "bt1_1_ser"),
+        ("29072019-bt\\29072019-bt-last30min-LFP.eeg", "lastt", "bt1_2_sal"),
+        ("30072019-bt\\30072019-bt-last30min-LFP-DSER.eeg", "lastt", "bt1_2_ser"),
+        ("29082019-nt2\\29082019-nt2-LFP-1st-Saline.eeg", "firstt", "nt2_1_sal"),
+        ("30082019-nt2\\30082019-nt2-LFP-1st.eeg", "firstt", "nt2_1_ser"),
+        ("29082019-nt2\\29082019-nt2-LFP-2nd-Saline.eeg", "lastt", "nt2_2_sal"),
+        ("30082019-nt2\\30082019-nt2-LFP-2nd.eeg", "lastt", "nt2_2_ser"),
+        ("29082019-bt2\\29082019-bt2-1st-LFP1_MERGE_29082019-bt2-1st-LFP2.eeg",
+         "firstt", "bt2_1_sal"),
+        ("30082019-bt2\\30082019-bt2-1st-LFP.eeg", "firstt", "bt2_1_ser"),
+        ("29082019-bt2\\29082019-bt2-2nd-LFP.eeg", "lastt", "bt2_2_sal"),
+        ("30082019-bt2\\30082019-bt2-2nd-LFP.eeg", "lastt", "bt2_2_ser")
+    ]
 
-    args = SimpleNamespace(
-        max_freq=40,
-        nofilt=False,
-        loc=os.path.join(root, "29072019-bt\\29072019-bt-last30min-LFP.eeg"),
-        eeg_num="13",
-        splits=[],
-        out_loc="lastt",
-        every_min=False,
-        recording_dur=1800,
-        get_entropy=True,
-        g_all=True
-    )
-    _, all3 = main(args)
+    for name in names_list:
+        args = SimpleNamespace(
+            max_freq=40,
+            nofilt=False,
+            loc=os.path.join(root, name[0]),
+            eeg_num="13",
+            splits=[],
+            out_loc=name[1],
+            every_min=False,
+            recording_dur=1800,
+            get_entropy=ent,
+            g_all=True
+        )
+        _, all1, band1 = main(args)
+        arr_raw_pow.append(all1)
+        arr_band_pow.append(band1)
 
-    args = SimpleNamespace(
-        max_freq=40,
-        nofilt=False,
-        loc=os.path.join(
-            root, "30072019-bt\\30072019-bt-last30min-LFP-DSER.eeg"),
-        eeg_num="13",
-        splits=[],
-        out_loc="lastt",
-        every_min=False,
-        recording_dur=1800,
-        get_entropy=True,
-        g_all=True
-    )
-    _, all4 = main(args)
+    for i in range(0, len(arr_raw_pow), 2):
+        difference = arr_raw_pow[i + 1] - arr_raw_pow[i]
+        print("Mean difference is {:4f}".format(np.mean(difference)))
+        print("Std deviation is {:4f}".format(np.std(difference)))
 
-    difference = all2 - all1
-    print(difference.flatten() * 1000)
-    print("Mean difference is {:4f}".format(np.mean(difference)))
-    print("Std deviation is {:4f}".format(np.std(difference)))
+    _results = OrderedDict()
+    _results["tetrodes"] = [i + 1 for i in range(32)]
 
-    difference = all4 - all3
-    print(difference.flatten() * 1000)
-    print("Mean difference is {:4f}".format(np.mean(difference)))
-    print("Std deviation is {:4f}".format(np.std(difference)))
+    for (name, arr) in zip(names_list, arr_raw_pow):
+        key_name = name[2]
+        _results[key_name] = arr
+
+    band_names = ["theta", "delta", "ratio", "theta rel", "delta rel", "total"]
+    for i, bname in enumerate(band_names):
+        for (name, arr) in zip(names_list, arr_band_pow):
+            key_name = bname + " " + name[2]
+            _results[key_name] = arr[i]
+
+    # Some t_tests
+    from scipy import stats
+    _all = arr_raw_pow
+    serine_list = [_all[i].flatten() for i in range(3, 12, 4)]
+    saline_list = [_all[i].flatten() for i in range(2, 12, 4)]
+    final1 = np.concatenate(serine_list)[3::4]
+    final2 = np.concatenate(saline_list)[3::4]
+    t_res = stats.ttest_rel(final1, final2)
+
+    headers = [
+        "Mean in Saline", "Mean in Serine",
+        "Std Error in Saline", "Std Error in Serine",
+        "T-test stat", "P-Value"]
+    _results["Summary Stats"] = headers
+
+    out_vals = [
+        final2.mean(), final1.mean(),
+        stats.sem(final2, ddof=1), stats.sem(final1, ddof=1),
+        t_res[0], t_res[1]
+    ]
+    _results["Stats Vals"] = out_vals
+    result_to_csv(_results, "nc_results", "power_results.csv")
+
     return
 
 
 if __name__ == "__main__":
     # main_cfg()
-    # main_py()
-
-    root = r"F:\cla-r-07022019"
-    name = "cla-r-07022019-L2.eeg"
-    load_loc = os.path.join(root, name)
-    quick_test(load_loc)
-    root = r"F:\cla-r-08022019"
-    name = "cla-r-08022019-L2.eeg"
-    load_loc = os.path.join(root, name)
-    quick_test(load_loc)
+    main_py()
+    # main_plot()
