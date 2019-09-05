@@ -415,10 +415,13 @@ class NDataContainer():
                 spike_name = filename + '.' + str(tetrode)
                 cut_name = filename + '_' + str(tetrode) + cluster_extension
                 lfp_name = filename + lfp_extension
+
+                if not os.path.isfile(os.path.join(directory, spike_name)):
+                    continue
                 # Don't consider files that have not been clustered
                 if not os.path.isfile(os.path.join(directory, cut_name)):
                     logging.info(
-                        "Skipping this - no cluster file named {}".format(cut_name))
+                        "Skipping tetrode {} - no cluster file named {}".format(tetrode, cut_name))
                     continue
 
                 for fname in txt_files:
@@ -428,7 +431,7 @@ class NDataContainer():
 
                 else:
                     logging.info(
-                        "Skipping this - no position file for {}".format(filename))
+                        "Skipping tetrode {} - no position file for {}".format(tetrode, filename))
                     continue
 
                 self.add_files(NDataContainer.EFileType.Spike, [spike_name])
@@ -724,7 +727,7 @@ class NDataContainer():
 
     def __repr__(self):
         """Return a string representation of the collection."""
-        return self.string_repr(pretty=False)
+        return self.string_repr(pretty=True)
 
     def __getitem__(self, index):
         """Return the data object with corresponding unit at index."""

@@ -1463,8 +1463,11 @@ class NeuroChaT(QtCore.QThread):
         """
         try:
             container = NDataContainer(load_on_fly=True)
-            container.add_axona_files_from_dir(directory)
-            nca.place_cell_summary(container, dpi=dpi)
+            container.add_axona_files_from_dir(
+                directory, tetrode_list = [i for i in range(1, 17)])
+            nca.place_cell_summary(
+                container, dpi=dpi, 
+                filter_place_cells=False, filter_low_freq=False)
         except Exception as ex:
             log_exception(ex, "In walking a directory for place cell summaries")
         return 
