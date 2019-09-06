@@ -1287,7 +1287,12 @@ class NeuroChaT(QtCore.QThread):
 
         excel_info = excel_info.assign(CentroidX=pd.Series(np.zeros(n_units)))
         excel_info = excel_info.assign(CentroidY=pd.Series(np.zeros(n_units)))
-        excel_info = excel_info.assign(AngleInDegrees=pd.Series(np.zeros(n_units)))
+        excel_info = excel_info.assign(
+            AngleInDegrees=pd.Series(np.zeros(n_units)))
+        excel_info = excel_info.assign(
+            StrongPlaceField=pd.Series(np.zeros(n_units)))
+        excel_info = excel_info.assign(
+            Skaggs=pd.Series(np.zeros(n_units)))
         
         centroids = []
         figs = []
@@ -1303,6 +1308,10 @@ class NeuroChaT(QtCore.QThread):
             centroids.append(centroid)
             excel_info.loc[i, "CentroidX"] = centroid[0]
             excel_info.loc[i, "CentroidY"] = centroid[1]
+            _res = data.get_results()
+            excel_info.loc[i, "Skaggs"] = _res["Spatial Skaggs"]
+            excel_info.loc[i, "StrongPlaceField"] = (
+                _res["Found strong place field"])
             if should_plot:
                 fig = nc_plot.loc_firing_and_place(place_data)
                 figs.append(fig)
