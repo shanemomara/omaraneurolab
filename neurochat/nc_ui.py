@@ -885,7 +885,9 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             data_format = self._control.get_data_format()
             if data_format == 'Axona':
                 spike_file = self._control.get_spike_file()
-                lfp_file = ''.join(spike_file.split('.')[:-1])+ '.'+ lfpID
+                spike_end = spike_file.split('.')[-1]
+                spike_start = spike_file[:(-(1 + len(spike_end)))]
+                lfp_file = spike_start + '.' + lfpID
             elif data_format == 'Neuralynx':
                 spike_file = self._control.get_spike_file()
                 print(os.sep.join(spike_file.split(os.sep)[:-1])+ os.sep+ lfpID)
