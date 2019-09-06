@@ -391,8 +391,9 @@ class NeuroChaT(QtCore.QThread):
 
                 cell_id = self.hdf.resolve_analysis_path(spike=self.ndata.spike, lfp=self.ndata.lfp)
                 nwb_name = self.hdf.resolve_hdfname(data=self.ndata.spike)
-                pdf_name = ''.join(nwb_name.split('.')[:-1])+ '_'+ \
-                            cell_id+ '.'+ self.get_graphic_format()
+                pdf_name = (
+                    nwb_name[:-(1 + len(nwb_name.split(".")[-1]))] +
+                    '_'+ cell_id+ '.'+ self.get_graphic_format())
 
                 info['nwb'].append(nwb_name)
                 info['cellid'].append(cell_id)
@@ -976,7 +977,7 @@ class NeuroChaT(QtCore.QThread):
         """
         if not filename:
             filename = self.config.get_nwb_file()
-        
+            
         self.hdf.set_filename(filename=filename)
     
     def close_hdf_file(self):
