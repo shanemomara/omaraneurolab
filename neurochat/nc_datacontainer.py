@@ -16,7 +16,7 @@ import numpy as np
 
 from neurochat.nc_data import NData
 from neurochat.nc_utils import get_all_files_in_dir
-from neurochat.nc_utils import has_ext, log_exception
+from neurochat.nc_utils import has_ext, log_exception, remove_extension
 
 
 class NDataContainer():
@@ -342,7 +342,7 @@ class NDataContainer():
                     lfp_ext = row[4]
                     if lfp_ext[0] != ".":
                         lfp_ext = "." + lfp_ext
-                    spike_name = spike_file.split(".")[0]
+                    spike_name = remove_extension(spike_file, keep_dot=False)
                     lfp_file = spike_name + lfp_ext
 
                     pos_files.append(spat_file)

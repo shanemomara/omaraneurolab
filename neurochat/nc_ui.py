@@ -39,6 +39,7 @@ from neurochat.nc_uimerge import UiMerge
 #reload(nc_control)
 from neurochat.nc_control import NeuroChaT
 from neurochat.nc_utils import make_dir_if_not_exists, log_exception
+from neurochat.nc_utils import remove_extension
 
 import pandas as pd
 
@@ -885,9 +886,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
             data_format = self._control.get_data_format()
             if data_format == 'Axona':
                 spike_file = self._control.get_spike_file()
-                spike_end = spike_file.split('.')[-1]
-                spike_start = spike_file[:(-(1 + len(spike_end)))]
-                lfp_file = spike_start + '.' + lfpID
+                lfp_file = remove_extension(spike_file) + lfpID
             elif data_format == 'Neuralynx':
                 spike_file = self._control.get_spike_file()
                 print(os.sep.join(spike_file.split(os.sep)[:-1])+ os.sep+ lfpID)

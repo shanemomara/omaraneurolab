@@ -1122,3 +1122,12 @@ def get_all_files_in_dir(
 def make_dir_if_not_exists(location):
     """Makes directory structure for given location"""
     os.makedirs(os.path.dirname(location), exist_ok=True)
+
+def remove_extension(filename, keep_dot=True, return_ext=False):
+    modifier = 0 if keep_dot else 1
+    ext = filename.split(".")[-1]
+    remove = len(ext) + modifier
+    if return_ext:
+        return filename[:-remove], ext
+    else:
+        return filename[:-remove]

@@ -16,6 +16,7 @@ import pandas as pd
 from PyQt5 import QtCore
 
 from neurochat.nc_utils import NLog, angle_between_points, log_exception
+from neurochat.nc_utils import remove_extension
 from neurochat.nc_data import NData
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_hdf import Nhdf
@@ -354,13 +355,13 @@ class NeuroChaT(QtCore.QThread):
             if os.path.exists(excel_file):
                 excel_info = pd.read_excel(excel_file)
                 for row in excel_info.itertuples():
-                    spike_file = row[1]+ os.sep+ row[3]
+                    spike_file = row[1] + os.sep + row[3]
                     unit_no = int(row[4])
                     lfp_id = row[5]
 
                     if self.get_data_format() == 'Axona':
-                        spatial_file = row[1]+ os.sep+ row[2]+ '.txt'
-                        lfp_file = ''.join(spike_file.split('.')[:-1])+ '.'+ lfp_id
+                        spatial_file = row[1] + os.sep + row[2] + '.txt'
+                        lfp_file = remove_extension(spike_file) + lfp_id
 
                     elif self.get_data_format() == 'Neuralynx':
                         spatial_file = row[1] + os.sep+ row[2]+ '.nvt'
@@ -392,8 +393,8 @@ class NeuroChaT(QtCore.QThread):
                 cell_id = self.hdf.resolve_analysis_path(spike=self.ndata.spike, lfp=self.ndata.lfp)
                 nwb_name = self.hdf.resolve_hdfname(data=self.ndata.spike)
                 pdf_name = (
-                    nwb_name[:-(1 + len(nwb_name.split(".")[-1]))] +
-                    '_'+ cell_id+ '.'+ self.get_graphic_format())
+                    remove_extension(nwb_name, keep_dot=False) +
+                    '_' + cell_id+ '.' + self.get_graphic_format())
 
                 info['nwb'].append(nwb_name)
                 info['cellid'].append(cell_id)
@@ -1169,7 +1170,7 @@ class NeuroChaT(QtCore.QThread):
 
                 if self.get_data_format() == 'Axona':
                     spatial_file = row[1]+ os.sep+ row[2]+ '.txt'
-                    lfp_file = ''.join(spike_file.split('.')[:-1])+ '.'+ lfp_id
+                    lfp_file = remove_extension(spike_file) + lfp_id
 
                 elif self.get_data_format() == 'Neuralynx':
                     spatial_file = row[1] + os.sep+ row[2]+ '.nvt'
@@ -1334,7 +1335,8 @@ class NeuroChaT(QtCore.QThread):
             self.close_fig(figs)
 
         try:
-            split_up = excel_file.split(".")
+            split_up = remove_extension(
+                excel_file, keep_dot=False, return_ext=True)
             output_file = split_up[0] + "_result." + split_up[1]
             excel_info.to_excel(output_file, index=False)
         except PermissionError:
