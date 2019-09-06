@@ -646,8 +646,9 @@ class NDataContainer():
         all_str_info = []
         for i in range(self.get_num_data()):
             str_info = self.get_index_info(i)
-            b_str = "{}: \n\tSpk {}\n\tUnt {}\n\tLfp {}\n\tPos {}\n\tDir {}".format(
-                i, str_info["Spike"], str_info["Units"], str_info["LFP"],
+            b_str = "{}: \n\tSpk {}\n\tUnt {}: {}\n\tLfp {}\n\tPos {}\n\tDir {}".format(
+                i, str_info["Spike"], len(str_info["Units"]),
+                str_info["Units"], str_info["LFP"],
                 str_info["Position"], str_info["Root"])
             all_str_info.append(b_str)
         return "\n".join(all_str_info)
