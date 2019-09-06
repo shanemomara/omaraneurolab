@@ -1514,6 +1514,7 @@ class NSpike(NBase):
         tet_no = words[-1].split(sep='.')[1]
         set_file = file_directory + os.sep + file_tag + '.set'
         cut_file = file_directory + os.sep + file_tag + '_' + tet_no + '.cut'
+        clu_file = file_directory + os.sep + file_tag + '.clu.' + tet_no
 
         self._set_data_source(file_name)
         self._set_source_format('Axona')
@@ -1627,7 +1628,8 @@ class NSpike(NBase):
                             np.add(chan_wave[:, j], sample_value, out=chan_wave[:, j])
                         np.putmask(chan_wave[:, j], chan_wave[:, j] > max_ADC_count, chan_wave[:, j]- max_byte_value)
                     spike_wave['ch'+ str(i+1)] = chan_wave*AD_bit_uvolts[i]
-            try:
+
+            if os.path.isfile(cut_file):
                 with open(cut_file, 'r') as f_cut:
                     while True:
                         line = f_cut.readline()
@@ -1635,10 +1637,15 @@ class NSpike(NBase):
                             break
                         if line.startswith('Exact_cut'):
                             unit_ID = np.fromfile(f_cut, dtype='uint8', sep=' ')
-            except FileNotFoundError:
+            
+            elif os.path.isfile(clu_file):
+                data = np.loadtxt(clu_file)
+                unit_ID = data[1:].flatten() - 1
+                    
+            else:
                 logging.error(
-                    "No cut file found for spike file {} please make one at {}".format(
-                        file_name, cut_file))
+                    "No cluster file found for spike file {} please make one at {} or {}".format(
+                        file_name, cut_file, clu_file))
                 return
             self._set_timestamp(spike_time)
             self._set_waveform(spike_wave)
