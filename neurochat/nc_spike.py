@@ -594,6 +594,7 @@ class NSpike(NBase):
             slope = np.gradient(wave)[1][:, :-1]
             max_val = wave.max(1)
 
+            peak_val, trough1_val = 0, 0
             if max_val.max() > 0:
                 peak_loc = [argpeak(slope[I, :]) for I in range(num_spikes)]
                 peak_val = [wave[I, peak_loc[I]] for I in range(num_spikes)]
