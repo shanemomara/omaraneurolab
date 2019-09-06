@@ -401,6 +401,7 @@ class NDataContainer():
         tetrode_list = kwargs.get("tetrode_list", default_tetrode_list)
         data_extension = kwargs.get("data_extension", ".set")
         cluster_extension = kwargs.get("cluster_extension", ".cut")
+        clu_extension = kwargs.get("clu_extension", ".clu.X")
         pos_extension = kwargs.get("pos_extension", ".txt")
         lfp_extension = kwargs.get("lfp_extension", ".eeg")
 
@@ -414,14 +415,17 @@ class NDataContainer():
             for tetrode in tetrode_list:
                 spike_name = filename + '.' + str(tetrode)
                 cut_name = filename + '_' + str(tetrode) + cluster_extension
+                clu_name = filename + clu_extension[:-1] + str(tetrode)
                 lfp_name = filename + lfp_extension
 
                 if not os.path.isfile(os.path.join(directory, spike_name)):
                     continue
                 # Don't consider files that have not been clustered
-                if not os.path.isfile(os.path.join(directory, cut_name)):
+                if not (
+                        os.path.isfile(os.path.join(directory, cut_name)) or
+                        os.path.isfile(os.path.join(directory, clu_name))):
                     logging.info(
-                        "Skipping tetrode {} - no cluster file named {}".format(tetrode, cut_name))
+                        "Skipping tetrode {} - no cluster file named {} or {}".format(tetrode, cut_name, clu_name))
                     continue
 
                 for fname in txt_files:
@@ -608,11 +612,19 @@ class NDataContainer():
     def get_index_info(self, idx):
         """Return the Spike, LFP, Position and Unit info at idx."""
         str_info = {}
+        dirnames = []
         for key in ["Spike", "LFP", "Position"]:
-            str_info[key] = (
-                os.path.basename(self.get_file_dict(key)[idx][0]))
+            name = self.get_file_dict(key)[idx][0]
+            str_info[key] = (os.path.basename(name))
+            dirnames.append(os.path.dirname(name))
         str_info["Units"] = (self.get_units(idx))
-        str_info["Root"] = os.path.dirname(self.get_file_dict("Spike")[idx][0])
+
+        if len(set(dirnames)) == 1:
+            str_info["Root"] = dirnames[0]
+        else:
+            print("Not all files are in the same directory {} {}".format(
+                ":Spike, LFP, Position: ", dirnames))
+            str_info["Root"] = dirnames
         return str_info
 
     def string_repr(self, pretty=True):
@@ -634,10 +646,9 @@ class NDataContainer():
         all_str_info = []
         for i in range(self.get_num_data()):
             str_info = self.get_index_info(i)
-            b_str = "{}: Spike {}, Units {}, LFP {}, Pos {}, Dir {}".format(
+            b_str = "{}: \n\tSpk {}\n\tUnt {}\n\tLfp {}\n\tPos {}\n\tDir {}".format(
                 i, str_info["Spike"], str_info["Units"], str_info["LFP"],
-                str_info["Position"], str_info["Root"]
-            )
+                str_info["Position"], str_info["Root"])
             all_str_info.append(b_str)
         return "\n".join(all_str_info)
 
