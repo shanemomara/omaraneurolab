@@ -28,7 +28,7 @@ from matplotlib.pyplot import savefig, close
 
 def place_cell_summary(
         collection, dpi=150, out_dirname="nc_plots",
-        filter_place_cells=True, filter_low_freq=True):
+        filter_place_cells=True, filter_low_freq=True, opt_end=""):
     """
     Quick Png spatial information summary of each cell in collection.
 
@@ -46,6 +46,8 @@ def place_cell_summary(
         is similar to actual values.
     filter_low_freq: bool, default True
         Filter out cells with spike freq less than 0.1Hz
+    opt_end : str, default ""
+        A string to append to the file output just before the extension
 
     Returns
     -------
@@ -143,7 +145,7 @@ def place_cell_summary(
                         units=named_units)
                     out_name = os.path.join(
                         main_dir, out_dirname,
-                        parts[0] + "_" + parts[1] + ".png")
+                        parts[0] + "_" + parts[1] + opt_end + ".png")
                     print("Saving place cell figure to {}".format(
                         out_name))
                     make_dir_if_not_exists(out_name)

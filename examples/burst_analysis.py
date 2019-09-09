@@ -61,7 +61,8 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
     # return hist, isi_log_bins
 
 
-def cell_classification_stats(in_dir, container, should_plot=False):
+def cell_classification_stats(
+        in_dir, container, should_plot=False, opt_end=""):
     """
     Compute a csv of cell stats for each unit in a container
 
@@ -97,24 +98,22 @@ def cell_classification_stats(in_dir, container, should_plot=False):
 
         if should_plot:
             plot_loc = os.path.join(
-                in_dir, "nc_plots",
-                parts[0] + "_" + parts[-1] + "_" +
-                str(ndata.get_unit_no()) + "_phase.png")
+                in_dir, "nc_plots", parts[0] + "_" + parts[-1] + "_" +
+                str(ndata.get_unit_no()) + "_phase" + opt_end + ".png")
             make_dir_if_not_exists(plot_loc)
             fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
             fig2.savefig(plot_loc)
             plt.close("all")
 
         if unit_idx == len(container.get_units(data_idx)) - 1:
-            end_name = parts[0] + "_" + parts[1] + "_burst" + ".csv"
-            out_name = os.path.join(
-                out_dir, end_name)
+            end_name = parts[0] + "_" + parts[1] + "_burst" + opt_end + ".csv"
+            out_name = os.path.join(out_dir, end_name)
             make_dir_if_not_exists(out_name)
             save_results_to_csv(out_name, _results)
             _results.clear()
             if should_plot:
                 plot_loc = os.path.join(
-                    in_dir, "nc_plots", parts[0] + "_lfp.png")
+                    in_dir, "nc_plots", parts[0] + "_lfp" + opt_end + ".png")
                 make_dir_if_not_exists(plot_loc)
 
                 lfp_spectrum = ndata.spectrum()
@@ -123,7 +122,7 @@ def cell_classification_stats(in_dir, container, should_plot=False):
                 plt.close(fig)
 
 
-def calculate_isi_hist(container, in_dir):
+def calculate_isi_hist(container, in_dir, opt_end=""):
     """Calculate a matrix of isi_hists for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     isi_hist_matrix = np.empty((len(container), 60), dtype=float)
@@ -137,12 +136,12 @@ def calculate_isi_hist(container, in_dir):
         ax1.axvline(x=np.log10(0.006))
 
     plot_loc = os.path.join(
-        in_dir, "nc_plots", "logisi.png")
+        in_dir, "nc_plots", "logisi" + opt_end + ".png")
     fig1.savefig(plot_loc, dpi=400)
     return isi_hist_matrix
 
 
-def calculate_auto_corr(container, in_dir):
+def calculate_auto_corr(container, in_dir, opt_end=""):
     """Calculate a matrix of autocorrs for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     auto_corr_matrix = np.empty((len(container), 20), dtype=float)
@@ -158,7 +157,7 @@ def calculate_auto_corr(container, in_dir):
         ax1.axvline(x=0.006)
 
     plot_loc = os.path.join(
-        in_dir, "nc_plots", "autocorr.png")
+        in_dir, "nc_plots", "autocorr" + opt_end + ".png")
     fig1.savefig(plot_loc, dpi=400)
     return auto_corr_matrix
 
@@ -188,7 +187,7 @@ def perform_pca(data, n_components=3, should_scale=True):
     return after_pca, pca
 
 
-def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
+def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1, opt_end=""):
     """
     Perform heirarchical clustering using ward's method
 
@@ -204,7 +203,7 @@ def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
         shc.linkage(data, method="ward", optimal_ordering=True),
         ax=ax)
     plot_loc = os.path.join(
-        in_dir, "nc_plots", "dendogram.png")
+        in_dir, "nc_plots", "dendogram" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
 
     cluster = AgglomerativeClustering(
@@ -217,11 +216,12 @@ def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1):
         data[:, plot_dim2],
         c=cluster.labels_, cmap='rainbow')
     plot_loc = os.path.join(
-        in_dir, "nc_plots", "PCAclust.png")
+        in_dir, "nc_plots", "PCAclust" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
 
 
-def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
+def pca_clustering(
+        container, in_dir, n_isi_comps=3, n_auto_comps=2, opt_end=""):
     """
     Wraps up other functions to do PCA clustering on a container.
 
@@ -236,12 +236,14 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     """
     print("Considering ISIH PCA")
     make_dir_if_not_exists(os.path.join(in_dir, "nc_plots", "dummy.txt"))
-    isi_hist_matrix = calculate_isi_hist(container, in_dir)
-    isi_after_pca, _ = perform_pca(
+    isi_hist_matrix = calculate_isi_hist(
+        container, in_dir, opt_end=opt_end)
+    isi_after_pca, isi_pca = perform_pca(
         isi_hist_matrix, n_isi_comps, True)
     print("Considering ACH PCA")
-    auto_corr_matrix = calculate_auto_corr(container, in_dir)
-    corr_after_pca, _ = perform_pca(
+    auto_corr_matrix = calculate_auto_corr(
+        container, in_dir, opt_end=opt_end)
+    corr_after_pca, corr_pca = perform_pca(
         auto_corr_matrix, n_auto_comps, True)
     joint_pca = np.empty(
         (len(container), n_isi_comps + n_auto_comps), dtype=float)
@@ -249,15 +251,30 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     joint_pca[:, n_isi_comps:n_isi_comps + n_auto_comps] = corr_after_pca
     ward_clustering(joint_pca, in_dir, 0, 3)
 
+    fname = os.path.join(in_dir, "nc_results",
+                         "PCA_results" + opt_end + ".csv")
+    with open(fname, "w") as f:
+        f.write("Type")
+        for _ in range(max(n_isi_comps, n_auto_comps)):
+            f.write(",Variance Ratio")
+        f.write("\nISI_PCA")
+        for val in isi_pca.explained_variance_ratio_:
+            f.write("," + str(val))
+        f.write("\nACH_PCA")
+        for val in corr_pca.explained_variance_ratio_:
+            f.write("," + str(val))
+        f.write("\n")
 
-def main(in_dir, tetrode_list, analysis_flags, re_filter=None, test_only=False):
+
+def main(
+        in_dir, tetrode_list, analysis_flags,
+        re_filter=None, test_only=False, opt_end=""):
     """Summarise all tetrodes in in_dir"""
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
     container.add_axona_files_from_dir(
         in_dir, tetrode_list=tetrode_list,
-        recursive=True, re_filter=re_filter,
-        verbose=test_only)
+        recursive=True, re_filter=re_filter)
     container.setup()
 
     if test_only:
@@ -265,32 +282,40 @@ def main(in_dir, tetrode_list, analysis_flags, re_filter=None, test_only=False):
 
     # Show summary of place
     if analysis_flags[0]:
+        # place_cell_summary(
+        #     container, dpi=200, out_dirname="nc_place_plots")
         place_cell_summary(
-            container, dpi=200, out_dirname="nc_place_plots")
-        place_cell_summary(
-            container, dpi=200, out_dirname="nc_cell_plots", filter_place_cells=False, filter_low_freq=False)
+            container, dpi=200, out_dirname="nc_cell_plots", filter_place_cells=False, filter_low_freq=False,
+            opt_end=opt_end)
         plt.close("all")
 
     # Do numerical analysis
     should_plot = analysis_flags[2]
     if analysis_flags[1]:
-        cell_classification_stats(in_dir, container, should_plot=should_plot)
+        cell_classification_stats(
+            in_dir, container, should_plot=should_plot, opt_end=opt_end)
 
     # Do PCA based analysis
     if analysis_flags[3]:
-        pca_clustering(container, in_dir)
+        pca_clustering(container, in_dir, opt_end=opt_end)
 
 
 if __name__ == "__main__":
     in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
-    re_filter = r"^LSR.*"
     # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     tetrode_list = [i for i in range(1, 17)]
-    test_only = True
+    test_only = False
+    optional_end = "_Sean"
+
+    # Use a Regex to filter out certain directories
+    # re_filter = None
+    re_filter = r"^LSR.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
     # Analysis 2 - more graphical output
     # Analysis 3 - PCA and Dendogram and agglomerative clustering
-    analysis_flags = [True, True, False, True]
-    main(in_dir, tetrode_list, analysis_flags, re_filter, test_only)
+    analysis_flags = [False, True, False, True]
+    main(
+        in_dir, tetrode_list, analysis_flags,
+        re_filter=re_filter, test_only=test_only, opt_end=optional_end)
