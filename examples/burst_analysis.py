@@ -79,10 +79,11 @@ def cell_classification_stats(in_dir, container, should_plot=False):
         name = spike_names[data_idx][0]
         parts = os.path.basename(name).split(".")
         note_dict = oDict()
-        note_dict["Tetrode"] = int(parts[1])
+        note_dict["Tetrode"] = int(parts[-1])
         note_dict["Unit"] = ndata.get_unit_no()
         ndata.update_results(note_dict)
         ndata.wave_property()
+        ndata.place()
         isi = ndata.isi()
         ndata.burst(burst_thresh=6)
         phase_dist = ndata.phase_dist()
@@ -97,7 +98,7 @@ def cell_classification_stats(in_dir, container, should_plot=False):
         if should_plot:
             plot_loc = os.path.join(
                 in_dir, "nc_plots",
-                parts[0] + "_" + parts[1] + "_" +
+                parts[0] + "_" + parts[-1] + "_" +
                 str(ndata.get_unit_no()) + "_phase.png")
             make_dir_if_not_exists(plot_loc)
             fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
@@ -234,6 +235,7 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     n_auto_comps - the number of principla components for auto_corr
     """
     print("Considering ISIH PCA")
+    make_dir_if_not_exists(os.path.join(in_dir, "nc_plots", "dummy.txt"))
     isi_hist_matrix = calculate_isi_hist(container, in_dir)
     isi_after_pca, _ = perform_pca(
         isi_hist_matrix, n_isi_comps, True)
@@ -248,16 +250,27 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     ward_clustering(joint_pca, in_dir, 0, 3)
 
 
-def main(in_dir, tetrode_list, analysis_flags):
+def main(in_dir, tetrode_list, analysis_flags, re_filter=None):
     """Summarise all tetrodes in in_dir"""
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
-    container.add_axona_files_from_dir(in_dir, tetrode_list=tetrode_list)
+    container.add_axona_files_from_dir(
+        in_dir, tetrode_list=tetrode_list,
+        recursive=True, re_filter=re_filter,
+        verbose=False)
     container.setup()
+    name = "file_list_" + os.path.basename(in_dir) + ".txt"
+    out_loc = os.path.join(in_dir, name)
+    with open(out_loc, 'w') as f:
+        f.write(str(container))
+    print("Wrote list of files considered to {}".format(out_loc))
 
     # Show summary of place
     if analysis_flags[0]:
-        place_cell_summary(container, dpi=200)
+        place_cell_summary(
+            container, dpi=200, out_dirname="nc_place_plots")
+        place_cell_summary(
+            container, dpi=200, out_dirname="nc_cell_plots", filter_place_cells=False, filter_low_freq=False)
         plt.close("all")
 
     # Do numerical analysis
@@ -271,12 +284,14 @@ def main(in_dir, tetrode_list, analysis_flags):
 
 
 if __name__ == "__main__":
-    in_dir = r'C:\Users\smartin5\Recordings\11092017'
-    tetrode_list = [1, 2, 3, 4, 5, 6, 7, 8]
+    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    re_filter = r"^LSR.*"
+    # in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    tetrode_list = [i for i in range(1, 17)]
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
     # Analysis 2 - more graphical output
     # Analysis 3 - PCA and Dendogram and agglomerative clustering
-    analysis_flags = [True, True, True, True]
-    main(in_dir, tetrode_list, analysis_flags)
+    analysis_flags = [True, True, False, True]
+    main(in_dir, tetrode_list, analysis_flags, re_filter)

@@ -228,6 +228,9 @@ class NDataContainer():
     def set_units(self, units='all'):
         """Set the list of units for the collection."""
         self._units = []
+        if self.get_file_dict() == {}:
+            print("Error: Can't set units for empty collection")
+            return
         if units == 'all':
             if self._load_on_fly:
                 vals = self.get_file_dict()["Spike"]
@@ -391,13 +394,16 @@ class NDataContainer():
             cluster_extension : str default .cut
             pos_extension : str default .txt
             lfp_extension : str default .eeg
+            re_filter : str default None 
+                regex string for matching filenames
 
         Returns
         -------
         None
 
         """
-        default_tetrode_list = [1, 2, 3, 4, 9, 10, 11, 12]
+        default_tetrode_list = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
         tetrode_list = kwargs.get("tetrode_list", default_tetrode_list)
         data_extension = kwargs.get("data_extension", ".set")
         cluster_extension = kwargs.get("cluster_extension", ".cut")
@@ -405,10 +411,17 @@ class NDataContainer():
         pos_extension = kwargs.get("pos_extension", ".txt")
         lfp_extension = kwargs.get("lfp_extension", ".eeg")
 
+        # filter_s should be passed
+        re_filter = kwargs.get("re_filter", None)
+
         files = get_all_files_in_dir(
-            directory, data_extension, recursive=recursive, verbose=verbose)
+            directory, data_extension,
+            recursive=recursive, verbose=verbose,
+            re_filter=re_filter, return_absolute=True)
         txt_files = get_all_files_in_dir(
-            directory, pos_extension, recursive=recursive, verbose=verbose)
+            directory, pos_extension,
+            recursive=recursive, verbose=verbose,
+            re_filter=re_filter, return_absolute=True)
 
         for filename in files:
             filename = filename[:-len(data_extension)]

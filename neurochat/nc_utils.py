@@ -12,6 +12,7 @@ from collections import OrderedDict as oDict
 import os
 from os import listdir
 from os.path import isfile, isdir, join
+import re
 
 import pandas as pd
 import numpy as np
@@ -1062,7 +1063,8 @@ def has_ext(filename, ext):
 
 
 def get_all_files_in_dir(
-        in_dir, ext=None, return_absolute=True, recursive=False, verbose=False):
+        in_dir, ext=None, return_absolute=True, 
+        recursive=False, verbose=False, re_filter=None):
     """
     Get all files in the directory with the given extension.
     
@@ -1087,11 +1089,17 @@ def get_all_files_in_dir(
         print("Non existant directory " + str(in_dir))
         return []
 
-    def ok_file(in_dir, f): 
-        return isfile(join(in_dir, f)) and has_ext(f, ext)
+    def match_filter(f):
+        if re_filter is None:
+            return True
+        search_res = re.search(re_filter, f)
+        return search_res is not None
 
-    def convert_to_path(in_dir, f): 
-        return join(in_dir, f) if return_absolute else f
+    def ok_file(root_dir, f):
+        return has_ext(f, ext) and isfile(join(root_dir, f)) and match_filter(f)
+
+    def convert_to_path(root_dir, f): 
+        return join(root_dir, f) if return_absolute else f
 
     if verbose:
         print("Adding following files from {}".format(in_dir))
@@ -1099,9 +1107,16 @@ def get_all_files_in_dir(
     if recursive:
         onlyfiles = []
         for root, _, filenames in os.walk(in_dir):
+            start_root = root[:len(in_dir)]
+
+            if len(root) == len(start_root):
+                end_root = ""
+            else:
+                end_root = root[len(in_dir + os.sep):]
             for filename in filenames:
-                if ok_file(root, filename):
-                    to_add = convert_to_path(root, filename)
+                filename = join(end_root, filename)
+                if ok_file(start_root, filename):
+                    to_add = convert_to_path(start_root, filename)
                     if verbose:
                         print(to_add)
                     onlyfiles.append(to_add)
