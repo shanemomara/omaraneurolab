@@ -250,20 +250,18 @@ def pca_clustering(container, in_dir, n_isi_comps=3, n_auto_comps=2):
     ward_clustering(joint_pca, in_dir, 0, 3)
 
 
-def main(in_dir, tetrode_list, analysis_flags, re_filter=None):
+def main(in_dir, tetrode_list, analysis_flags, re_filter=None, test_only=False):
     """Summarise all tetrodes in in_dir"""
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
     container.add_axona_files_from_dir(
         in_dir, tetrode_list=tetrode_list,
         recursive=True, re_filter=re_filter,
-        verbose=False)
+        verbose=test_only)
     container.setup()
-    name = "file_list_" + os.path.basename(in_dir) + ".txt"
-    out_loc = os.path.join(in_dir, name)
-    with open(out_loc, 'w') as f:
-        f.write(str(container))
-    print("Wrote list of files considered to {}".format(out_loc))
+
+    if test_only:
+        exit(0)
 
     # Show summary of place
     if analysis_flags[0]:
@@ -288,10 +286,11 @@ if __name__ == "__main__":
     re_filter = r"^LSR.*"
     # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     tetrode_list = [i for i in range(1, 17)]
+    test_only = True
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
     # Analysis 2 - more graphical output
     # Analysis 3 - PCA and Dendogram and agglomerative clustering
     analysis_flags = [True, True, False, True]
-    main(in_dir, tetrode_list, analysis_flags, re_filter)
+    main(in_dir, tetrode_list, analysis_flags, re_filter, test_only)

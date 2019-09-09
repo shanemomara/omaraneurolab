@@ -10,6 +10,7 @@ import copy
 import logging
 import os
 import pprint
+import re
 
 import pandas as pd
 import numpy as np
@@ -396,6 +397,8 @@ class NDataContainer():
             lfp_extension : str default .eeg
             re_filter : str default None 
                 regex string for matching filenames
+            save_result : bool default True
+                should save the resulting collection to a file
 
         Returns
         -------
@@ -410,9 +413,8 @@ class NDataContainer():
         clu_extension = kwargs.get("clu_extension", ".clu.X")
         pos_extension = kwargs.get("pos_extension", ".txt")
         lfp_extension = kwargs.get("lfp_extension", ".eeg")
-
-        # filter_s should be passed
         re_filter = kwargs.get("re_filter", None)
+        save_result = kwargs.get("save_result", True)
 
         files = get_all_files_in_dir(
             directory, data_extension,
@@ -455,6 +457,18 @@ class NDataContainer():
                 self.add_files(NDataContainer.EFileType.Position, [pos_name])
                 self.add_files(NDataContainer.EFileType.LFP, [lfp_name])
         self.set_units()
+
+        if save_result:
+            friendly_re = ""
+            if re_filter:
+                friendly_re = "_" + \
+                    " ".join(re.findall("[a-zA-Z]+", re_filter))
+            name = "file_list_" + \
+                os.path.basename(directory) + friendly_re + ".txt"
+            out_loc = os.path.join(directory, name)
+            with open(out_loc, 'w') as f:
+                f.write(str(self))
+            print("Wrote list of files considered to {}".format(out_loc))
 
     def merge(self, indices, force_equal_units=True):
         """
