@@ -892,7 +892,16 @@ class NSpike(NBase):
                 max_nfev=100000)
         except Exception as e:
             logging.error("Failed curve_fit in theta_index: {} ".format(e))
+            _results['Theta Index'] = None
+            _results['TI fit freq Hz'] = None
+            _results['TI fit tau1 sec'] = None
+            _results['TI adj Rsq'] = None
+            _results['TI Pearse R'] = None
+            _results['TI Pearse P'] = None
+
+            self.update_result(_results)
             return None
+
         a, f, tau1, b, c, tau2 = popt
 
         y_fit[center:] = fit_func(x, *popt)
