@@ -2,6 +2,7 @@
 import csv
 import os
 from copy import copy
+import logging
 
 from sklearn.decomposition import PCA
 from sklearn.cluster import AgglomerativeClustering
@@ -9,10 +10,12 @@ from sklearn.preprocessing import StandardScaler
 import scipy.cluster.hierarchy as shc
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_containeranalysis import place_cell_summary
 from neurochat.nc_utils import make_dir_if_not_exists, log_exception, oDict
+from neurochat.nc_utils import remove_extension
 import neurochat.nc_plot as nc_plot
 
 
@@ -62,7 +65,8 @@ def log_isi(ndata, start=0.0005, stop=10, num_bins=60):
 
 
 def cell_classification_stats(
-        in_dir, container, should_plot=False, opt_end=""):
+        in_dir, container, out_name,
+        should_plot=False, opt_end=""):
     """
     Compute a csv of cell stats for each unit in a container
 
@@ -73,23 +77,32 @@ def cell_classification_stats(
     should_plot - whether to save some plots for this
     """
     _results = []
-    out_dir = os.path.join(in_dir, "nc_results")
     spike_names = container.get_file_dict()["Spike"]
     for i, ndata in enumerate(container):
         data_idx, unit_idx = container._index_to_data_pos(i)
         name = spike_names[data_idx][0]
         parts = os.path.basename(name).split(".")
+
+        # Setup up identifier information
         note_dict = oDict()
+        dir_t = os.path.dirname(name)
+        note_dict["FullDir"] = dir_t
+        if dir_t != in_dir:
+            note_dict["RelDir"] = os.path.dirname(name)[len(in_dir + os.sep):]
+        else:
+            note_dict["RelDir"] = ""
+        note_dict["Recording"] = parts[0]
         note_dict["Tetrode"] = int(parts[-1])
         note_dict["Unit"] = ndata.get_unit_no()
         ndata.update_results(note_dict)
+
+        # Caculate cell properties
         ndata.wave_property()
         ndata.place()
         isi = ndata.isi()
         ndata.burst(burst_thresh=6)
         phase_dist = ndata.phase_dist()
         theta_index = ndata.theta_index()
-        # theta_skip_index = ndata.theta_skip_index()
         ndata.bandpower_ratio(
             [5, 11], [1.5, 4], 1.6, relative=True,
             first_name="Theta", second_name="Delta")
@@ -105,13 +118,7 @@ def cell_classification_stats(
             fig2.savefig(plot_loc)
             plt.close("all")
 
-        if unit_idx == len(container.get_units(data_idx)) - 1:
-            end_name = parts[0] + "_" + parts[1] + "_burst" + opt_end + ".csv"
-            out_name = os.path.join(out_dir, end_name)
-            make_dir_if_not_exists(out_name)
-            save_results_to_csv(out_name, _results)
-            _results.clear()
-            if should_plot:
+            if unit_idx == len(container.get_units(data_idx)) - 1:
                 plot_loc = os.path.join(
                     in_dir, "nc_plots", parts[0] + "_lfp" + opt_end + ".png")
                 make_dir_if_not_exists(plot_loc)
@@ -121,19 +128,26 @@ def cell_classification_stats(
                 fig.savefig(plot_loc)
                 plt.close(fig)
 
+    # Save the cell statistics
+    make_dir_if_not_exists(out_name)
+    save_results_to_csv(out_name, _results)
+    _results.clear()
 
-def calculate_isi_hist(container, in_dir, opt_end=""):
+
+def calculate_isi_hist(container, in_dir, opt_end="", s_color=False):
     """Calculate a matrix of isi_hists for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     isi_hist_matrix = np.empty((len(container), 60), dtype=float)
+    color = iter(cm.gray(np.linspace(0, 0.8, len(container))))
     for i, ndata in enumerate(container):
         res_isi, bins = log_isi(ndata)
         isi_hist_matrix[i] = res_isi
         bin_centres = bins[:-1] + np.mean(np.diff(bins)) / 2
-        ax1.plot(bin_centres, res_isi)
+        c = next(color) if s_color else "k"
+        ax1.plot(bin_centres, res_isi, c=c)
         ax1.set_xlim([-3, 1])
         ax1.set_xticks([-3, -2, -1, 0])
-        ax1.axvline(x=np.log10(0.006))
+    ax1.axvline(x=np.log10(0.006), c="k")
 
     plot_loc = os.path.join(
         in_dir, "nc_plots", "logisi" + opt_end + ".png")
@@ -141,20 +155,22 @@ def calculate_isi_hist(container, in_dir, opt_end=""):
     return isi_hist_matrix
 
 
-def calculate_auto_corr(container, in_dir, opt_end=""):
+def calculate_auto_corr(container, in_dir, opt_end="", s_color=False):
     """Calculate a matrix of autocorrs for each unit in a container"""
     ax1, fig1 = nc_plot._make_ax_if_none(None)
     auto_corr_matrix = np.empty((len(container), 20), dtype=float)
+    color = iter(cm.gray(np.linspace(0, 0.8, len(container))))
     for i, ndata in enumerate(container):
         auto_corr_data = ndata.isi_auto_corr(bins=1, bound=[0, 20])
         auto_corr_matrix[i] = (auto_corr_data["isiCorr"] /
                                ndata.spike.get_unit_stamp().size)
         bins = auto_corr_data['isiAllCorrBins']
         bin_centres = bins[:-1] + np.mean(np.diff(bins)) / 2
-        ax1.plot(bin_centres / 1000, auto_corr_matrix[i])
+        c = next(color) if s_color else "k"
+        ax1.plot(bin_centres / 1000, auto_corr_matrix[i], c=c)
         ax1.set_xlim([0.000, 0.02])
         ax1.set_xticks([0.000, 0.005, 0.01, 0.015, 0.02])
-        ax1.axvline(x=0.006)
+    ax1.axvline(x=0.006, c="k")
 
     plot_loc = os.path.join(
         in_dir, "nc_plots", "autocorr" + opt_end + ".png")
@@ -187,7 +203,8 @@ def perform_pca(data, n_components=3, should_scale=True):
     return after_pca, pca
 
 
-def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1, opt_end=""):
+def ward_clustering(
+        data, in_dir, plot_dim1=0, plot_dim2=1, opt_end="", s_color=False):
     """
     Perform heirarchical clustering using ward's method
 
@@ -199,29 +216,71 @@ def ward_clustering(data, in_dir, plot_dim1=0, plot_dim2=1, opt_end=""):
     plot_dim2 - the other PCA dimesion to plot
     """
     ax, fig = nc_plot._make_ax_if_none(None)
+    if s_color:
+        shc.set_link_color_palette(["m", "c", "y", "k"])
+        atc = '#bcbddc'
+    else:
+        shc.set_link_color_palette(["k"])
+        atc = '#bcbddc'
     dend = shc.dendrogram(
         shc.linkage(data, method="ward", optimal_ordering=True),
-        ax=ax)
+        ax=ax, above_threshold_color=atc, orientation="right")
+    ax.set_yticks([], [])
     plot_loc = os.path.join(
         in_dir, "nc_plots", "dendogram" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
+    shc.set_link_color_palette(None)
 
     cluster = AgglomerativeClustering(
         n_clusters=2, affinity="euclidean", linkage="ward")
     cluster.fit_predict(data)
 
     ax, fig = nc_plot._make_ax_if_none(None)
-    ax.scatter(
-        data[:, plot_dim1],
-        data[:, plot_dim2],
-        c=cluster.labels_, cmap='rainbow')
+    if s_color:
+        ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
+                   c=cluster.labels_, cmap='rainbow')
+    else:
+        markers = list(map(lambda a: "k" if a else "r", cluster.labels_))
+        ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
+                   c=markers)
     plot_loc = os.path.join(
         in_dir, "nc_plots", "PCAclust" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
 
+    return cluster
+
+
+def save_pca_res(
+        container, fname, n_isi_comps, n_auto_comps, isi_pca, corr_pca, clust):
+    with open(fname, "w") as f:
+        f.write("Type")
+        for _ in range(max(n_isi_comps, n_auto_comps)):
+            f.write(",Variance Ratio")
+        f.write("\nISI_PCA")
+        for val in isi_pca.explained_variance_ratio_:
+            f.write("," + str(val))
+        f.write("\nACH_PCA")
+        for val in corr_pca.explained_variance_ratio_:
+            f.write("," + str(val))
+        f.write("\n")
+        f.write("\n")
+        o_count = 0
+        for i in range(container.get_num_data()):
+            str_info = container.get_index_info(i)
+            for j in str_info["Units"]:
+                f.write(os.path.basename(str_info["Spike"]) +
+                        "_Unit_" + str(j) + ",")
+            f.write("\n")
+            for val in clust.labels_[o_count:o_count + len(str_info["Units"])]:
+                f.write(str(val) + ",")
+            o_count = o_count + len(str_info["Units"])
+            f.write("\n")
+        f.write("\n")
+
 
 def pca_clustering(
-        container, in_dir, n_isi_comps=3, n_auto_comps=2, opt_end=""):
+        container, in_dir, n_isi_comps=3, n_auto_comps=2,
+        opt_end="", s_color=False):
     """
     Wraps up other functions to do PCA clustering on a container.
 
@@ -237,42 +296,34 @@ def pca_clustering(
     print("Considering ISIH PCA")
     make_dir_if_not_exists(os.path.join(in_dir, "nc_plots", "dummy.txt"))
     isi_hist_matrix = calculate_isi_hist(
-        container, in_dir, opt_end=opt_end)
+        container, in_dir, opt_end=opt_end, s_color=s_color)
     isi_after_pca, isi_pca = perform_pca(
         isi_hist_matrix, n_isi_comps, True)
     print("Considering ACH PCA")
     auto_corr_matrix = calculate_auto_corr(
-        container, in_dir, opt_end=opt_end)
+        container, in_dir, opt_end=opt_end, s_color=s_color)
     corr_after_pca, corr_pca = perform_pca(
         auto_corr_matrix, n_auto_comps, True)
     joint_pca = np.empty(
         (len(container), n_isi_comps + n_auto_comps), dtype=float)
     joint_pca[:, :n_isi_comps] = isi_after_pca
     joint_pca[:, n_isi_comps:n_isi_comps + n_auto_comps] = corr_after_pca
-    ward_clustering(joint_pca, in_dir, 0, 3)
-
-    fname = os.path.join(in_dir, "nc_results",
-                         "PCA_results" + opt_end + ".csv")
-    with open(fname, "w") as f:
-        f.write("Type")
-        for _ in range(max(n_isi_comps, n_auto_comps)):
-            f.write(",Variance Ratio")
-        f.write("\nISI_PCA")
-        for val in isi_pca.explained_variance_ratio_:
-            f.write("," + str(val))
-        f.write("\nACH_PCA")
-        for val in corr_pca.explained_variance_ratio_:
-            f.write("," + str(val))
-        f.write("\n")
+    clust = ward_clustering(
+        joint_pca, in_dir, 0, 3, opt_end=opt_end, s_color=s_color)
+    fname = os.path.join(
+        in_dir, "nc_results", "PCA_results" + opt_end + ".csv")
+    save_pca_res(
+        container, fname, n_isi_comps, n_auto_comps, isi_pca, corr_pca, clust)
 
 
 def main(
         in_dir, tetrode_list, analysis_flags,
-        re_filter=None, test_only=False, opt_end=""):
+        re_filter=None, test_only=False, opt_end="",
+        s_color=False):
     """Summarise all tetrodes in in_dir"""
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
-    container.add_axona_files_from_dir(
+    out_name = container.add_axona_files_from_dir(
         in_dir, tetrode_list=tetrode_list,
         recursive=True, re_filter=re_filter)
     container.setup()
@@ -292,24 +343,38 @@ def main(
     # Do numerical analysis
     should_plot = analysis_flags[2]
     if analysis_flags[1]:
+        import re
+        out_name = remove_extension(out_name) + "csv"
+        out_name = re.sub(r"file_list_", r"cell_stats_", out_name)
         cell_classification_stats(
-            in_dir, container, should_plot=should_plot, opt_end=opt_end)
+            in_dir, container, out_name,
+            should_plot=should_plot, opt_end=opt_end)
 
     # Do PCA based analysis
     if analysis_flags[3]:
-        pca_clustering(container, in_dir, opt_end=opt_end)
+        pca_clustering(container, in_dir, opt_end=opt_end, s_color=s_color)
+
+
+def setup_logging(in_dir):
+    fname = os.path.join(in_dir, 'nc_output.log')
+    if os.path.isfile(fname):
+        open(fname, 'w').close()
+    logging.basicConfig(
+        filename=fname, level=logging.DEBUG)
+    mpl_logger = logging.getLogger("matplotlib")
+    mpl_logger.setLevel(level=logging.WARNING)
 
 
 if __name__ == "__main__":
-    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
-    # in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    # in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]
-    test_only = False
     optional_end = "_Sean"
 
     # Use a Regex to filter out certain directories
-    # re_filter = None
-    re_filter = r"^LSR.*"
+    re_filter = None
+    # re_filter = r"^LSR.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
@@ -318,4 +383,5 @@ if __name__ == "__main__":
     analysis_flags = [False, True, False, True]
     main(
         in_dir, tetrode_list, analysis_flags,
-        re_filter=re_filter, test_only=test_only, opt_end=optional_end)
+        re_filter=re_filter, test_only=False,
+        opt_end=optional_end, s_color=False)
