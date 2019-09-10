@@ -20,6 +20,18 @@ from neurochat.nc_utils import get_all_files_in_dir, make_dir_if_not_exists
 from neurochat.nc_utils import has_ext, log_exception, remove_extension
 
 
+class NDataContainerIterator():
+    def __init__(self, container):
+        self._index = 0
+        self._container = container
+
+    def __next__(self):
+        if self._index < len(self._container):
+            self._index += 1
+            return self._container[self._index - 1]
+        raise StopIteration
+
+
 class NDataContainer():
     """
     Class for storing multiple file locations for ndata objects.
@@ -44,7 +56,7 @@ class NDataContainer():
         _container : List
         _file_names_dict : Dict
         _units : List
-        _unit_count : int
+        _unit_count : List
         _share_positions : bool
         _load_on_fly : bool
         _smoothed_speed : bool
@@ -54,7 +66,7 @@ class NDataContainer():
         self._file_names_dict = {}
         self._units = []
         self._container = []
-        self._unit_count = 0
+        self._unit_count = []
         self._share_positions = share_positions
         self._load_on_fly = load_on_fly
         self._last_data_pt = (1, None)
@@ -797,8 +809,10 @@ class NDataContainer():
     def __len__(self):
         """Return the number of units in the collection."""
         counts = self._unit_count
-        if counts == 0:
-            counts = [1 for _ in range(len(self._container))]
+        if len(counts) == 0:
+            print("Recounting units")
+            self._unit_count = self._count_num_units()
+            counts = self._unit_count
         return sum(counts)
 
     def _count_num_units(self):
@@ -824,9 +838,13 @@ class NDataContainer():
 
         """
         counts = self._unit_count
-        if counts == 0:
-            counts = [1 for _ in range(len(self._container))]
+        if len(counts) == 0:
+            print("Recounting units")
+            self._unit_count = self._count_num_units()
+            counts = self._unit_count
         if index >= len(self):
+            print("Error, index {} is out of range {} for {}".format(
+                index, len(self) - 1, self))
             raise IndexError
         else:
             running_sum, running_idx = 0, 0
@@ -836,3 +854,6 @@ class NDataContainer():
                 else:
                     running_sum += count
                     running_idx += 1
+
+    def __iter__(self):
+        return NDataContainerIterator(self)
