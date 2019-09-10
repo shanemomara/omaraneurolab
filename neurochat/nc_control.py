@@ -357,10 +357,11 @@ class NeuroChaT(QtCore.QThread):
                 for row in excel_info.itertuples():
                     spike_file = row[1] + os.sep + row[3]
                     unit_no = int(row[4])
-                    lfp_id = row[5]
+                    lfp_id = str(row[5])
 
                     if self.get_data_format() == 'Axona':
-                        spatial_file = row[1] + os.sep + row[2] + '.txt'
+                        end = "" if row[2][-4:] == ".txt" else ".txt"
+                        spatial_file = row[1] + os.sep + row[2] + end
                         lfp_file = remove_extension(spike_file) + lfp_id
 
                     elif self.get_data_format() == 'Neuralynx':
@@ -1224,12 +1225,12 @@ class NeuroChaT(QtCore.QThread):
         if os.path.exists(excel_file):
             excel_info = pd.read_excel(excel_file)
             for row in excel_info.itertuples():
-                spike_file = row[1]+ os.sep+ row[2]
-                unit_no = int(row[3])
+                spike_file = row[1]+ os.sep+ row[3]
+                unit_no = int(row[4])
                 if self.get_data_format() == 'NWB':
                 # excel list: directory| spike group| unit_no
-                    hdf_name = row[1] + os.sep+ row[2]+ '.hdf5'
-                    spike_file = hdf_name+ '/processing/Shank'+ '/'+ row[3]
+                    hdf_name = row[1] + os.sep+ row[3]+ '.hdf5'
+                    spike_file = hdf_name+ '/processing/Shank'+ '/'+ row[4]
                 info['spike'].append(spike_file)
                 info['unit'].append(unit_no)
             n_units = excel_info.shape[0]
@@ -1250,7 +1251,7 @@ class NeuroChaT(QtCore.QThread):
                         if info['unit'][i] in units:
                             excel_info.loc[i, 'unitExists'] = True
 
-            excel_info.to_excel(excel_file)
+            excel_info.to_excel(excel_file, index=False)
             logging.info('Verification process completed!')
         else:
             logging.error('Excel  file does not exist!')
@@ -1394,7 +1395,7 @@ class NeuroChaT(QtCore.QThread):
                             bc, dh = nclust.cluster_separation(unit_no=info['unit'][i])
                             excel_info.loc[i, 'BC'] = np.max(bc)
                             excel_info.loc[i, 'Dh'] = np.min(dh)
-            excel_info.to_excel(excel_file)
+            excel_info.to_excel(excel_file, index=False)
             logging.info('Cluster evaluation completed!')
         else:
             logging.error('Excel  file does not exist!')
@@ -1454,7 +1455,7 @@ class NeuroChaT(QtCore.QThread):
                                 unit_1=info['unit_1'][i], unit_2=info['unit_2'][i])
                         excel_info.loc[i, 'BC'] = bc
                         excel_info.loc[i, 'Dh'] = dh
-            excel_info.to_excel(excel_file)
+            excel_info.to_excel(excel_file, index=False)
             logging.info('Cluster similarity analysis completed!')
         else:
             logging.error('Excel  file does not exist!')

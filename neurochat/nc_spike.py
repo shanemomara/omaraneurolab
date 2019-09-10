@@ -812,7 +812,8 @@ class NSpike(NBase):
                 ibi.append(unitStamp[burst_start[j+1]]- unitStamp[burst_end[j]])
             duty_cycle = np.divide(burst_duration[1:], ibi)/1000 # ibi in sec, burst_duration in ms
         else:
-            logging.warning('No burst detected')
+            logging.warning(
+                'No burst detected in {}'.format(self.get_filename()))
 
         spikesInBurst = np.array(spikesInBurst) if spikesInBurst else np.array([])
         bursting_isi = np.array(bursting_isi) if bursting_isi else np.array([])
