@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from neurochat.nc_data import NData
-from neurochat.nc_utils import get_all_files_in_dir
+from neurochat.nc_utils import get_all_files_in_dir, make_dir_if_not_exists
 from neurochat.nc_utils import has_ext, log_exception, remove_extension
 
 
@@ -463,12 +463,16 @@ class NDataContainer():
             if re_filter:
                 friendly_re = "_" + \
                     " ".join(re.findall("[a-zA-Z]+", re_filter))
-            name = "file_list_" + \
-                os.path.basename(directory) + friendly_re + ".txt"
-            out_loc = os.path.join(directory, name)
+            name = (
+                "file_list_" + os.path.basename(directory) +
+                friendly_re + ".txt")
+            out_loc = os.path.join(directory, "nc_results", name)
+            make_dir_if_not_exists(out_loc)
             with open(out_loc, 'w') as f:
                 f.write(str(self))
             print("Wrote list of files considered to {}".format(out_loc))
+            return out_loc
+        return None
 
     def merge(self, indices, force_equal_units=True):
         """
