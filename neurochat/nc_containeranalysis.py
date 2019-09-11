@@ -9,6 +9,7 @@ from itertools import compress
 from math import floor, ceil
 import os
 import gc
+import re
 
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_data import NData
@@ -28,7 +29,8 @@ from matplotlib.pyplot import savefig, close
 
 def place_cell_summary(
         collection, dpi=150, out_dirname="nc_plots",
-        filter_place_cells=True, filter_low_freq=True, opt_end=""):
+        filter_place_cells=True, filter_low_freq=True, opt_end="",
+        base_dir=None):
     """
     Quick Png spatial information summary of each cell in collection.
 
@@ -48,6 +50,8 @@ def place_cell_summary(
         Filter out cells with spike freq less than 0.1Hz
     opt_end : str, default ""
         A string to append to the file output just before the extension
+    base_dir : str, default None
+        An optional directory to save the files to 
 
     Returns
     -------
@@ -115,7 +119,16 @@ def place_cell_summary(
             if unit_idx == len(collection.get_units(data_idx)) - 1:
                 spike_name = os.path.basename(filename)
                 parts = spike_name.split(".")
-                main_dir = os.path.dirname(filename)
+                f_dir = os.path.dirname(filename)
+                png_basename = parts[0] + "_" + parts[1] + opt_end + ".png"
+                if base_dir is not None:
+                    main_dir = base_dir
+                    png_base = f_dir[len(base_dir + os.sep):]
+                    png_base = ("--").join(png_base.split(os.sep))
+                    # png_base = re.sub(os.sep, "_", png_base)
+                    png_basename = png_base + "--" + png_basename
+                else:
+                    main_dir = f_dir
 
                 if filter_place_cells:
                     named_units = [
@@ -144,8 +157,7 @@ def place_cell_summary(
                         size_multiplier=4, point_size=dpi / 7.0,
                         units=named_units)
                     out_name = os.path.join(
-                        main_dir, out_dirname,
-                        parts[0] + "_" + parts[1] + opt_end + ".png")
+                        main_dir, out_dirname, png_basename)
                     print("Saving place cell figure to {}".format(
                         out_name))
                     make_dir_if_not_exists(out_name)

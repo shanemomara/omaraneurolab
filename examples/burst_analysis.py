@@ -23,7 +23,7 @@ def save_results_to_csv(filename, in_dicts):
     """Save a dictionary to a csv"""
     names = in_dicts[0].keys()
     try:
-        with open(filename, 'w') as csvfile:
+        with open(filename, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=names)
             writer.writeheader()
             for in_dict in in_dicts:
@@ -79,54 +79,62 @@ def cell_classification_stats(
     _results = []
     spike_names = container.get_file_dict()["Spike"]
     for i, ndata in enumerate(container):
-        data_idx, unit_idx = container._index_to_data_pos(i)
-        name = spike_names[data_idx][0]
-        parts = os.path.basename(name).split(".")
+        try:
+            data_idx, unit_idx = container._index_to_data_pos(i)
+            name = spike_names[data_idx][0]
+            parts = os.path.basename(name).split(".")
 
-        # Setup up identifier information
-        note_dict = oDict()
-        dir_t = os.path.dirname(name)
-        note_dict["FullDir"] = dir_t
-        if dir_t != in_dir:
-            note_dict["RelDir"] = os.path.dirname(name)[len(in_dir + os.sep):]
-        else:
-            note_dict["RelDir"] = ""
-        note_dict["Recording"] = parts[0]
-        note_dict["Tetrode"] = int(parts[-1])
-        note_dict["Unit"] = ndata.get_unit_no()
-        ndata.update_results(note_dict)
+            # Setup up identifier information
+            note_dict = oDict()
+            dir_t = os.path.dirname(name)
+            note_dict["FullDir"] = dir_t
+            if dir_t != in_dir:
+                note_dict["RelDir"] = os.path.dirname(
+                    name)[len(in_dir + os.sep):]
+            else:
+                note_dict["RelDir"] = ""
+            note_dict["Recording"] = parts[0]
+            note_dict["Tetrode"] = int(parts[-1])
+            note_dict["Unit"] = ndata.get_unit_no()
+            ndata.update_results(note_dict)
 
-        # Caculate cell properties
-        ndata.wave_property()
-        ndata.place()
-        isi = ndata.isi()
-        ndata.burst(burst_thresh=6)
-        phase_dist = ndata.phase_dist()
-        theta_index = ndata.theta_index()
-        ndata.bandpower_ratio(
-            [5, 11], [1.5, 4], 1.6, relative=True,
-            first_name="Theta", second_name="Delta")
-        result = copy(ndata.get_results())
-        _results.append(result)
+            # Caculate cell properties
+            ndata.wave_property()
+            ndata.place()
+            isi = ndata.isi()
+            ndata.burst(burst_thresh=6)
+            phase_dist = ndata.phase_dist()
+            theta_index = ndata.theta_index()
+            ndata.bandpower_ratio(
+                [5, 11], [1.5, 4], 1.6, relative=True,
+                first_name="Theta", second_name="Delta")
+            result = copy(ndata.get_results())
+            _results.append(result)
 
-        if should_plot:
-            plot_loc = os.path.join(
-                in_dir, "nc_plots", parts[0] + "_" + parts[-1] + "_" +
-                str(ndata.get_unit_no()) + "_phase" + opt_end + ".png")
-            make_dir_if_not_exists(plot_loc)
-            fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
-            fig2.savefig(plot_loc)
-            plt.close("all")
-
-            if unit_idx == len(container.get_units(data_idx)) - 1:
+            if should_plot:
                 plot_loc = os.path.join(
-                    in_dir, "nc_plots", parts[0] + "_lfp" + opt_end + ".png")
+                    in_dir, "nc_plots", parts[0] + "_" + parts[-1] + "_" +
+                    str(ndata.get_unit_no()) + "_phase" + opt_end + ".png")
                 make_dir_if_not_exists(plot_loc)
+                fig1, fig2, fig3 = nc_plot.spike_phase(phase_dist)
+                fig2.savefig(plot_loc)
+                plt.close("all")
 
-                lfp_spectrum = ndata.spectrum()
-                fig = nc_plot.lfp_spectrum(lfp_spectrum)
-                fig.savefig(plot_loc)
-                plt.close(fig)
+                if unit_idx == len(container.get_units(data_idx)) - 1:
+                    plot_loc = os.path.join(
+                        in_dir, "nc_plots", parts[0] + "_lfp" + opt_end + ".png")
+                    make_dir_if_not_exists(plot_loc)
+
+                    lfp_spectrum = ndata.spectrum()
+                    fig = nc_plot.lfp_spectrum(lfp_spectrum)
+                    fig.savefig(plot_loc)
+                    plt.close(fig)
+
+        except Exception as e:
+            print("WARNING: Failed to analyse {} unit {}".format(
+                os.path.basename(name), note_dict["Unit"]))
+            log_exception(e, "Failed on {} unit {}".format(
+                os.path.basename(name), note_dict["Unit"]))
 
     # Save the cell statistics
     make_dir_if_not_exists(out_name)
@@ -325,7 +333,8 @@ def main(
     container = NDataContainer(load_on_fly=True)
     out_name = container.add_axona_files_from_dir(
         in_dir, tetrode_list=tetrode_list,
-        recursive=True, re_filter=re_filter)
+        recursive=True, re_filter=re_filter,
+        verbose=False, unit_cutoff=(0, 5))
     container.setup()
 
     if test_only:
@@ -337,7 +346,7 @@ def main(
         #     container, dpi=200, out_dirname="nc_place_plots")
         place_cell_summary(
             container, dpi=200, out_dirname="nc_cell_plots", filter_place_cells=False, filter_low_freq=False,
-            opt_end=opt_end)
+            opt_end=opt_end, base_dir=in_dir)
         plt.close("all")
 
     # Do numerical analysis
@@ -366,15 +375,15 @@ def setup_logging(in_dir):
 
 
 if __name__ == "__main__":
-    # in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
-    in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]
-    optional_end = "_Sean"
+    optional_end = "_Can"
 
     # Use a Regex to filter out certain directories
-    re_filter = None
-    # re_filter = r"^LSR.*"
+    # re_filter = None
+    re_filter = r"^Can.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
