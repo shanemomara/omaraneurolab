@@ -411,6 +411,8 @@ class NDataContainer():
                 regex string for matching filenames
             save_result : bool default True
                 should save the resulting collection to a file
+            unit_cutoff : tuple of ints
+                don't consider any recordings with units outside this range
 
         Returns
         -------
@@ -427,6 +429,7 @@ class NDataContainer():
         lfp_extension = kwargs.get("lfp_extension", ".eeg")
         re_filter = kwargs.get("re_filter", None)
         save_result = kwargs.get("save_result", True)
+        unit_cutoff = kwargs.get("unit_cutoff", None)
 
         files = get_all_files_in_dir(
             directory, data_extension,
@@ -452,7 +455,7 @@ class NDataContainer():
                         os.path.isfile(os.path.join(directory, cut_name)) or
                         os.path.isfile(os.path.join(directory, clu_name))):
                     logging.info(
-                        "Skipping tetrode {} - no cluster file named {} or {}".format(tetrode, cut_name, clu_name))
+                        "Skipping tetrode {} - no cluster file named {} or {}".format(tetrode, cut_name, os.path.basename(clu_name)))
                     continue
 
                 for fname in txt_files:
@@ -470,6 +473,9 @@ class NDataContainer():
                 self.add_files(NDataContainer.EFileType.LFP, [lfp_name])
         self.set_units()
 
+        if unit_cutoff:
+            self.remove_recordings_units(
+                unit_cutoff[0], unit_cutoff[1], verbose=verbose)
         if save_result:
             friendly_re = ""
             if re_filter:
@@ -682,6 +688,31 @@ class NDataContainer():
             return self._pretty_string()
         else:
             return self._full_string()
+
+    def remove_recordings_units(
+            self, unit_lb=0, unit_ub=10000, verbose=False):
+        start_size = self.get_num_data()
+        start_total = len(self)
+        for i in range(self.get_num_data() - 1, -1, -1):
+            unit_count = len(self.get_units(i))
+            if (unit_count > unit_ub) or (unit_count < unit_lb):
+                for key in ("Spike", "LFP", "Position"):
+                    name = self._file_names_dict[key].pop(i)
+                    if (key is "Spike") and verbose:
+                        print("Removed {} with {} units".format(
+                            os.path.basename(name[0]), unit_count))
+                if self._unit_count.pop(i) != unit_count:
+                    print("Error in remove recording {}".format(name))
+                self._last_data_pt = (1, None)
+                self._units.pop(i)
+                if not self._load_on_fly:
+                    self._container.pop(i)
+        end_size = self.get_num_data()
+        self._count_num_units()
+        end_total = len(self)
+
+        print("{} with {} units reduced to {} with {} units".format(
+            start_size, start_total, end_size, end_total))
 
     # Methods from here on should be for private class use
     def _pretty_string(self):
