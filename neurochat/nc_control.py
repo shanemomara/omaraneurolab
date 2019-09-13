@@ -855,8 +855,9 @@ class NeuroChaT(QtCore.QThread):
                 fig = nc_plot.multiple_regression(graph_data)
                 self.close_fig(fig)                
                 self.plot_data_to_hdf(name=name+ '/multiple_regression/', graph_data=graph_data)
-            except:
-                logging.error('Error in multiple-regression analysis')
+            except Exception as ex:
+                log_exception(
+                    ex, "in multiple-regression analysis")
 
         if self.get_analysis('inter_depend'):
             # No plot
