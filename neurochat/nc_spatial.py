@@ -2627,7 +2627,6 @@ class NSpatial(NAbstract):
 
         distRate = np.divide(spike_count, tcount, out=np.zeros_like(spike_count),\
                             where=tcount != 0, casting='unsafe') # for skaggs only
-
         pixelCount = histogram(distMat[np.logical_not(nanInd)], distBins)[0]
         distCount = np.divide(histogram(distMat[fmap >= thresh], distBins)[0], pixelCount, \
                              out=np.zeros_like(distBins), where=pixelCount != 0, casting='unsafe')
@@ -2878,8 +2877,13 @@ class NSpatial(NAbstract):
         episode = kwargs.get('episode', 120)
         nrep = kwargs.get('nrep', 1000)
         sampRate = 1/subsampInterv
-        stamp = 1/sampRate
-        time = np.arange(0, self.get_duration(), stamp)
+        stamp = subsampInterv
+ 
+        a_size = np.round(self.get_duration(), 4)
+        time = np.linspace(
+            0, a_size, endpoint=True,
+            num=np.round(a_size/stamp)+1)
+        time = np.round(time, 4)
         Y = histogram(ftimes, time)[0]* sampRate # Instant firing rate
 
         nt = time.size
@@ -2889,6 +2893,8 @@ class NSpatial(NAbstract):
         placeRate[np.isnan(placeRate)] = 0
         for i in np.arange(nt):
             ind = find(np.logical_and(self.get_time() >= time[i], self.get_time() < time[i]+ stamp))
+            if len(ind) == 0:
+                continue
             xloc[i] = np.median(self.get_pos_x()[ind])
             yloc[i] = np.median(self.get_pos_y()[ind])
             if histogram(yloc[i], yedges)[1] < yedges.size and histogram(xloc[i], xedges)[1] < xedges.size:
