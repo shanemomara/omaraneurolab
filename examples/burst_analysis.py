@@ -11,6 +11,7 @@ import scipy.cluster.hierarchy as shc
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import seaborn as sns
 
 from neurochat.nc_datacontainer import NDataContainer
 from neurochat.nc_containeranalysis import place_cell_summary
@@ -101,6 +102,10 @@ def cell_classification_stats(
             # Caculate cell properties
             ndata.wave_property()
             ndata.place()
+            # ndata.hd_rate()
+            # ndata.grid()
+            # ndata.border()
+            # ndata.multiple_regression()
             isi = ndata.isi()
             ndata.burst(burst_thresh=6)
             phase_dist = ndata.phase_dist()
@@ -155,11 +160,12 @@ def calculate_isi_hist(container, in_dir, opt_end="", s_color=False):
         ax1.plot(bin_centres, res_isi, c=c)
         ax1.set_xlim([-3, 1])
         ax1.set_xticks([-3, -2, -1, 0])
-    ax1.axvline(x=np.log10(0.006), c="k")
+    ax1.axvline(x=np.log10(0.006), c="r", ls="--")
 
     plot_loc = os.path.join(
         in_dir, "nc_plots", "logisi" + opt_end + ".png")
     fig1.savefig(plot_loc, dpi=400)
+
     return isi_hist_matrix
 
 
@@ -178,7 +184,7 @@ def calculate_auto_corr(container, in_dir, opt_end="", s_color=False):
         ax1.plot(bin_centres / 1000, auto_corr_matrix[i], c=c)
         ax1.set_xlim([0.000, 0.02])
         ax1.set_xticks([0.000, 0.005, 0.01, 0.015, 0.02])
-    ax1.axvline(x=0.006, c="k")
+    ax1.axvline(x=0.006, c="r", ls="--")
 
     plot_loc = os.path.join(
         in_dir, "nc_plots", "autocorr" + opt_end + ".png")
@@ -225,11 +231,12 @@ def ward_clustering(
     """
     ax, fig = nc_plot._make_ax_if_none(None)
     if s_color:
-        shc.set_link_color_palette(["m", "c", "y", "k"])
-        atc = '#bcbddc'
+        shc.set_link_color_palette(
+            ['#4A777A', "#6996AD", "#82CFFD", "#3579DC"])
     else:
         shc.set_link_color_palette(["k"])
-        atc = '#bcbddc'
+
+    atc = '#bcbddc'
     dend = shc.dendrogram(
         shc.linkage(data, method="ward", optimal_ordering=True),
         ax=ax, above_threshold_color=atc, orientation="right")
@@ -244,22 +251,22 @@ def ward_clustering(
     cluster.fit_predict(data)
 
     ax, fig = nc_plot._make_ax_if_none(None)
-    if s_color:
-        ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
-                   c=cluster.labels_, cmap='rainbow')
-    else:
-        markers = list(map(lambda a: "k" if a else "r", cluster.labels_))
-        ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
-                   c=markers)
+    markers = list(map(lambda a: "k" if a else "r", cluster.labels_))
+    # ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
+    #            c=markers)
+    sns.scatterplot(
+        data[:, plot_dim1], data[:, plot_dim2], ax=ax,
+        style=cluster.labels_, hue=cluster.labels_, legend=False)
     plot_loc = os.path.join(
         in_dir, "nc_plots", "PCAclust" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
 
-    return cluster
+    return cluster, dend
 
 
 def save_pca_res(
-        container, fname, n_isi_comps, n_auto_comps, isi_pca, corr_pca, clust):
+        container, fname, n_isi_comps, n_auto_comps,
+        isi_pca, corr_pca, clust, dend):
     with open(fname, "w") as f:
         f.write("Type")
         for _ in range(max(n_isi_comps, n_auto_comps)):
@@ -272,18 +279,46 @@ def save_pca_res(
             f.write("," + str(val))
         f.write("\n")
         f.write("\n")
-        o_count = 0
-        for i in range(container.get_num_data()):
-            str_info = container.get_index_info(i)
-            for j in str_info["Units"]:
-                f.write(os.path.basename(str_info["Spike"]) +
-                        "_Unit_" + str(j) + ",")
-            f.write("\n")
-            for val in clust.labels_[o_count:o_count + len(str_info["Units"])]:
-                f.write(str(val) + ",")
-            o_count = o_count + len(str_info["Units"])
-            f.write("\n")
+        f.write("Name, Unit, Clust Label, Dend Leaf\n")
+        d_idx = dend["leaves"][::-1]
+        for i in range(len(container)):
+            idx_info = container.get_index_info(i, absolute=True)
+            idx = d_idx.index(i)
+            val = clust.labels_[i]
+            f.write("{}, {}, {}, {}\n".format(
+                idx_info["Spike"], idx_info["Units"], val, idx))
         f.write("\n")
+
+
+def plot_clustering(
+        container, in_dir, isi_hist, ac_hist, dend, cluster, opt_end=""):
+    dend_idxs = dend["leaves"][::-1]
+    sorted_isi = isi_hist[dend_idxs]
+    sorted_ac = ac_hist[dend_idxs]
+
+    ax1, fig1 = nc_plot._make_ax_if_none(None)
+    cmap = sns.cubehelix_palette(
+        8, start=0.5, rot=-.75, dark=0, light=.95, reverse=True)
+    # cmap = sns.color_palette("Blues")
+    sns.heatmap(
+        sorted_isi, ax=ax1, yticklabels=5,
+        xticklabels=10, cmap=cmap)
+    ax1.set_ylim([sorted_isi.shape[0], 0])
+    ax1.axvline(x=16, c="r", ls="--")
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "logisi_hist" + opt_end + ".png")
+    fig1.savefig(plot_loc, dpi=400)
+    fig1.clear()
+    ax1, fig1 = nc_plot._make_ax_if_none(None)
+    sns.heatmap(
+        sorted_ac, ax=ax1, yticklabels=5,
+        xticklabels=5, cmap=cmap)
+    ax1.axvline(x=6, c="r", ls="--")
+    ax1.set_ylim([sorted_ac.shape[0], 0])
+    plot_loc = os.path.join(
+        in_dir, "nc_plots", "ac_hist" + opt_end + ".png")
+    fig1.savefig(plot_loc, dpi=400)
+    fig1.clear()
 
 
 def pca_clustering(
@@ -316,12 +351,16 @@ def pca_clustering(
         (len(container), n_isi_comps + n_auto_comps), dtype=float)
     joint_pca[:, :n_isi_comps] = isi_after_pca
     joint_pca[:, n_isi_comps:n_isi_comps + n_auto_comps] = corr_after_pca
-    clust = ward_clustering(
+    clust, dend = ward_clustering(
         joint_pca, in_dir, 0, 3, opt_end=opt_end, s_color=s_color)
+    plot_clustering(
+        container, in_dir, isi_hist_matrix, auto_corr_matrix,
+        dend, clust, opt_end=opt_end)
     fname = os.path.join(
         in_dir, "nc_results", "PCA_results" + opt_end + ".csv")
     save_pca_res(
-        container, fname, n_isi_comps, n_auto_comps, isi_pca, corr_pca, clust)
+        container, fname, n_isi_comps, n_auto_comps,
+        isi_pca, corr_pca, clust, dend)
 
 
 def main(
@@ -329,6 +368,8 @@ def main(
         re_filter=None, test_only=False, opt_end="",
         s_color=False):
     """Summarise all tetrodes in in_dir"""
+    # Setup seaborn - note affects all plots!
+    sns.set(palette="colorblind")
     # Load files from dir in tetrodes x, y, z
     container = NDataContainer(load_on_fly=True)
     out_name = container.add_axona_files_from_dir(
@@ -375,15 +416,15 @@ def setup_logging(in_dir):
 
 
 if __name__ == "__main__":
-    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
-    # in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    # in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    in_dir = r"C:\Users\smartin5\Recordings\11092017"
     setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]
-    optional_end = "_Can"
+    optional_end = "_ALL"
 
     # Use a Regex to filter out certain directories
-    # re_filter = None
-    re_filter = r"^Can.*"
+    re_filter = None
+    # re_filter = "^CSR.*|^LSR.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
@@ -393,4 +434,4 @@ if __name__ == "__main__":
     main(
         in_dir, tetrode_list, analysis_flags,
         re_filter=re_filter, test_only=False,
-        opt_end=optional_end, s_color=False)
+        opt_end=optional_end, s_color=True)
