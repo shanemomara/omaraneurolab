@@ -88,6 +88,7 @@ def cell_classification_stats(
             # Setup up identifier information
             note_dict = oDict()
             dir_t = os.path.dirname(name)
+            note_dict["Index"] = i
             note_dict["FullDir"] = dir_t
             if dir_t != in_dir:
                 note_dict["RelDir"] = os.path.dirname(
@@ -239,8 +240,7 @@ def ward_clustering(
     atc = '#bcbddc'
     dend = shc.dendrogram(
         shc.linkage(data, method="ward", optimal_ordering=True),
-        ax=ax, above_threshold_color=atc, orientation="right")
-    ax.set_yticks([], [])
+        ax=ax, above_threshold_color=atc, orientation="right", no_labels=True)
     plot_loc = os.path.join(
         in_dir, "nc_plots", "dendogram" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
@@ -256,7 +256,7 @@ def ward_clustering(
     #            c=markers)
     sns.scatterplot(
         data[:, plot_dim1], data[:, plot_dim2], ax=ax,
-        style=cluster.labels_, hue=cluster.labels_, legend=False)
+        style=cluster.labels_, hue=cluster.labels_)
     plot_loc = os.path.join(
         in_dir, "nc_plots", "PCAclust" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
@@ -416,21 +416,21 @@ def setup_logging(in_dir):
 
 
 if __name__ == "__main__":
-    # in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
-    in_dir = r"C:\Users\smartin5\Recordings\11092017"
+    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]
-    optional_end = "_ALL"
+    optional_end = "_CSR LSR"
 
     # Use a Regex to filter out certain directories
     re_filter = None
-    # re_filter = "^CSR.*|^LSR.*"
+    re_filter = "^CSR.*|^LSR.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
     # Analysis 2 - more graphical output
     # Analysis 3 - PCA and Dendogram and agglomerative clustering
-    analysis_flags = [False, True, False, True]
+    analysis_flags = [False, True, False, False]
     main(
         in_dir, tetrode_list, analysis_flags,
         re_filter=re_filter, test_only=False,
