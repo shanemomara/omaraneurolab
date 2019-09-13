@@ -658,15 +658,22 @@ class NDataContainer():
                     zip(centroids, self.get_units()[idx]),
                     key=lambda pair: pair[0][h])]
 
-    def get_index_info(self, idx):
+    def get_index_info(self, idx, absolute=False):
         """Return the Spike, LFP, Position and Unit info at idx."""
         str_info = {}
         dirnames = []
+        if absolute:
+            idx, u_idx = self._index_to_data_pos(idx)
+
         for key in ["Spike", "LFP", "Position"]:
             name = self.get_file_dict(key)[idx][0]
             str_info[key] = (os.path.basename(name))
             dirnames.append(os.path.dirname(name))
-        str_info["Units"] = (self.get_units(idx))
+
+        if absolute:
+            str_info["Units"] = (self.get_units(idx)[u_idx])
+        else:
+            str_info["Units"] = (self.get_units(idx))
 
         if len(set(dirnames)) == 1:
             str_info["Root"] = dirnames[0]
