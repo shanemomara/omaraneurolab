@@ -103,10 +103,10 @@ def cell_classification_stats(
             # Caculate cell properties
             ndata.wave_property()
             ndata.place()
-            # ndata.hd_rate()
-            # ndata.grid()
-            # ndata.border()
-            # ndata.multiple_regression()
+            ndata.hd_rate()
+            ndata.grid()
+            ndata.border()
+            ndata.multiple_regression()
             isi = ndata.isi()
             ndata.burst(burst_thresh=6)
             phase_dist = ndata.phase_dist()
@@ -251,12 +251,12 @@ def ward_clustering(
     cluster.fit_predict(data)
 
     ax, fig = nc_plot._make_ax_if_none(None)
-    markers = list(map(lambda a: "k" if a else "r", cluster.labels_))
+    markers = list(map(lambda a: "Burst" if a else "Regular", cluster.labels_))
     # ax.scatter(data[:, plot_dim1], data[:, plot_dim2],
     #            c=markers)
     sns.scatterplot(
         data[:, plot_dim1], data[:, plot_dim2], ax=ax,
-        style=cluster.labels_, hue=cluster.labels_)
+        style=markers, hue=markers)
     plot_loc = os.path.join(
         in_dir, "nc_plots", "PCAclust" + opt_end + ".png")
     fig.savefig(plot_loc, dpi=400)
@@ -266,7 +266,7 @@ def ward_clustering(
 
 def save_pca_res(
         container, fname, n_isi_comps, n_auto_comps,
-        isi_pca, corr_pca, clust, dend):
+        isi_pca, corr_pca, clust, dend, joint_pca):
     with open(fname, "w") as f:
         f.write("Type")
         for _ in range(max(n_isi_comps, n_auto_comps)):
@@ -279,14 +279,17 @@ def save_pca_res(
             f.write("," + str(val))
         f.write("\n")
         f.write("\n")
-        f.write("Name, Unit, Clust Label, Dend Leaf\n")
+        f.write("Name,Unit,Clust Label,Dend Leaf,ISI PCA,AC PCA\n")
         d_idx = dend["leaves"][::-1]
         for i in range(len(container)):
             idx_info = container.get_index_info(i, absolute=True)
             idx = d_idx.index(i)
             val = clust.labels_[i]
-            f.write("{}, {}, {}, {}\n".format(
-                idx_info["Spike"], idx_info["Units"], val, idx))
+            pca1 = joint_pca[i, 0]
+            pca2 = joint_pca[i, 3]
+            f.write("{},{},{},{},{},{}\n".format(
+                idx_info["Spike"], idx_info["Units"],
+                val, idx, pca1, pca2))
         f.write("\n")
 
 
@@ -360,7 +363,7 @@ def pca_clustering(
         in_dir, "nc_results", "PCA_results" + opt_end + ".csv")
     save_pca_res(
         container, fname, n_isi_comps, n_auto_comps,
-        isi_pca, corr_pca, clust, dend)
+        isi_pca, corr_pca, clust, dend, joint_pca)
 
 
 def main(
@@ -404,6 +407,68 @@ def main(
     if analysis_flags[3]:
         pca_clustering(container, in_dir, opt_end=opt_end, s_color=s_color)
 
+    if analysis_flags[4]:
+        with open(
+                os.path.join(in_dir, "nc_results", "bursttime.csv"), "w") as f:
+            from collections import OrderedDict
+            import operator
+            info = OrderedDict()
+            for i in range(container.get_num_data()):
+                c_info = container.get_index_info(i)
+                compare, tetrode = os.path.splitext(c_info["Spike"])
+                r_type = compare.split("_")[-1]
+                final_c = compare[:-(len(r_type) + 1)]
+                add_info = (int(r_type), int(tetrode[1:]), c_info["Units"], i)
+                if final_c[2:].startswith("11"):
+                    str_part = final_c[2:13]
+                else:
+                    str_part = final_c[2:20]
+                if str_part in info:
+                    info[str_part].append(add_info)
+                else:
+                    info[str_part] = [add_info]
+            for key, val in info.items():
+                val = sorted(val, key=operator.itemgetter(0, 1))
+                info[key] = val
+            print(info)
+
+            f.write("Name")
+            for i in range(1, 18):
+                f.write(",{}".format(i))
+            f.write("\n")
+            for key, val in info.items():
+                t_units = OrderedDict()
+                for s_val in val:
+                    r_type, t, units, idx = s_val
+                    if str(t) in t_units:
+                        for u in units:
+                            if u in t_units[str(t)]:
+                                t_units[str(t)][u].append((r_type, idx))
+                    else:
+                        t_units[str(t)] = OrderedDict()
+                        for u in units:
+                            t_units[str(t)][u] = [(r_type, idx)]
+                print(t_units)
+
+                for tetrode, units in t_units.items():
+                    for unit, idxs in units.items():
+                        f.write(
+                            key + "__" + str(tetrode) + "__" + str(unit) + ",")
+                        burst_arr = np.full(17, np.nan)
+                        for i in idxs:
+                            data = container[i[1]]
+                            data.burst()
+                            p_burst = data.get_results()["Propensity to burst"]
+                            burst_arr[i[0] - 1] = p_burst
+                        o_str = ""
+                        for b in burst_arr:
+                            o_str = o_str + "{},".format(b)
+                        f.write(o_str[:-1] + "\n")
+
+        # tetrodes = OrderedDict()
+        # if t in tetrodes:
+        #     if
+
 
 def setup_logging(in_dir):
     fname = os.path.join(in_dir, 'nc_output.log')
@@ -420,17 +485,19 @@ if __name__ == "__main__":
     # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]
-    optional_end = "_CSR LSR"
+    optional_end = "_Can"
 
     # Use a Regex to filter out certain directories
-    re_filter = None
-    re_filter = "^CSR.*|^LSR.*"
+    # re_filter = None
+    # re_filter = "^CSR.*|^LSR.*"
+    re_filter = "^Can.*"
 
     # Analysis 0 - summary place cell plot
     # Analysis 1 - csv file of data to classify cells
     # Analysis 2 - more graphical output
     # Analysis 3 - PCA and Dendogram and agglomerative clustering
-    analysis_flags = [False, True, False, False]
+    # Analysis 4 - Time resolved analysis
+    analysis_flags = [False, False, False, False, True]
     main(
         in_dir, tetrode_list, analysis_flags,
         re_filter=re_filter, test_only=False,
