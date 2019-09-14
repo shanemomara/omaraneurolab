@@ -2471,7 +2471,7 @@ class NSpatial(NAbstract):
         """
         graph_data = {}
 
-        minPixel = kwargs.get('minPixel', 100)
+        minPixel = kwargs.get('minPixel', 20)
         pixel = kwargs.get('pixel', 3)
 
         if 'update' in kwargs.keys():
