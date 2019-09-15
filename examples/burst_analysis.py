@@ -9,6 +9,8 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 import scipy.cluster.hierarchy as shc
 import numpy as np
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
@@ -430,7 +432,6 @@ def main(
             for key, val in info.items():
                 val = sorted(val, key=operator.itemgetter(0, 1))
                 info[key] = val
-            print(info)
 
             f.write("Name")
             for i in range(1, 18):
@@ -448,7 +449,6 @@ def main(
                         t_units[str(t)] = OrderedDict()
                         for u in units:
                             t_units[str(t)][u] = [(r_type, idx)]
-                print(t_units)
 
                 for tetrode, units in t_units.items():
                     for unit, idxs in units.items():
@@ -456,7 +456,8 @@ def main(
                             key + "__" + str(tetrode) + "__" + str(unit) + ",")
                         burst_arr = np.full(17, np.nan)
                         for i in idxs:
-                            data = container[i[1]]
+                            unit_o_idx = container.get_units(i[1]).index(unit)
+                            data = container.get_data_at(i[1], unit_o_idx)
                             data.burst()
                             p_burst = data.get_results()["Propensity to burst"]
                             burst_arr[i[0] - 1] = p_burst
@@ -464,10 +465,6 @@ def main(
                         for b in burst_arr:
                             o_str = o_str + "{},".format(b)
                         f.write(o_str[:-1] + "\n")
-
-        # tetrodes = OrderedDict()
-        # if t in tetrodes:
-        #     if
 
 
 def setup_logging(in_dir):
@@ -481,7 +478,7 @@ def setup_logging(in_dir):
 
 
 if __name__ == "__main__":
-    in_dir = r'C:\Users\smartin5\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
+    in_dir = r'E:\OneDrive\OneDrive - TCDUD.onmicrosoft.com\Bernstein'
     # in_dir = r"C:\Users\smartin5\Recordings\11092017"
     setup_logging(in_dir)
     tetrode_list = [i for i in range(1, 17)]

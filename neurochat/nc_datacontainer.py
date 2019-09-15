@@ -721,6 +721,26 @@ class NDataContainer():
         print("{} with {} units reduced to {} with {} units".format(
             start_size, start_total, end_size, end_total))
 
+    def get_data_at(self, data_index, unit_index):
+        if self._load_on_fly:
+            try:
+                if data_index == self._last_data_pt[0]:
+                    result = self._last_data_pt[1]
+                else:
+                    result = NData()
+                    for key, vals in self.get_file_dict().items():
+                        descriptor = vals[data_index]
+                        self._load(key, descriptor,
+                                   idx=data_index, ndata=result)
+                    self._last_data_pt = (data_index, result)
+            except Exception as e:
+                log_exception(e, "During loading data")
+        else:
+            result = self.get_data(data_index)
+        if len(self.get_units()) > 0:
+            result.set_unit_no(self.get_units(data_index)[unit_index])
+        return result
+
     # Methods from here on should be for private class use
     def _pretty_string(self):
         """Alternative string representation should be prettier."""
@@ -825,24 +845,7 @@ class NDataContainer():
     def __getitem__(self, index):
         """Return the data object with corresponding unit at index."""
         data_index, unit_index = self._index_to_data_pos(index)
-        if self._load_on_fly:
-            try:
-                if data_index == self._last_data_pt[0]:
-                    result = self._last_data_pt[1]
-                else:
-                    result = NData()
-                    for key, vals in self.get_file_dict().items():
-                        descriptor = vals[data_index]
-                        self._load(key, descriptor,
-                                   idx=data_index, ndata=result)
-                    self._last_data_pt = (data_index, result)
-            except Exception as e:
-                log_exception(e, "During loading data")
-        else:
-            result = self.get_data(data_index)
-        if len(self.get_units()) > 0:
-            result.set_unit_no(self.get_units(data_index)[unit_index])
-        return result
+        return self.get_data_at(data_index, unit_index)
 
     def __len__(self):
         """Return the number of units in the collection."""
