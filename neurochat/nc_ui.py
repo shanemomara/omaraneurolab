@@ -575,27 +575,36 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         session information in NeuroChaT configuration file (.ncfg).
 
         """
-        try:
-            with open(self._default_loc, "w") as f:
-                f.write(os.getcwd())
-        except Exception as e:
-            log_exception(e, "Failed save last location {} in {}".format(
-                os.getcwd(), self._default_loc))
+        def save_last(event):
+            try:
+                with open(self._default_loc, "w") as f:
+                    f.write(os.getcwd())
+                event.accept()
+            except Exception as e:
+                log_exception(e, "Failed to save last location {} in {}".format(
+                    os.getcwd(), self._default_loc))
+                event.ignore()
+
         reply = QtWidgets.QMessageBox.question(self, "Message", \
             "Save current session before you quit?",\
             QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel,\
             QtWidgets.QMessageBox.Save)
         if reply == QtWidgets.QMessageBox.Save:
-            config_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getSaveFileName(self, \
-                        'Save configuration to...', os.getcwd()+ os.sep+ 'nc_config.ncfg', ".ncfg")[0])
+            config_file = QtCore.QDir.toNativeSeparators(
+                QtWidgets.QFileDialog.getSaveFileName(
+                    self, 'Save session as...', os.getcwd(), "*.ncfg")[0])
             if config_file:
                 try:
-                    event.accept()
+                    self._get_config()
+                    self._control.save_config(config_file)
+                    logging.info("Session saved in: " + config_file)
+                    os.chdir(os.path.dirname(config_file))
+                    save_last(event) 
                 except:
                     logging.error('Failed to save configuration!')
                     event.ignore()
         elif reply == QtWidgets.QMessageBox.Close:
-            event.accept()
+            save_last(event)
         else:
             event.ignore()
 
