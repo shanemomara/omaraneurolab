@@ -474,9 +474,10 @@ class NSpike(NBase):
             for spike in self._spikes:
                 spike.load()
         else:
-            for name in names:
-                spike = self.get_spikes_by_name(name)
-                spike.load()
+            logging.error("Spikes by name has yet to be implemented")
+            # for name in names:
+            #     spike = self.get_spikes_by_name(name)
+            #     spike.load()
 
     def add_lfp(self, lfp=None, **kwargs):
         """
@@ -528,9 +529,10 @@ class NSpike(NBase):
             for lfp in self._lfp:
                 lfp.load()
         else:
-            for name in names:
-                lfp = self.get_lfp_by_name(name)
-                lfp.load()
+            logging.error("Lfp by name has yet to be implemented")
+            # for name in names:
+            #     lfp = self.get_lfp_by_name(name)
+            #     lfp.load()
 
     def wave_property(self):
         """

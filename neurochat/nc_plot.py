@@ -1018,10 +1018,11 @@ def loc_spike(place_data, ax=None, **kwargs):
         Axis of the spike-plot
 
     """
-    default_point_size = max(
-        place_data['yedges'].max() - place_data['yedges'].min(),
-        place_data['xedges'].max() - place_data['xedges'].min()
-    ) / 10
+    # default_point_size = max(
+    #     place_data['yedges'].max() - place_data['yedges'].min(),
+    #     place_data['xedges'].max() - place_data['xedges'].min()
+    # ) / 10
+    default_point_size = 2
 
     color = kwargs.get("color", RED)
     point_size = kwargs.get("point_size", default_point_size)
