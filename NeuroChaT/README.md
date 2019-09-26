@@ -1,6 +1,6 @@
 # NeuroChaT
 
-NeuroChaT is an open-source neuron characterisation toolbox primarily developed by Md. Nurul Islam with Shane O'Mara.
+NeuroChaT is an open-source neuron characterisation toolbox primarily developed by Md. Nurul Islam under supervision of Shane O'Mara.
 
 ## Installation
 
@@ -11,7 +11,8 @@ Python version 3.5 upwards is required to install neurochat. Installation steps 
 Open command prompt and type/paste the following. It is recommended to install neurochat to a virtual environment (E.g. using virtualenv), if doing so, activate it before typing these commands.
 
 ```
-git clone https://github.com/seankmartin/NeuroChaT
+git clone https://github.com/shanemomara/omaraneurolab.git
+cd omaraneurolab
 cd NeuroChaT
 pip install .
 python neurochat_gui\neurochat_ui.py
@@ -23,6 +24,7 @@ Open command prompt and type/paste the following.
 
 ```
 git clone https://github.com/seankmartin/NeuroChaT
+cd omaraneurolab
 cd NeuroChaT
 pip install -r requirements.txt
 python modify_neuro_path.py
