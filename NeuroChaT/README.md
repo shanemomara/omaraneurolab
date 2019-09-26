@@ -23,7 +23,7 @@ python neurochat_gui\neurochat_ui.py
 Open command prompt and type/paste the following.
 
 ```
-git clone https://github.com/seankmartin/NeuroChaT
+git clone https://github.com/shanemomara/omaraneurolab.git
 cd omaraneurolab
 cd NeuroChaT
 pip install -r requirements.txt
