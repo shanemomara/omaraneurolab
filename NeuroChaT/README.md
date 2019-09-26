@@ -12,8 +12,7 @@ Open command prompt and type/paste the following. It is recommended to install n
 
 ```
 git clone https://github.com/shanemomara/omaraneurolab.git
-cd omaraneurolab
-cd NeuroChaT
+cd omaraneurolab\NeuroChaT
 pip install .
 python neurochat_gui\neurochat_ui.py
 ```
@@ -24,8 +23,7 @@ Open command prompt and type/paste the following.
 
 ```
 git clone https://github.com/shanemomara/omaraneurolab.git
-cd omaraneurolab
-cd NeuroChaT
+cd omaraneurolab\NeuroChaT
 pip install -r requirements.txt
 python modify_neuro_path.py
 python neurochat_gui\neurochat_ui.py
