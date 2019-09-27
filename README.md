@@ -1,4 +1,4 @@
-# O'Mara Neuro lab
+# O'Mara Neuro Lab
 
 The Github repository for software from Shane O'Mara's neuroscience research lab in Trinity College Dublin.
 
