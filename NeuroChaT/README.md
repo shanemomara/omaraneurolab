@@ -22,7 +22,7 @@ This work was supported by a Joint Senior Investigator Award made by The Wellcom
 
 ## Installation
 
-Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
+For Windows users, [a standalone executable](https://drive.google.com/open?id=1ad16YsDRtFlxXX-WvCV8Y3ZeD-OqbhMU) is available to run the GUI based version of NeuroChaT. Otherwise, Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
 
 ### Option 1: Use Pip
 
