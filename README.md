@@ -6,4 +6,4 @@ The Github repository for software from Shane O'Mara's neuroscience research lab
 
 Software projects are listed as subdirectories of this main lab repository with individual README files in those subdirectories.
 
-- **NeuroChaT**: A neuron characterisation toolbox written in python with over twenty thousand lines of code.
+- [**NeuroChaT**](https://github.com/shanemomara/omaraneurolab/tree/master/NeuroChaT): A neuron characterisation toolbox written in python with over twenty thousand lines of code.
