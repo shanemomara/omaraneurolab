@@ -51,7 +51,7 @@ This method only allows the GUI program to function, any other file will need to
 
 ## Documentation
 
-See the docs folder for a pdf user guide which should be the first port of call. There is also html docs available for the neurochat package, which can be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu.
+See the docs folder for a pdf user guide which should be the first port of call. For coding with NeuroChaT, the API guide in notebooks/api_use_guide.ipynb is a good starting point. There is also html docs available for the neurochat package, which can be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu.
 
 ## Open Science Framework Storage
 
