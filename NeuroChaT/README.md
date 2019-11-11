@@ -22,7 +22,7 @@ This work was supported by a Joint Senior Investigator Award made by The Wellcom
 
 ## Installation
 
-For Windows users, [a standalone executable](https://drive.google.com/open?id=1ad16YsDRtFlxXX-WvCV8Y3ZeD-OqbhMU) is available to run the GUI based version of NeuroChaT. Otherwise, Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
+For Windows users, [a standalone executable](https://github.com/shanemomara/omaraneurolab/releases/download/1.0.0/NeuroChaT.exe) is available to run the GUI based version of NeuroChaT. Otherwise, Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
 
 ### Option 1: Use Pip
 
@@ -51,7 +51,7 @@ This method only allows the GUI program to function, any other file will need to
 
 ## Documentation
 
-See the docs folder for a pdf user guide which should be the first port of call. There is also html docs available for the neurochat package, which can be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu.
+See the docs folder for a pdf user guide which should be the first port of call. For coding with NeuroChaT, the API guide in notebooks/api_use_guide.ipynb is a good starting point. There is also html docs available for the neurochat package, which can be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu.
 
 ## Open Science Framework Storage
 
