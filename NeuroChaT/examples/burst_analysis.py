@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler
 import scipy.cluster.hierarchy as shc
 import numpy as np
 import matplotlib
-matplotlib.use('agg')
+# matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
@@ -405,7 +405,6 @@ def main(args, config):
     max_units = int(config.get("Setup", "max_units"))
     isi_bound = int(config.get("Params", "isi_bound"))
     isi_bin_length = int(config.get("Params", "isi_bin_length"))
-    filter_cells = config.getboolean("Output", "filter_cells")
 
     setup_logging(in_dir)
 
@@ -433,7 +432,7 @@ def main(args, config):
     if analysis_flags[0]:
         place_cell_summary(
             container, dpi=summary_dpi, out_dirname=plot_outname,
-            filter_place_cells=filter_cells, filter_low_freq=filter_cells,
+            filter_place_cells=False, filter_low_freq=False,
             opt_end=opt_end, base_dir=in_dir,
             output_format=output_format, isi_bound=isi_bound,
             isi_bin_length=isi_bin_length, output=plot_order,
@@ -538,7 +537,7 @@ def print_config(config, msg=""):
 if __name__ == "__main__":
     config = configparser.ConfigParser()
     here = os.path.dirname(os.path.realpath(__file__))
-    config_path = os.path.join(here, "configs", "burst_analysis.cfg")
+    config_path = os.path.join(here, "Configs", "burst_analysis.cfg")
     config.read(config_path)
 
     parser = argparse.ArgumentParser(
