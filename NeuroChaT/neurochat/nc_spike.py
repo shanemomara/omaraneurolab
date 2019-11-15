@@ -1460,6 +1460,7 @@ class NSpike(NBase):
                 g = hdf.f[path]
             else:
                 logging.error('Specified shank datapath does not exist!')
+                return
     
             for key, value in g.attrs.items():
                 _record_info[key] = value
@@ -1665,7 +1666,6 @@ class NSpike(NBase):
             
             if unit_ID is None:
                 string = "Unable to parse clusters from {}".format(used)
-                print(string)
                 logging.error(string)
                 return
 
