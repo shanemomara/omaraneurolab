@@ -720,6 +720,34 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.lfp_chan_box.clear()
         self.lfp_chan_box.addItems(items)
 
+    def unit_getitems(self):
+        """Returns the list of units once spike data is set."""
+        try:
+            file_format = self.file_format_box.itemText(
+                self.file_format_box.currentIndex())
+            if file_format == "NWB":
+                self._control.open_hdf_file()
+                _, path = self._control.get_spike_file().split("+")
+                path = path + '/Clustering/cluster_nums'
+                items = self._control.hdf.f[path]
+            else:
+                data = self._control.ndata
+                data.load_spike()
+                items = data.get_unit_list()
+            if len(items) == 0:
+                logging.error("No units in this file.")
+                items = [i for i in range(256)]
+            str_items = [str(x) for x in items]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(str_items)
+            if file_format == "NWB":
+                self._control.close_hdf_file()
+        except Exception as e:
+            log_exception(e, "Populating unit list failed")
+            items = [str(i) for i in range(256)]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(items)
+
     def browse(self):
         """
         Opens a file dialog asking the user to select spike and spatial data files.
@@ -748,6 +776,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 #                    spike_file = words[-1]
 #                    self._curr_dir = directory
                     self._control.set_spike_file(spike_file)
+                    self._control.ndata.set_spike_file(spike_file)
                     logging.info("New spike file added: " + \
                                         words[-1])
                     spatial_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -761,6 +790,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         logging.info("New spatial file added: " + \
                                         words[-1])
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
             elif file_format == "NWB":
                 nwb_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -779,7 +809,6 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         path = '/processing/Shank'
                         self._control.open_hdf_file()
                         items= self._control.get_hdf_groups(path=path)
-                        self._control.close_hdf_file()
                         # hdf = Nhdf()
                         # hdf.set_filename(nwb_file)
                         # path = '/processing/Shank'
@@ -788,22 +817,33 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         # else:
                         #     logging.warning('No Shank data stored in the path:'+ path)
                         if items:
-                            item, ok = QtWidgets.QInputDialog.getItem(self, "Select electrode group",
-                                                                      "Electrode groups: ", items, 0, False)
+                            item, ok = QtWidgets.QInputDialog.getItem(
+                                self, "Select electrode group",
+                                "Electrode groups: ", items, 0, False)
                             if ok:
-                                self._control.set_spike_file(nwb_file+ '+'+ path+ '/' + item)
-                                logging.info('Spike data set to electrode group: '+ path+ '/'+ item)
+                                self._control.set_spike_file(
+                                    nwb_file+ '+'+ path+ '/' + item)
+                                logging.info(
+                                    'Spike data set to electrode group: '
+                                    + path+ '/'+ item)
 
                                 path = '/processing/Behavioural/Position'
                                 if self._control.exist_hdf_path(path=path):
-                                    self._control.set_spatial_file(nwb_file+ '+'+ path)
-                                    logging.info('Position data set to group: '+ path)
+                                    self._control.set_spatial_file(
+                                        nwb_file+ '+'+ path)
+                                    logging.info(
+                                        'Position data set to group: '+ path)
                                 else:
-                                    logging.warning(path+ ' not found! Spatial data cannot be set!')
-                    except:
-                        logging.error('Cannot read the hdf file')
+                                    logging.warning(
+                                        path+ 
+                                        ' not found! Spatial data not set.')
+                        self._control.close_hdf_file()
+                    except Exception as e:
+                        log_exception(
+                            e, "Cannot read hdf file in nc_ui browse")
 
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
         elif mode_id == 2:
             excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -878,9 +918,11 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         Called when the selection in the 'Unit No' is changed. Sets the unit number accordingly.
 
         """
-
-        self._control.set_unit_no(value)
-        logging.info("Selected Unit: "+ str(value))
+        if value < 0:
+            return
+        unit_no = int(self.unit_no_box.itemText(value))
+        self._control.set_unit_no(unit_no)
+        logging.info("Selected Unit: "+ str(unit_no))
 
     def set_lfp_chan(self, value):
         """
@@ -1005,6 +1047,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         getattr(self, self._control.get_graphic_format() + '_button').setChecked(True)
         self.graphic_format_select()
 
+        self.unit_getitems()
         index = self._control.get_unit_no()
         if index >= 0 & index < 256:
             self.unit_no_box.setCurrentIndex(index)
