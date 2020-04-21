@@ -1,475 +1,32 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-    <meta name="generator" content="pdoc 0.7.5" />
-    <title>neurochat.nc_datacontainer API documentation</title>
-    <meta name="description"
-        content="This module implements a container for the Ndata class to simplify multi experiment analyses …" />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-    <style>
-        .flex {
-            display: flex !important
-        }
-
-        body {
-            line-height: 1.5em
-        }
-
-        #content {
-            padding: 20px
-        }
-
-        #sidebar {
-            padding: 30px;
-            overflow: hidden
-        }
-
-        .http-server-breadcrumbs {
-            font-size: 130%;
-            margin: 0 0 15px 0
-        }
-
-        #footer {
-            font-size: .75em;
-            padding: 5px 30px;
-            border-top: 1px solid #ddd;
-            text-align: right
-        }
-
-        #footer p {
-            margin: 0 0 0 1em;
-            display: inline-block
-        }
-
-        #footer p:last-child {
-            margin-right: 30px
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            font-weight: 300
-        }
-
-        h1 {
-            font-size: 2.5em;
-            line-height: 1.1em
-        }
-
-        h2 {
-            font-size: 1.75em;
-            margin: 1em 0 .50em 0
-        }
-
-        h3 {
-            font-size: 1.4em;
-            margin: 25px 0 10px 0
-        }
-
-        h4 {
-            margin: 0;
-            font-size: 105%
-        }
-
-        a {
-            color: #058;
-            text-decoration: none;
-            transition: color .3s ease-in-out
-        }
-
-        a:hover {
-            color: #e82
-        }
-
-        .title code {
-            font-weight: bold
-        }
-
-        h2[id^="header-"] {
-            margin-top: 2em
-        }
-
-        .ident {
-            color: #900
-        }
-
-        pre code {
-            background: #f8f8f8;
-            font-size: .8em;
-            line-height: 1.4em
-        }
-
-        code {
-            background: #f2f2f1;
-            padding: 1px 4px;
-            overflow-wrap: break-word
-        }
-
-        h1 code {
-            background: transparent
-        }
-
-        pre {
-            background: #f8f8f8;
-            border: 0;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            margin: 1em 0;
-            padding: 1ex
-        }
-
-        #http-server-module-list {
-            display: flex;
-            flex-flow: column
-        }
-
-        #http-server-module-list div {
-            display: flex
-        }
-
-        #http-server-module-list dt {
-            min-width: 10%
-        }
-
-        #http-server-module-list p {
-            margin-top: 0
-        }
-
-        .toc ul,
-        #index {
-            list-style-type: none;
-            margin: 0;
-            padding: 0
-        }
-
-        #index code {
-            background: transparent
-        }
-
-        #index h3 {
-            border-bottom: 1px solid #ddd
-        }
-
-        #index ul {
-            padding: 0
-        }
-
-        #index h4 {
-            font-weight: bold
-        }
-
-        #index h4+ul {
-            margin-bottom: .6em
-        }
-
-        @media (min-width:200ex) {
-            #index .two-column {
-                column-count: 2
-            }
-        }
-
-        @media (min-width:300ex) {
-            #index .two-column {
-                column-count: 3
-            }
-        }
-
-        dl {
-            margin-bottom: 2em
-        }
-
-        dl dl:last-child {
-            margin-bottom: 4em
-        }
-
-        dd {
-            margin: 0 0 1em 3em
-        }
-
-        #header-classes+dl>dd {
-            margin-bottom: 3em
-        }
-
-        dd dd {
-            margin-left: 2em
-        }
-
-        dd p {
-            margin: 10px 0
-        }
-
-        .name {
-            background: #eee;
-            font-weight: bold;
-            font-size: .85em;
-            padding: 5px 10px;
-            display: inline-block;
-            min-width: 40%
-        }
-
-        .name:hover {
-            background: #e0e0e0
-        }
-
-        .name>span:first-child {
-            white-space: nowrap
-        }
-
-        .name.class>span:nth-child(2) {
-            margin-left: .4em
-        }
-
-        .inherited {
-            color: #999;
-            border-left: 5px solid #eee;
-            padding-left: 1em
-        }
-
-        .inheritance em {
-            font-style: normal;
-            font-weight: bold
-        }
-
-        .desc h2 {
-            font-weight: 400;
-            font-size: 1.25em
-        }
-
-        .desc h3 {
-            font-size: 1em
-        }
-
-        .desc dt code {
-            background: inherit
-        }
-
-        .source summary,
-        .git-link-div {
-            color: #666;
-            text-align: right;
-            font-weight: 400;
-            font-size: .8em;
-            text-transform: uppercase
-        }
-
-        .source summary>* {
-            white-space: nowrap;
-            cursor: pointer
-        }
-
-        .git-link {
-            color: inherit;
-            margin-left: 1em
-        }
-
-        .source pre {
-            max-height: 500px;
-            overflow: auto;
-            margin: 0
-        }
-
-        .source pre code {
-            font-size: 12px;
-            overflow: visible
-        }
-
-        .hlist {
-            list-style: none
-        }
-
-        .hlist li {
-            display: inline
-        }
-
-        .hlist li:after {
-            content: ',\2002'
-        }
-
-        .hlist li:last-child:after {
-            content: none
-        }
-
-        .hlist .hlist {
-            display: inline;
-            padding-left: 1em
-        }
-
-        img {
-            max-width: 100%
-        }
-
-        .admonition {
-            padding: .1em .5em;
-            margin-bottom: 1em
-        }
-
-        .admonition-title {
-            font-weight: bold
-        }
-
-        .admonition.note,
-        .admonition.info,
-        .admonition.important {
-            background: #aef
-        }
-
-        .admonition.todo,
-        .admonition.versionadded,
-        .admonition.tip,
-        .admonition.hint {
-            background: #dfd
-        }
-
-        .admonition.warning,
-        .admonition.versionchanged,
-        .admonition.deprecated {
-            background: #fd4
-        }
-
-        .admonition.error,
-        .admonition.danger,
-        .admonition.caution {
-            background: lightpink
-        }
-    </style>
-    <style media="screen and (min-width: 700px)">
-        @media screen and (min-width:700px) {
-            #sidebar {
-                width: 30%
-            }
-
-            #content {
-                width: 70%;
-                max-width: 100ch;
-                padding: 3em 4em;
-                border-left: 1px solid #ddd
-            }
-
-            pre code {
-                font-size: 1em
-            }
-
-            .item .name {
-                font-size: 1em
-            }
-
-            main {
-                display: flex;
-                flex-direction: row-reverse;
-                justify-content: flex-end
-            }
-
-            .toc ul ul,
-            #index ul {
-                padding-left: 1.5em
-            }
-
-            .toc>ul>li {
-                margin-top: .5em
-            }
-        }
-    </style>
-    <style media="print">
-        @media print {
-            #sidebar h1 {
-                page-break-before: always
-            }
-
-            .source {
-                display: none
-            }
-        }
-
-        @media print {
-            * {
-                background: transparent !important;
-                color: #000 !important;
-                box-shadow: none !important;
-                text-shadow: none !important
-            }
-
-            a[href]:after {
-                content: " ("attr(href) ")";
-                font-size: 90%
-            }
-
-            a[href][title]:after {
-                content: none
-            }
-
-            abbr[title]:after {
-                content: " ("attr(title) ")"
-            }
-
-            .ir a:after,
-            a[href^="javascript:"]:after,
-            a[href^="#"]:after {
-                content: ""
-            }
-
-            pre,
-            blockquote {
-                border: 1px solid #999;
-                page-break-inside: avoid
-            }
-
-            thead {
-                display: table-header-group
-            }
-
-            tr,
-            img {
-                page-break-inside: avoid
-            }
-
-            img {
-                max-width: 100% !important
-            }
-
-            @page {
-                margin: 0.5cm
-            }
-
-            p,
-            h2,
-            h3 {
-                orphans: 3;
-                widows: 3
-            }
-
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6 {
-                page-break-after: avoid
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.5" />
+<title>neurochat.nc_datacontainer API documentation</title>
+<meta name="description" content="This module implements a container for the Ndata class to simplify multi experiment analyses …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
-
 <body>
-    <main>
-        <article id="content">
-            <header>
-                <h1 class="title">Module <code>neurochat.nc_datacontainer</code></h1>
-            </header>
-            <section id="section-intro">
-                <p>This module implements a container for the Ndata class to simplify multi experiment analyses.</p>
-                <p>@author: Sean Martin; martins7 at tcd dot ie</p>
-                <details class="source">
-                    <summary>
-                        <span>Expand source code</span>
-                    </summary>
-                    <pre><code class="python"># -*- coding: utf-8 -*-
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>neurochat.nc_datacontainer</code></h1>
+</header>
+<section id="section-intro">
+<p>This module implements a container for the Ndata class to simplify multi experiment analyses.</p>
+<p>@author: Sean Martin; martins7 at tcd dot ie</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements a container for the Ndata class to simplify multi experiment analyses.
 
@@ -1448,60 +1005,57 @@ class NDataContainer():
 
     def __iter__(self):
         return NDataContainerIterator(self)</code></pre>
-                </details>
-            </section>
-            <section>
-            </section>
-            <section>
-            </section>
-            <section>
-            </section>
-            <section>
-                <h2 class="section-title" id="header-classes">Classes</h2>
-                <dl>
-                    <dt id="neurochat.nc_datacontainer.NDataContainer"><code class="flex name class">
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="neurochat.nc_datacontainer.NDataContainer"><code class="flex name class">
 <span>class <span class="ident">NDataContainer</span></span>
 <span>(</span><span>share_positions=False, load_on_fly=False, share_stms=False)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Class for storing multiple file locations for ndata objects.</p>
-                            <p>Additionally the ndata objects themselves can be stored.</p>
-                            <p>Initialise the class.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>share_positions</code></strong> :&ensp;<code>bool</code></dt>
-                                <dd>Share the same position file between the data objects</dd>
-                                <dt><strong><code>load_on_fly</code></strong> :&ensp;<code>bool</code></dt>
-                                <dd>Don't store all the data in memory,
-                                    instead load it as needed, on the fly</dd>
-                            </dl>
-                            <h2 id="attributes">Attributes</h2>
-                            <dl>
-                                <dt><strong><code>_container</code></strong> :&ensp;<code>List</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_file_names_dict</code></strong> :&ensp;<code>Dict</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_units</code></strong> :&ensp;<code>List</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_unit_count</code></strong> :&ensp;<code>List</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_share_positions</code></strong> :&ensp;<code>bool</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_load_on_fly</code></strong> :&ensp;<code>bool</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_smoothed_speed</code></strong> :&ensp;<code>bool</code></dt>
-                                <dd>&nbsp;</dd>
-                                <dt><strong><code>_last_data_pt</code></strong> :&ensp;<code>tuple</code>
-                                    (<code>int</code>, <code>NData</code>)</dt>
-                                <dd>&nbsp;</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">class NDataContainer():
+<dd>
+<section class="desc"><p>Class for storing multiple file locations for ndata objects.</p>
+<p>Additionally the ndata objects themselves can be stored.</p>
+<p>Initialise the class.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>share_positions</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Share the same position file between the data objects</dd>
+<dt><strong><code>load_on_fly</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Don't store all the data in memory,
+instead load it as needed, on the fly</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>_container</code></strong> :&ensp;<code>List</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_file_names_dict</code></strong> :&ensp;<code>Dict</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_units</code></strong> :&ensp;<code>List</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_unit_count</code></strong> :&ensp;<code>List</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_share_positions</code></strong> :&ensp;<code>bool</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_load_on_fly</code></strong> :&ensp;<code>bool</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_smoothed_speed</code></strong> :&ensp;<code>bool</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>_last_data_pt</code></strong> :&ensp;<code>tuple</code> (<code>int</code>, <code>NData</code>)</dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NDataContainer():
     &#34;&#34;&#34;
     Class for storing multiple file locations for ndata objects.
 
@@ -2445,45 +1999,40 @@ class NDataContainer():
 
     def __iter__(self):
         return NDataContainerIterator(self)</code></pre>
-                        </details>
-                        <h3>Class variables</h3>
-                        <dl>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.EFileType"><code
-                                    class="name">var <span class="ident">EFileType</span></code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>The different filetypes that can be added to an object.</p>
-                                </section>
-                            </dd>
-                        </dl>
-                        <h3>Methods</h3>
-                        <dl>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.add_all_files"><code class="name flex">
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="neurochat.nc_datacontainer.NDataContainer.EFileType"><code class="name">var <span class="ident">EFileType</span></code></dt>
+<dd>
+<section class="desc"><p>The different filetypes that can be added to an object.</p></section>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="neurochat.nc_datacontainer.NDataContainer.add_all_files"><code class="name flex">
 <span>def <span class="ident">add_all_files</span></span>(<span>self, spats, spikes, lfps)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Quickly add a list of positions, spikes and lfps.</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>spats</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>The list of spatial files</dd>
-                                        <dt><strong><code>spikes</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>The list of spike files</dd>
-                                        <dt><strong><code>lfps</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>The list of lfp files</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>None</code></dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def add_all_files(self, spats, spikes, lfps):
+<dd>
+<section class="desc"><p>Quickly add a list of positions, spikes and lfps.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spats</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of spatial files</dd>
+<dt><strong><code>spikes</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of spike files</dd>
+<dt><strong><code>lfps</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of lfp files</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_all_files(self, spats, spikes, lfps):
     &#34;&#34;&#34;
     Quickly add a list of positions, spikes and lfps.
 
@@ -2504,51 +2053,47 @@ class NDataContainer():
     self.add_files(self.EFileType.Position, spats)
     self.add_files(self.EFileType.Spike, spikes)
     self.add_files(self.EFileType.LFP, lfps)</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir"><code
-                                    class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir"><code class="name flex">
 <span>def <span class="ident">add_axona_files_from_dir</span></span>(<span>self, directory, recursive=False, verbose=False, **kwargs)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Go through a directory, extracting files from it.</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>directory</code></strong> :&ensp;<code>str</code></dt>
-                                        <dd>The directory to parse through</dd>
-                                    </dl>
-                                    <p>recursive : bool, optional. Defaults to False.
-                                        Whether to recurse through dirs
-                                        verbose: bool, optional. Defaults to False.
-                                        Whether to print the files being added.</p>
-                                    <dl>
-                                        <dt><strong><code>**kwargs</code></strong> :&ensp;<code>keyword</code>
-                                            <code>arguments</code></dt>
-                                        <dd>tetrode_list : list
-                                            list of tetrodes to consider
-                                            data_extension : str default .set
-                                            cluster_extension : str default .cut
-                                            pos_extension : str default .txt
-                                            lfp_extension : str default .eeg
-                                            re_filter : str default None
-                                            regex string for matching filenames
-                                            save_result : bool default True
-                                            should save the resulting collection to a file
-                                            unit_cutoff : tuple of ints
-                                            don't consider any recordings with units outside this range</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>None</code></dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def add_axona_files_from_dir(
+<dd>
+<section class="desc"><p>Go through a directory, extracting files from it.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>directory</code></strong> :&ensp;<code>str</code></dt>
+<dd>The directory to parse through</dd>
+</dl>
+<p>recursive : bool, optional. Defaults to False.
+Whether to recurse through dirs
+verbose: bool, optional. Defaults to False.
+Whether to print the files being added.</p>
+<dl>
+<dt><strong><code>**kwargs</code></strong> :&ensp;<code>keyword</code> <code>arguments</code></dt>
+<dd>tetrode_list : list
+list of tetrodes to consider
+data_extension : str default .set
+cluster_extension : str default .cut
+pos_extension : str default .txt
+lfp_extension : str default .eeg
+re_filter : str default None
+regex string for matching filenames
+save_result : bool default True
+should save the resulting collection to a file
+unit_cutoff : tuple of ints
+don't consider any recordings with units outside this range</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_axona_files_from_dir(
         self, directory, recursive=False, verbose=False, **kwargs):
     &#34;&#34;&#34;
     Go through a directory, extracting files from it.
@@ -2690,53 +2235,49 @@ class NDataContainer():
             &#34;Wrote list of files considered to {}&#34;.format(out_loc))
         return out_loc
     return cluster_files</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.add_data"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.add_data"><code class="name flex">
 <span>def <span class="ident">add_data</span></span>(<span>self, data)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Add an NData object to this container.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def add_data(self, data):
+<dd>
+<section class="desc"><p>Add an NData object to this container.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_data(self, data):
     &#34;&#34;&#34;Add an NData object to this container.&#34;&#34;&#34;
     if isinstance(data, NData):
         self._container.append(data)
     else:
         logging.error(&#34;Adding incorrect object to data container&#34;)
         return</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.add_files"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.add_files"><code class="name flex">
 <span>def <span class="ident">add_files</span></span>(<span>self, f_type, descriptors)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Add a list of filenames of the given type to the container.</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>f_type</code></strong> :&ensp;<code>EFileType</code>:</dt>
-                                        <dd>The type of file being added (Spike, LFP, Position)</dd>
-                                        <dt><strong><code>descriptors</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>Either a list of filenames, or a list of tuples in the order
-                                            (filenames, obj_names, data_sytem). Filenames should be absolute</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>None</code></dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def add_files(self, f_type, descriptors):
+<dd>
+<section class="desc"><p>Add a list of filenames of the given type to the container.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>f_type</code></strong> :&ensp;<code>EFileType</code>:</dt>
+<dd>The type of file being added (Spike, LFP, Position)</dd>
+<dt><strong><code>descriptors</code></strong> :&ensp;<code>list</code></dt>
+<dd>Either a list of filenames, or a list of tuples in the order
+(filenames, obj_names, data_sytem). Filenames should be absolute</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_files(self, f_type, descriptors):
     &#34;&#34;&#34;
     Add a list of filenames of the given type to the container.
 
@@ -2788,35 +2329,32 @@ class NDataContainer():
                 description.append(None)
         self._file_names_dict.setdefault(
             f_type.name, []).append(description)</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.add_files_from_excel"><code
-                                    class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.add_files_from_excel"><code class="name flex">
 <span>def <span class="ident">add_files_from_excel</span></span>(<span>self, file_loc, unit_sep=' ')</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Add filepaths from an excel file.</p>
-                                    <p>These should be setup to be in the order:
-                                        directory | position file | spike file | unit numbers | eeg extension</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>file_loc</code></strong> :&ensp;<code>str</code></dt>
-                                        <dd>Name of the excel file that contains the data specifications</dd>
-                                        <dt><strong><code>unit_sep</code></strong> :&ensp;<code>str</code></dt>
-                                        <dd>Optional separator character for unit numbers, default " "</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>excel_info</code> :</dt>
-                                        <dd>The raw info parsed from the excel file for further use</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def add_files_from_excel(self, file_loc, unit_sep=&#34; &#34;):
+<dd>
+<section class="desc"><p>Add filepaths from an excel file.</p>
+<p>These should be setup to be in the order:
+directory | position file | spike file | unit numbers | eeg extension</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_loc</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the excel file that contains the data specifications</dd>
+<dt><strong><code>unit_sep</code></strong> :&ensp;<code>str</code></dt>
+<dd>Optional separator character for unit numbers, default " "</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>excel_info</code> :</dt>
+<dd>The raw info parsed from the excel file for further use</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_files_from_excel(self, file_loc, unit_sep=&#34; &#34;):
     &#34;&#34;&#34;
     Add filepaths from an excel file.
 
@@ -2913,32 +2451,29 @@ class NDataContainer():
     else:
         logging.error(&#39;Excel file does not exist!&#39;)
         return None</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_data"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_data"><code class="name flex">
 <span>def <span class="ident">get_data</span></span>(<span>self, index=None)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return the NData objects in this collection, or a specific object.</p>
-                                    <p>Do not call this with no index if loading data on the fly</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
-                                        <dd>Optional index to get data at</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>NData</code> or <code>list</code> of <code>NData</code>
-                                            <code>objects</code></dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_data(self, index=None):
+<dd>
+<section class="desc"><p>Return the NData objects in this collection, or a specific object.</p>
+<p>Do not call this with no index if loading data on the fly</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
+<dd>Optional index to get data at</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>NData</code> or <code>list</code> of <code>NData</code> <code>objects</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data(self, index=None):
     &#34;&#34;&#34;
     Return the NData objects in this collection, or a specific object.
 
@@ -2968,18 +2503,18 @@ class NDataContainer():
         logging.error(&#34;Input index to get_data out of range&#34;)
         return
     return self._container[index]</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_data_at"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_data_at"><code class="name flex">
 <span>def <span class="ident">get_data_at</span></span>(<span>self, data_index, unit_index)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc"></section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_data_at(self, data_index, unit_index):
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data_at(self, data_index, unit_index):
     if self._load_on_fly:
         try:
             if (data_index == self._last_data_pt[0] and
@@ -3001,38 +2536,34 @@ class NDataContainer():
     if len(self.get_units()) &gt; 0:
         result.set_unit_no(self.get_units(data_index)[unit_index])
     return result</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_file_dict"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_file_dict"><code class="name flex">
 <span>def <span class="ident">get_file_dict</span></span>(<span>self, key=None)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return the key value filename dictionary for this collection.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_file_dict(self, key=None):
+<dd>
+<section class="desc"><p>Return the key value filename dictionary for this collection.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_file_dict(self, key=None):
     &#34;&#34;&#34;Return the key value filename dictionary for this collection.&#34;&#34;&#34;
     if key:
         return self._file_names_dict.get(key, None)
     return self._file_names_dict</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_index_info"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_index_info"><code class="name flex">
 <span>def <span class="ident">get_index_info</span></span>(<span>self, idx, absolute=False)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return the Spike, LFP, Position and Unit info at idx.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_index_info(self, idx, absolute=False):
+<dd>
+<section class="desc"><p>Return the Spike, LFP, Position and Unit info at idx.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_index_info(self, idx, absolute=False):
     &#34;&#34;&#34;Return the Spike, LFP, Position and Unit info at idx.&#34;&#34;&#34;
     str_info = {}
     dirnames = []
@@ -3057,18 +2588,18 @@ class NDataContainer():
             &#34;:Spike, LFP, Position, STM: &#34;, dirnames))
         str_info[&#34;Root&#34;] = dirnames
     return str_info</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_name_at_idx"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_name_at_idx"><code class="name flex">
 <span>def <span class="ident">get_name_at_idx</span></span>(<span>self, idx, ext, opt_end='', base_dir=None, out_dirname='nc_plots')</span>
 </code></dt>
-                            <dd>
-                                <section class="desc"></section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_name_at_idx(
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_name_at_idx(
         self, idx, ext, opt_end=&#34;&#34;, base_dir=None, out_dirname=&#34;nc_plots&#34;):
     data_idx, unit_idx = self._index_to_data_pos(idx)
     filename = self.get_file_dict()[&#34;Spike&#34;][data_idx][0]
@@ -3092,50 +2623,46 @@ class NDataContainer():
         main_dir, out_dirname, data_basename)
     make_dir_if_not_exists(out_name)
     return out_name</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_num_data"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_num_data"><code class="name flex">
 <span>def <span class="ident">get_num_data</span></span>(<span>self)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return the number of Ndata objects in the container.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_num_data(self):
+<dd>
+<section class="desc"><p>Return the number of Ndata objects in the container.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_num_data(self):
     &#34;&#34;&#34;Return the number of Ndata objects in the container.&#34;&#34;&#34;
     if self._load_on_fly:
         for _, vals in self.get_file_dict().items():
             return len(vals)
     return len(self._container)</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.get_units"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.get_units"><code class="name flex">
 <span>def <span class="ident">get_units</span></span>(<span>self, index=None)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return the units in this collection, optionally at a given index.</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
-                                        <dd>Optional collection data index to get the units for</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>list</code></dt>
-                                        <dd>Either a list containing lists of all units in the collection
-                                            or the list of units for the given data index</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def get_units(self, index=None):
+<dd>
+<section class="desc"><p>Return the units in this collection, optionally at a given index.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
+<dd>Optional collection data index to get the units for</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>Either a list containing lists of all units in the collection
+or the list of units for the given data index</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_units(self, index=None):
     &#34;&#34;&#34;
     Return the units in this collection, optionally at a given index.
 
@@ -3157,20 +2684,18 @@ class NDataContainer():
         logging.error(&#34;Input index to get_data out of range&#34;)
         return
     return self._units[index]</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.list_all_units"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.list_all_units"><code class="name flex">
 <span>def <span class="ident">list_all_units</span></span>(<span>self)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Print all the units in the container.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def list_all_units(self):
+<dd>
+<section class="desc"><p>Print all the units in the container.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_all_units(self):
     &#34;&#34;&#34;Print all the units in the container.&#34;&#34;&#34;
     if self._load_on_fly:
         for key, vals in self.get_file_dict().items():
@@ -3182,35 +2707,32 @@ class NDataContainer():
     else:
         for data in self._container:
             print(&#34;units are {}&#34;.format(data.get_unit_list()))</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.merge"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.merge"><code class="name flex">
 <span>def <span class="ident">merge</span></span>(<span>self, indices, force_equal_units=True)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Merge the data from multiple indices together into the first index.</p>
-                                    <p>ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY - DOES NOT MERGE LFP.
-                                        Only call this after loading the data, and not while loading on the fly</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>indices</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>The list of indices in the data to merge together</dd>
-                                    </dl>
-                                    <p>force_equal_units:
-                                        The merged indexes must have the same unit numbers available</p>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>The</code> <code>merged</code> <code>data</code> <code>point</code>
-                                        </dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def merge(self, indices, force_equal_units=True):
+<dd>
+<section class="desc"><p>Merge the data from multiple indices together into the first index.</p>
+<p>ONLY FUNCTIONS FOR POSITIONS AND SPIKES CURRENTLY - DOES NOT MERGE LFP.
+Only call this after loading the data, and not while loading on the fly</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>indices</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of indices in the data to merge together</dd>
+</dl>
+<p>force_equal_units:
+The merged indexes must have the same unit numbers available</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>The</code> <code>merged</code> <code>data</code> <code>point</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge(self, indices, force_equal_units=True):
     &#34;&#34;&#34;
     Merge the data from multiple indices together into the first index.
 
@@ -3297,19 +2819,18 @@ class NDataContainer():
     self._container[target_index].set_unit_no(
         self.get_units(target_index)[0])
     return self.get_data(target_index)</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.remove_recordings_units"><code
-                                    class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.remove_recordings_units"><code class="name flex">
 <span>def <span class="ident">remove_recordings_units</span></span>(<span>self, unit_lb=0, unit_ub=10000, verbose=False)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc"></section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def remove_recordings_units(
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_recordings_units(
         self, unit_lb=0, unit_ub=10000, verbose=False):
     start_size = self.get_num_data()
     start_total = len(self)
@@ -3339,20 +2860,18 @@ class NDataContainer():
     else:
         print(&#34;{} tetrodes with {} units&#34;.format(
             start_size, start_total))</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.set_units"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.set_units"><code class="name flex">
 <span>def <span class="ident">set_units</span></span>(<span>self, units='all')</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Set the list of units for the collection.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def set_units(self, units=&#39;all&#39;):
+<dd>
+<section class="desc"><p>Set the list of units for the collection.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_units(self, units=&#39;all&#39;):
     &#34;&#34;&#34;Set the list of units for the collection.&#34;&#34;&#34;
     self._units = []
     if self.get_file_dict() == {}:
@@ -3392,52 +2911,47 @@ class NDataContainer():
         logging.error(
             &#34;Unrecognised type {} passed to set units&#34;.format(type(units)))
     self._unit_count = self._count_num_units()</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.setup"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.setup"><code class="name flex">
 <span>def <span class="ident">setup</span></span>(<span>self)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Perform data initialisation based on the input filenames.</p>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def setup(self):
+<dd>
+<section class="desc"><p>Perform data initialisation based on the input filenames.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setup(self):
     &#34;&#34;&#34;Perform data initialisation based on the input filenames.&#34;&#34;&#34;
     if self._load_on_fly:
         self._last_data_pt = (1, None)
     else:
         self._load_all_data()</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.sort_units_spatially"><code
-                                    class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.sort_units_spatially"><code class="name flex">
 <span>def <span class="ident">sort_units_spatially</span></span>(<span>self, should_sort_list=None, mode='vertical')</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Sort the units in the collection based on the place field centroid.</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>should_sort_list</code></strong> :&ensp;<code>list</code></dt>
-                                        <dd>Optional list of boolean values indicating what objects</dd>
-                                        <dt><strong><code>mode</code></strong> :&ensp;<code>str</code></dt>
-                                        <dd>"horizontal" or "vertical", indicating what axis to sort on.</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><code>None</code></dt>
-                                        <dd>&nbsp;</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def sort_units_spatially(self, should_sort_list=None, mode=&#34;vertical&#34;):
+<dd>
+<section class="desc"><p>Sort the units in the collection based on the place field centroid.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>should_sort_list</code></strong> :&ensp;<code>list</code></dt>
+<dd>Optional list of boolean values indicating what objects</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>str</code></dt>
+<dd>"horizontal" or "vertical", indicating what axis to sort on.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sort_units_spatially(self, should_sort_list=None, mode=&#34;vertical&#34;):
     &#34;&#34;&#34;
     Sort the units in the collection based on the place field centroid.
 
@@ -3477,27 +2991,24 @@ class NDataContainer():
             self._units[idx] = [unit for _, unit in sorted(
                 zip(centroids, self.get_units()[idx]),
                 key=lambda pair: pair[0][h])]</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.string_repr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.string_repr"><code class="name flex">
 <span>def <span class="ident">string_repr</span></span>(<span>self, pretty=True)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return a string representation of this class.
-                                        Parameters</p>
-                                    <hr>
-                                    <dl>
-                                        <dt><strong><code>pretty</code></strong> :&ensp;<code>str</code>,
-                                            <code>Default</code> <code>True</code></dt>
-                                        <dd>Should return a pretty version or all the info.</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def string_repr(self, pretty=True):
+<dd>
+<section class="desc"><p>Return a string representation of this class.
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>pretty</code></strong> :&ensp;<code>str</code>, <code>Default</code> <code>True</code></dt>
+<dd>Should return a pretty version or all the info.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def string_repr(self, pretty=True):
     &#34;&#34;&#34;
     Return a string representation of this class.
     Parameters
@@ -3509,34 +3020,29 @@ class NDataContainer():
         return self._pretty_string()
     else:
         return self._full_string()</code></pre>
-                                </details>
-                            </dd>
-                            <dt id="neurochat.nc_datacontainer.NDataContainer.subsample"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainer.subsample"><code class="name flex">
 <span>def <span class="ident">subsample</span></span>(<span>self, key)</span>
 </code></dt>
-                            <dd>
-                                <section class="desc">
-                                    <p>Return a subsample of the original data collection.</p>
-                                    <p>This subsample is not a reference, but a deep copy</p>
-                                    <h2 id="parameters">Parameters</h2>
-                                    <dl>
-                                        <dt><strong><code>key</code></strong> :&ensp;<code>Slice</code> or
-                                            <code>int</code></dt>
-                                        <dd>How to sample the original collection</dd>
-                                    </dl>
-                                    <h2 id="returns">Returns</h2>
-                                    <dl>
-                                        <dt><a title="neurochat.nc_datacontainer.NDataContainer"
-                                                href="#neurochat.nc_datacontainer.NDataContainer"><code>NDataContainer</code></a>
-                                        </dt>
-                                        <dd>The deep copied subsample</dd>
-                                    </dl>
-                                </section>
-                                <details class="source">
-                                    <summary>
-                                        <span>Expand source code</span>
-                                    </summary>
-                                    <pre><code class="python">def subsample(self, key):
+<dd>
+<section class="desc"><p>Return a subsample of the original data collection.</p>
+<p>This subsample is not a reference, but a deep copy</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>key</code></strong> :&ensp;<code>Slice</code> or <code>int</code></dt>
+<dd>How to sample the original collection</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="neurochat.nc_datacontainer.NDataContainer" href="#neurochat.nc_datacontainer.NDataContainer"><code>NDataContainer</code></a></dt>
+<dd>The deep copied subsample</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subsample(self, key):
     &#34;&#34;&#34;
     Return a subsample of the original data collection.
 
@@ -3572,21 +3078,21 @@ class NDataContainer():
 
     result._unit_count = result._count_num_units()
     return result</code></pre>
-                                </details>
-                            </dd>
-                        </dl>
-                    </dd>
-                    <dt id="neurochat.nc_datacontainer.NDataContainerIterator"><code class="flex name class">
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="neurochat.nc_datacontainer.NDataContainerIterator"><code class="flex name class">
 <span>class <span class="ident">NDataContainerIterator</span></span>
 <span>(</span><span>container)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc"></section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">class NDataContainerIterator():
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NDataContainerIterator():
     def __init__(self, container):
         self._index = 0
         self._container = container
@@ -3596,88 +3102,62 @@ class NDataContainer():
             self._index += 1
             return self._container[self._index - 1]
         raise StopIteration</code></pre>
-                        </details>
-                    </dd>
-                </dl>
-            </section>
-        </article>
-        <nav id="sidebar">
-            <h1>Index</h1>
-            <div class="toc">
-                <ul></ul>
-            </div>
-            <ul id="index">
-                <li>
-                    <h3>Super-module</h3>
-                    <ul>
-                        <li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
-                    </ul>
-                </li>
-                <li>
-                    <h3><a href="#header-classes">Classes</a></h3>
-                    <ul>
-                        <li>
-                            <h4><code><a title="neurochat.nc_datacontainer.NDataContainer" href="#neurochat.nc_datacontainer.NDataContainer">NDataContainer</a></code>
-                            </h4>
-                            <ul class="">
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.EFileType" href="#neurochat.nc_datacontainer.NDataContainer.EFileType">EFileType</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_all_files" href="#neurochat.nc_datacontainer.NDataContainer.add_all_files">add_all_files</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir" href="#neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir">add_axona_files_from_dir</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_data" href="#neurochat.nc_datacontainer.NDataContainer.add_data">add_data</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_files" href="#neurochat.nc_datacontainer.NDataContainer.add_files">add_files</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_files_from_excel" href="#neurochat.nc_datacontainer.NDataContainer.add_files_from_excel">add_files_from_excel</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_data" href="#neurochat.nc_datacontainer.NDataContainer.get_data">get_data</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_data_at" href="#neurochat.nc_datacontainer.NDataContainer.get_data_at">get_data_at</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_file_dict" href="#neurochat.nc_datacontainer.NDataContainer.get_file_dict">get_file_dict</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_index_info" href="#neurochat.nc_datacontainer.NDataContainer.get_index_info">get_index_info</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_name_at_idx" href="#neurochat.nc_datacontainer.NDataContainer.get_name_at_idx">get_name_at_idx</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_num_data" href="#neurochat.nc_datacontainer.NDataContainer.get_num_data">get_num_data</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_units" href="#neurochat.nc_datacontainer.NDataContainer.get_units">get_units</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.list_all_units" href="#neurochat.nc_datacontainer.NDataContainer.list_all_units">list_all_units</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.merge" href="#neurochat.nc_datacontainer.NDataContainer.merge">merge</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.remove_recordings_units" href="#neurochat.nc_datacontainer.NDataContainer.remove_recordings_units">remove_recordings_units</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.set_units" href="#neurochat.nc_datacontainer.NDataContainer.set_units">set_units</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.setup" href="#neurochat.nc_datacontainer.NDataContainer.setup">setup</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.sort_units_spatially" href="#neurochat.nc_datacontainer.NDataContainer.sort_units_spatially">sort_units_spatially</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.string_repr" href="#neurochat.nc_datacontainer.NDataContainer.string_repr">string_repr</a></code>
-                                </li>
-                                <li><code><a title="neurochat.nc_datacontainer.NDataContainer.subsample" href="#neurochat.nc_datacontainer.NDataContainer.subsample">subsample</a></code>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <h4><code><a title="neurochat.nc_datacontainer.NDataContainerIterator" href="#neurochat.nc_datacontainer.NDataContainerIterator">NDataContainerIterator</a></code>
-                            </h4>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </main>
-    <footer id="footer">
-        <p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad()</script>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="neurochat.nc_datacontainer.NDataContainer" href="#neurochat.nc_datacontainer.NDataContainer">NDataContainer</a></code></h4>
+<ul class="">
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.EFileType" href="#neurochat.nc_datacontainer.NDataContainer.EFileType">EFileType</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_all_files" href="#neurochat.nc_datacontainer.NDataContainer.add_all_files">add_all_files</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir" href="#neurochat.nc_datacontainer.NDataContainer.add_axona_files_from_dir">add_axona_files_from_dir</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_data" href="#neurochat.nc_datacontainer.NDataContainer.add_data">add_data</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_files" href="#neurochat.nc_datacontainer.NDataContainer.add_files">add_files</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.add_files_from_excel" href="#neurochat.nc_datacontainer.NDataContainer.add_files_from_excel">add_files_from_excel</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_data" href="#neurochat.nc_datacontainer.NDataContainer.get_data">get_data</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_data_at" href="#neurochat.nc_datacontainer.NDataContainer.get_data_at">get_data_at</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_file_dict" href="#neurochat.nc_datacontainer.NDataContainer.get_file_dict">get_file_dict</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_index_info" href="#neurochat.nc_datacontainer.NDataContainer.get_index_info">get_index_info</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_name_at_idx" href="#neurochat.nc_datacontainer.NDataContainer.get_name_at_idx">get_name_at_idx</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_num_data" href="#neurochat.nc_datacontainer.NDataContainer.get_num_data">get_num_data</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.get_units" href="#neurochat.nc_datacontainer.NDataContainer.get_units">get_units</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.list_all_units" href="#neurochat.nc_datacontainer.NDataContainer.list_all_units">list_all_units</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.merge" href="#neurochat.nc_datacontainer.NDataContainer.merge">merge</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.remove_recordings_units" href="#neurochat.nc_datacontainer.NDataContainer.remove_recordings_units">remove_recordings_units</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.set_units" href="#neurochat.nc_datacontainer.NDataContainer.set_units">set_units</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.setup" href="#neurochat.nc_datacontainer.NDataContainer.setup">setup</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.sort_units_spatially" href="#neurochat.nc_datacontainer.NDataContainer.sort_units_spatially">sort_units_spatially</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.string_repr" href="#neurochat.nc_datacontainer.NDataContainer.string_repr">string_repr</a></code></li>
+<li><code><a title="neurochat.nc_datacontainer.NDataContainer.subsample" href="#neurochat.nc_datacontainer.NDataContainer.subsample">subsample</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="neurochat.nc_datacontainer.NDataContainerIterator" href="#neurochat.nc_datacontainer.NDataContainerIterator">NDataContainerIterator</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
 </body>
-
 </html>

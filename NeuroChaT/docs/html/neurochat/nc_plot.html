@@ -1,474 +1,32 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-    <meta name="generator" content="pdoc 0.7.5" />
-    <title>neurochat.nc_plot API documentation</title>
-    <meta name="description" content="This module implements plotting functions for NeuroChaT analyses …" />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-    <style>
-        .flex {
-            display: flex !important
-        }
-
-        body {
-            line-height: 1.5em
-        }
-
-        #content {
-            padding: 20px
-        }
-
-        #sidebar {
-            padding: 30px;
-            overflow: hidden
-        }
-
-        .http-server-breadcrumbs {
-            font-size: 130%;
-            margin: 0 0 15px 0
-        }
-
-        #footer {
-            font-size: .75em;
-            padding: 5px 30px;
-            border-top: 1px solid #ddd;
-            text-align: right
-        }
-
-        #footer p {
-            margin: 0 0 0 1em;
-            display: inline-block
-        }
-
-        #footer p:last-child {
-            margin-right: 30px
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            font-weight: 300
-        }
-
-        h1 {
-            font-size: 2.5em;
-            line-height: 1.1em
-        }
-
-        h2 {
-            font-size: 1.75em;
-            margin: 1em 0 .50em 0
-        }
-
-        h3 {
-            font-size: 1.4em;
-            margin: 25px 0 10px 0
-        }
-
-        h4 {
-            margin: 0;
-            font-size: 105%
-        }
-
-        a {
-            color: #058;
-            text-decoration: none;
-            transition: color .3s ease-in-out
-        }
-
-        a:hover {
-            color: #e82
-        }
-
-        .title code {
-            font-weight: bold
-        }
-
-        h2[id^="header-"] {
-            margin-top: 2em
-        }
-
-        .ident {
-            color: #900
-        }
-
-        pre code {
-            background: #f8f8f8;
-            font-size: .8em;
-            line-height: 1.4em
-        }
-
-        code {
-            background: #f2f2f1;
-            padding: 1px 4px;
-            overflow-wrap: break-word
-        }
-
-        h1 code {
-            background: transparent
-        }
-
-        pre {
-            background: #f8f8f8;
-            border: 0;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            margin: 1em 0;
-            padding: 1ex
-        }
-
-        #http-server-module-list {
-            display: flex;
-            flex-flow: column
-        }
-
-        #http-server-module-list div {
-            display: flex
-        }
-
-        #http-server-module-list dt {
-            min-width: 10%
-        }
-
-        #http-server-module-list p {
-            margin-top: 0
-        }
-
-        .toc ul,
-        #index {
-            list-style-type: none;
-            margin: 0;
-            padding: 0
-        }
-
-        #index code {
-            background: transparent
-        }
-
-        #index h3 {
-            border-bottom: 1px solid #ddd
-        }
-
-        #index ul {
-            padding: 0
-        }
-
-        #index h4 {
-            font-weight: bold
-        }
-
-        #index h4+ul {
-            margin-bottom: .6em
-        }
-
-        @media (min-width:200ex) {
-            #index .two-column {
-                column-count: 2
-            }
-        }
-
-        @media (min-width:300ex) {
-            #index .two-column {
-                column-count: 3
-            }
-        }
-
-        dl {
-            margin-bottom: 2em
-        }
-
-        dl dl:last-child {
-            margin-bottom: 4em
-        }
-
-        dd {
-            margin: 0 0 1em 3em
-        }
-
-        #header-classes+dl>dd {
-            margin-bottom: 3em
-        }
-
-        dd dd {
-            margin-left: 2em
-        }
-
-        dd p {
-            margin: 10px 0
-        }
-
-        .name {
-            background: #eee;
-            font-weight: bold;
-            font-size: .85em;
-            padding: 5px 10px;
-            display: inline-block;
-            min-width: 40%
-        }
-
-        .name:hover {
-            background: #e0e0e0
-        }
-
-        .name>span:first-child {
-            white-space: nowrap
-        }
-
-        .name.class>span:nth-child(2) {
-            margin-left: .4em
-        }
-
-        .inherited {
-            color: #999;
-            border-left: 5px solid #eee;
-            padding-left: 1em
-        }
-
-        .inheritance em {
-            font-style: normal;
-            font-weight: bold
-        }
-
-        .desc h2 {
-            font-weight: 400;
-            font-size: 1.25em
-        }
-
-        .desc h3 {
-            font-size: 1em
-        }
-
-        .desc dt code {
-            background: inherit
-        }
-
-        .source summary,
-        .git-link-div {
-            color: #666;
-            text-align: right;
-            font-weight: 400;
-            font-size: .8em;
-            text-transform: uppercase
-        }
-
-        .source summary>* {
-            white-space: nowrap;
-            cursor: pointer
-        }
-
-        .git-link {
-            color: inherit;
-            margin-left: 1em
-        }
-
-        .source pre {
-            max-height: 500px;
-            overflow: auto;
-            margin: 0
-        }
-
-        .source pre code {
-            font-size: 12px;
-            overflow: visible
-        }
-
-        .hlist {
-            list-style: none
-        }
-
-        .hlist li {
-            display: inline
-        }
-
-        .hlist li:after {
-            content: ',\2002'
-        }
-
-        .hlist li:last-child:after {
-            content: none
-        }
-
-        .hlist .hlist {
-            display: inline;
-            padding-left: 1em
-        }
-
-        img {
-            max-width: 100%
-        }
-
-        .admonition {
-            padding: .1em .5em;
-            margin-bottom: 1em
-        }
-
-        .admonition-title {
-            font-weight: bold
-        }
-
-        .admonition.note,
-        .admonition.info,
-        .admonition.important {
-            background: #aef
-        }
-
-        .admonition.todo,
-        .admonition.versionadded,
-        .admonition.tip,
-        .admonition.hint {
-            background: #dfd
-        }
-
-        .admonition.warning,
-        .admonition.versionchanged,
-        .admonition.deprecated {
-            background: #fd4
-        }
-
-        .admonition.error,
-        .admonition.danger,
-        .admonition.caution {
-            background: lightpink
-        }
-    </style>
-    <style media="screen and (min-width: 700px)">
-        @media screen and (min-width:700px) {
-            #sidebar {
-                width: 30%
-            }
-
-            #content {
-                width: 70%;
-                max-width: 100ch;
-                padding: 3em 4em;
-                border-left: 1px solid #ddd
-            }
-
-            pre code {
-                font-size: 1em
-            }
-
-            .item .name {
-                font-size: 1em
-            }
-
-            main {
-                display: flex;
-                flex-direction: row-reverse;
-                justify-content: flex-end
-            }
-
-            .toc ul ul,
-            #index ul {
-                padding-left: 1.5em
-            }
-
-            .toc>ul>li {
-                margin-top: .5em
-            }
-        }
-    </style>
-    <style media="print">
-        @media print {
-            #sidebar h1 {
-                page-break-before: always
-            }
-
-            .source {
-                display: none
-            }
-        }
-
-        @media print {
-            * {
-                background: transparent !important;
-                color: #000 !important;
-                box-shadow: none !important;
-                text-shadow: none !important
-            }
-
-            a[href]:after {
-                content: " ("attr(href) ")";
-                font-size: 90%
-            }
-
-            a[href][title]:after {
-                content: none
-            }
-
-            abbr[title]:after {
-                content: " ("attr(title) ")"
-            }
-
-            .ir a:after,
-            a[href^="javascript:"]:after,
-            a[href^="#"]:after {
-                content: ""
-            }
-
-            pre,
-            blockquote {
-                border: 1px solid #999;
-                page-break-inside: avoid
-            }
-
-            thead {
-                display: table-header-group
-            }
-
-            tr,
-            img {
-                page-break-inside: avoid
-            }
-
-            img {
-                max-width: 100% !important
-            }
-
-            @page {
-                margin: 0.5cm
-            }
-
-            p,
-            h2,
-            h3 {
-                orphans: 3;
-                widows: 3
-            }
-
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6 {
-                page-break-after: avoid
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.5" />
+<title>neurochat.nc_plot API documentation</title>
+<meta name="description" content="This module implements plotting functions for NeuroChaT analyses …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
-
 <body>
-    <main>
-        <article id="content">
-            <header>
-                <h1 class="title">Module <code>neurochat.nc_plot</code></h1>
-            </header>
-            <section id="section-intro">
-                <p>This module implements plotting functions for NeuroChaT analyses.</p>
-                <p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
-                <details class="source">
-                    <summary>
-                        <span>Expand source code</span>
-                    </summary>
-                    <pre><code class="python"># -*- coding: utf-8 -*-
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>neurochat.nc_plot</code></h1>
+</header>
+<section id="section-intro">
+<p>This module implements plotting functions for NeuroChaT analyses.</p>
+<p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements plotting functions for NeuroChaT analyses.
 
@@ -1286,6 +844,7 @@ def hd_rate(hd_data, ax=None, **kwargs):
 
     return ax
 
+
 def hd_rate_pred(hd_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plot predicted and actual head direction from the positional data.
@@ -1319,6 +878,7 @@ def hd_rate_pred(hd_data, ax=None, **kwargs):
         [hd_data[&#39;hdRate&#39;].max(), hd_data[&#39;hdPred&#39;].max()])
 
     return ax
+
 
 def hd_spike(hd_data, ax=None):
     &#34;&#34;&#34;
@@ -1742,6 +1302,7 @@ def loc_rate(place_data, ax=None, smooth=True, **kwargs):
         cbar.ax.set_yticklabels(split_text)
 
     return ax
+
 
 def loc_firing(place_data, **kwargs):
     &#34;&#34;&#34;
@@ -2447,6 +2008,7 @@ def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
 
     return fig
 
+
 def plot_angle_between_points(points, xlim, ylim, ax=None):
     &#34;&#34;&#34;
     Plots the angle between three points
@@ -2684,6 +2246,7 @@ def print_place_cells(
                         should_color=color_isi, burst_ms=burst_ms,
                         raster=raster)
                     plt.close(temp_fig)
+
         if one_by_one:
             figs.append(fig)
 
@@ -2792,37 +2355,35 @@ def print_place_cells(
     #         #xlim=(round(i_range[0], 1), round(i_range[1], 1)),
     #         title=None, ylabel=None, xlabel=None)
     # return fig</code></pre>
-                </details>
-            </section>
-            <section>
-            </section>
-            <section>
-            </section>
-            <section>
-                <h2 class="section-title" id="header-functions">Functions</h2>
-                <dl>
-                    <dt id="neurochat.nc_plot.angular_velocity"><code class="name flex">
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="neurochat.nc_plot.angular_velocity"><code class="name flex">
 <span>def <span class="ident">angular_velocity</span></span>(<span>angVel_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the angular head velocity of the animal vs spike rate</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>angVel_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to angular head velocity correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Scatter plot of angular velocity vs spike-rate superimposed with fitted rate</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def angular_velocity(angVel_data):
+<dd>
+<section class="desc"><p>Plots the angular head velocity of the animal vs spike rate</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>angVel_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to angular head velocity correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Scatter plot of angular velocity vs spike-rate superimposed with fitted rate</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def angular_velocity(angVel_data):
     &#34;&#34;&#34;
     Plots the angular head velocity of the animal vs spike rate
 
@@ -2855,36 +2416,34 @@ def print_place_cells(
     ax.set_ylabel(&#39;Spikes/sec&#39;)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.border"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.border"><code class="name flex">
 <span>def <span class="ident">border</span></span>(<span>border_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data from border analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>border_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from border analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Histogram of taxicab distance of active pixels</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Angular distance of pixels vs active pixel count</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distance from border vs spike rate</dd>
-                                <dt><strong><code>fig4</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Mean distance distance from border vs firing-rate percentage</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def border(border_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data from border analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>border_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from border analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Histogram of taxicab distance of active pixels</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Angular distance of pixels vs active pixel count</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distance from border vs spike rate</dd>
+<dt><strong><code>fig4</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Mean distance distance from border vs firing-rate percentage</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def border(border_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data from border analysis
 
@@ -2938,30 +2497,28 @@ def print_place_cells(
     fig4 = stair_plot(border_data)
 
     return fig1, fig2, fig3, fig4</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.dist_rate"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.dist_rate"><code class="name flex">
 <span>def <span class="ident">dist_rate</span></span>(<span>dist_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the firing rate vs distance from border</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>dist_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from border and gradient analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distance from border vs spike rate</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def dist_rate(dist_data):
+<dd>
+<section class="desc"><p>Plots the firing rate vs distance from border</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dist_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from border and gradient analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distance from border vs spike rate</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dist_rate(dist_data):
     &#34;&#34;&#34;
     Plots the firing rate vs distance from border
 
@@ -2991,34 +2548,32 @@ def print_place_cells(
     plt.legend(loc=&#39;lower right&#39;)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.gradient"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.gradient"><code class="name flex">
 <span>def <span class="ident">gradient</span></span>(<span>gradient_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the replay_data from gradient cell analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>border_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from border analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distance from border vs spike rate</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Differential firing rate vs distance from border</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Mean distance distance from border vs firing-rate percentage</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def gradient(gradient_data):
+<dd>
+<section class="desc"><p>Plots the replay_data from gradient cell analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>border_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from border analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distance from border vs spike rate</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Differential firing rate vs distance from border</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Mean distance distance from border vs firing-rate percentage</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gradient(gradient_data):
     &#34;&#34;&#34;
     Plots the replay_data from gradient cell analysis
 
@@ -3052,32 +2607,30 @@ def print_place_cells(
     fig3 = stair_plot(gradient_data)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.grid"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.grid"><code class="name flex">
 <span>def <span class="ident">grid</span></span>(<span>grid_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the replay_data from grid analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>grid_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from border analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Autocorrelation of firing rate map, superimposed with central peaks</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Rotational correlation of autocorrelation map</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def grid(grid_data):
+<dd>
+<section class="desc"><p>Plots the replay_data from grid analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>grid_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from border analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Autocorrelation of firing rate map, superimposed with central peaks</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Rotational correlation of autocorrelation map</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid(grid_data):
     &#34;&#34;&#34;
     Plots the replay_data from grid analysis
 
@@ -3136,33 +2689,30 @@ def print_place_cells(
         return fig1, fig2
     else:
         return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_firing"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_firing"><code class="name flex">
 <span>def <span class="ident">hd_firing</span></span>(<span>hd_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis of head directional correlation to spike-rate</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-directional correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Polar plot of head-direction during spiking-events</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Polar plot of head-direction vs spike-rate. Predicted firing rate is also plotted.
-                                </dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_firing(hd_data):
+<dd>
+<section class="desc"><p>Plots the analysis of head directional correlation to spike-rate</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-directional correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Polar plot of head-direction during spiking-events</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Polar plot of head-direction vs spike-rate. Predicted firing rate is also plotted.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_firing(hd_data):
     &#34;&#34;&#34;
     Plots the analysis of head directional correlation to spike-rate
 
@@ -3186,36 +2736,32 @@ def print_place_cells(
     fig2 = plt.figure()
     ax2 = hd_rate_pred(hd_data, ax=plt.gca(polar=True))
     return fig1, fig2</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_rate"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_rate"><code class="name flex">
 <span>def <span class="ident">hd_rate</span></span>(<span>hd_data, ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plot head direction vs spike rate.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-direction correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Polar Axes object. If specified, the figure is plotted in this axes.</dd>
-                                <dt><strong><code>kwargs</code></strong> :&ensp;<code>title</code> - <code>str</code>,
-                                    default <code>"Head</code> <code>directional</code> <code>firing</code>
-                                    <code>rate"</code></dt>
-                                <dd>&nbsp;</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Axes of the polar plot of head-direction vs spike-rate.</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_rate(hd_data, ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plot head direction vs spike rate.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-direction correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Polar Axes object. If specified, the figure is plotted in this axes.</dd>
+<dt><strong><code>kwargs</code></strong> :&ensp;<code>title</code> - <code>str</code>, default <code>"Head</code> <code>directional</code> <code>firing</code> <code>rate"</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Axes of the polar plot of head-direction vs spike-rate.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_rate(hd_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plot head direction vs spike rate.
 
@@ -3246,33 +2792,31 @@ def print_place_cells(
     ax.set_rticks([hd_data[&#39;hdRate&#39;].max()])
 
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_rate_ccw"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_rate_ccw"><code class="name flex">
 <span>def <span class="ident">hd_rate_ccw</span></span>(<span>hd_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of head directional correlation to spike-rate
-                                but split into counterclockwise and clockwise head-movements.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-direction correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Polar plot of head-direction vs spike-rate in
-                                    clockwise and counterclockwise
-                                    head movements</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_rate_ccw(hd_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of head directional correlation to spike-rate
+but split into counterclockwise and clockwise head-movements.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-direction correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Polar plot of head-direction vs spike-rate in
+clockwise and counterclockwise
+head movements</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_rate_ccw(hd_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data of head directional correlation to spike-rate
     but split into counterclockwise and clockwise head-movements.
@@ -3303,37 +2847,33 @@ def print_place_cells(
     ax.set_rticks([hd_data[&#39;hdRateCW&#39;].max(), hd_data[&#39;hdRateCCW&#39;].max()])
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_rate_pred"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_rate_pred"><code class="name flex">
 <span>def <span class="ident">hd_rate_pred</span></span>(<span>hd_data, ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plot predicted and actual head direction from the positional data.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-direction correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Polar Axes object. If specified, the figure is plotted in this axes.</dd>
-                                <dt><strong><code>kwargs</code></strong> :&ensp;<code>title</code> - <code>str</code>,
-                                    default <code>"Head</code> <code>directional</code> <code>firing</code>
-                                    <code>rate"</code></dt>
-                                <dd>&nbsp;</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Axes of the polar plot of actual (blue) and expected (green)
-                                    head-direction vs spike-rate.</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_rate_pred(hd_data, ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plot predicted and actual head direction from the positional data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-direction correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Polar Axes object. If specified, the figure is plotted in this axes.</dd>
+<dt><strong><code>kwargs</code></strong> :&ensp;<code>title</code> - <code>str</code>, default <code>"Head</code> <code>directional</code> <code>firing</code> <code>rate"</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Axes of the polar plot of actual (blue) and expected (green)
+head-direction vs spike-rate.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_rate_pred(hd_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plot predicted and actual head direction from the positional data.
 
@@ -3366,31 +2906,28 @@ def print_place_cells(
         [hd_data[&#39;hdRate&#39;].max(), hd_data[&#39;hdPred&#39;].max()])
 
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_rate_time_lapse"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_rate_time_lapse"><code class="name flex">
 <span>def <span class="ident">hd_rate_time_lapse</span></span>(<span>hd_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of head directional time-lapse analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional time-lapsed anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of
-                                    <code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Time-lapsed head-drectional firing rate plot</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_rate_time_lapse(hd_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of head directional time-lapse analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional time-lapsed anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of <code>matplotlib.pyplot.Figure</code></dt>
+<dd>Time-lapsed head-drectional firing rate plot</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_rate_time_lapse(hd_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of head directional time-lapse analysis
 
@@ -3427,32 +2964,30 @@ def print_place_cells(
         else:
             ax.set_visible(False)
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_shuffle"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_shuffle"><code class="name flex">
 <span>def <span class="ident">hd_shuffle</span></span>(<span>hd_shuffle_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of head directional shuffling analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_shuffle_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional shuffling anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distribution of Rayleigh Z statistics</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distribution of Von Mises concentration parameter Kapppa</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_shuffle(hd_shuffle_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of head directional shuffling analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_shuffle_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional shuffling anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distribution of Rayleigh Z statistics</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distribution of Von Mises concentration parameter Kapppa</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_shuffle(hd_shuffle_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of head directional shuffling analysis
 
@@ -3497,33 +3032,30 @@ def print_place_cells(
     ax.set_ylabel(&#39;Count&#39;)
 
     return fig1, fig2</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_spike"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_spike"><code class="name flex">
 <span>def <span class="ident">hd_spike</span></span>(<span>hd_data, ax=None)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the head-direction of the animal at the time of spiking-events in polar scatter
-                                plot.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-direction correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
-                                <dd>Axis object. If specified, the figure is plotted in this axis.</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
-                                <dd>Axis of the polar plot of head-direction during spiking events.</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_spike(hd_data, ax=None):
+<dd>
+<section class="desc"><p>Plots the head-direction of the animal at the time of spiking-events in polar scatter plot.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-direction correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
+<dd>Axis object. If specified, the figure is plotted in this axis.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
+<dd>Axis of the polar plot of head-direction during spiking events.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_spike(hd_data, ax=None):
     &#34;&#34;&#34;
     Plots the head-direction of the animal at the time of spiking-events in polar scatter plot.
 
@@ -3551,31 +3083,28 @@ def print_place_cells(
     ax.spines[&#39;polar&#39;].set_visible(False)
 
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_spike_time_lapse"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_spike_time_lapse"><code class="name flex">
 <span>def <span class="ident">hd_spike_time_lapse</span></span>(<span>hd_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of head directional time-lapse analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional time-lapsed anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of
-                                    <code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Time-lapsed spike-plots</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_spike_time_lapse(hd_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of head directional time-lapse analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional time-lapsed anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of <code>matplotlib.pyplot.Figure</code></dt>
+<dd>Time-lapsed spike-plots</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_spike_time_lapse(hd_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of head directional time-lapse analysis
 
@@ -3612,36 +3141,32 @@ def print_place_cells(
         else:
             ax.set_visible(False)
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.hd_time_shift"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.hd_time_shift"><code class="name flex">
 <span>def <span class="ident">hd_time_shift</span></span>(<span>hd_shift_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of head directional time-shift analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>hd_shift_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional time-shift anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Skaggs information content of head directional firing in shifted time of spiking
-                                    events</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Peak firing rate of head directional firing in shifted time of spiking events</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Skaggs information content of head directional firing in shifted time of spiking
-                                    events</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def hd_time_shift(hd_shift_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of head directional time-shift analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>hd_shift_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional time-shift anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Skaggs information content of head directional firing in shifted time of spiking events</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Peak firing rate of head directional firing in shifted time of spiking events</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Skaggs information content of head directional firing in shifted time of spiking events</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hd_time_shift(hd_shift_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of head directional time-shift analysis
 
@@ -3689,35 +3214,33 @@ def print_place_cells(
     ax.set_title(&#39;Delta of hd firing in shifted time of spiking events&#39;)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.isi"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.isi"><code class="name flex">
 <span>def <span class="ident">isi</span></span>(<span>isi_data, axes=[None, None, None], **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots Interspike interval histogram and scatter plots of interval-before
-                                vs interval-after.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>isi_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the ISI analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Histogram of ISI</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Scatter plot of ISI-before vs ISI-after in loglog scale</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>2D histogram of the ISI-before vs ISI-after in log-log scale</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def isi(isi_data, axes=[None, None, None], **kwargs):
+<dd>
+<section class="desc"><p>Plots Interspike interval histogram and scatter plots of interval-before
+vs interval-after.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>isi_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the ISI analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Histogram of ISI</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Scatter plot of ISI-before vs ISI-after in loglog scale</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>2D histogram of the ISI-before vs ISI-after in log-log scale</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isi(isi_data, axes=[None, None, None], **kwargs):
     &#34;&#34;&#34;
     Plots Interspike interval histogram and scatter plots of interval-before
     vs interval-after.
@@ -3808,34 +3331,32 @@ def print_place_cells(
     ax.set_title(&#39;Distribution of ISI \n (before and after spike)&#39;)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.isi_corr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.isi_corr"><code class="name flex">
 <span>def <span class="ident">isi_corr</span></span>(<span>isi_corr_data, ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots ISI correlation.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>isi_corr_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the ISI correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Optional axes object to plot to.</dd>
-                            </dl>
-                            <p>kwargs :
-                                title : str</p>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>ISI correlation histogram</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def isi_corr(isi_corr_data, ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plots ISI correlation.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>isi_corr_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the ISI correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Optional axes object to plot to.</dd>
+</dl>
+<p>kwargs :
+title : str</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>ISI correlation histogram</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isi_corr(isi_corr_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plots ISI correlation.
 
@@ -3887,32 +3408,30 @@ def print_place_cells(
     ax.set_ylabel(ylabel)
 
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.largest_waveform"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.largest_waveform"><code class="name flex">
 <span>def <span class="ident">largest_waveform</span></span>(<span>wave_data, ax=None)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plot the largest waveform in electrode groups.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>wave_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data form the Waveform analysis</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Optional axes to plot to</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>The figure plotted to, or None if an axes is provided</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def largest_waveform(wave_data, ax=None):
+<dd>
+<section class="desc"><p>Plot the largest waveform in electrode groups.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>wave_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data form the Waveform analysis</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Optional axes to plot to</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>matplotlib.pyplot.Figure</code></dt>
+<dd>The figure plotted to, or None if an axes is provided</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def largest_waveform(wave_data, ax=None):
     &#34;&#34;&#34;
     Plot the largest waveform in electrode groups.
 
@@ -3936,41 +3455,37 @@ def print_place_cells(
     ax.plot(mean_wave - std_wave, color=&#39;green&#39;, linestyle=&#39;dashed&#39;)
 
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.lfp_spectrum"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.lfp_spectrum"><code class="name flex">
 <span>def <span class="ident">lfp_spectrum</span></span>(<span>plot_data, ax=None, color=None, style='Solid')</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots LFP spectrum analysis data</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the ISI correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib</code> <code>Axes</code>
-                                </dt>
-                                <dd>Optional axes to plot into.
-                                    Makes a new figure if this is None</dd>
-                                <dt><strong><code>color</code></strong> :&ensp;<code>matplotlib</code>
-                                    <code>supported</code> <code>color</code></dt>
-                                <dd>Default is None, the color of the plot line</dd>
-                                <dt><strong><code>style</code></strong> :&ensp;<code>str</code></dt>
-                                <dd>options are:
-                                    Solid - A thin flat line
-                                    Dashed - A thicker dashed line</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Line plot of LFP spectrum using Welch's method</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def lfp_spectrum(plot_data, ax=None, color=None, style=&#34;Solid&#34;):
+<dd>
+<section class="desc"><p>Plots LFP spectrum analysis data</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the ISI correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib</code> <code>Axes</code></dt>
+<dd>Optional axes to plot into.
+Makes a new figure if this is None</dd>
+<dt><strong><code>color</code></strong> :&ensp;<code>matplotlib</code> <code>supported</code> <code>color</code></dt>
+<dd>Default is None, the color of the plot line</dd>
+<dt><strong><code>style</code></strong> :&ensp;<code>str</code></dt>
+<dd>options are:
+Solid - A thin flat line
+Dashed - A thicker dashed line</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Line plot of LFP spectrum using Welch's method</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lfp_spectrum(plot_data, ax=None, color=None, style=&#34;Solid&#34;):
     &#34;&#34;&#34;
     Plots LFP spectrum analysis data
 
@@ -4017,30 +3532,28 @@ def print_place_cells(
     plt.axis(_extent)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.lfp_spectrum_tr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.lfp_spectrum_tr"><code class="name flex">
 <span>def <span class="ident">lfp_spectrum_tr</span></span>(<span>plot_data, ax=None)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots time-resolved LFP spectrum analysis data</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the ISI correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>3D plot of short-term FFT of the LFP signal</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def lfp_spectrum_tr(plot_data, ax=None):
+<dd>
+<section class="desc"><p>Plots time-resolved LFP spectrum analysis data</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the ISI correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>3D plot of short-term FFT of the LFP signal</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lfp_spectrum_tr(plot_data, ax=None):
     &#34;&#34;&#34;
     Plots time-resolved LFP spectrum analysis data
 
@@ -4072,30 +3585,28 @@ def print_place_cells(
         plt.colorbar(pcm, ax=ax, use_gridspec=True)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_auto_corr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_auto_corr"><code class="name flex">
 <span>def <span class="ident">loc_auto_corr</span></span>(<span>locAuto_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of locational firing rate autocorrelation</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>locAuto_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from spatial correlation of firing map</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Spatial correlation map</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_auto_corr(locAuto_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of locational firing rate autocorrelation</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>locAuto_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from spatial correlation of firing map</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Spatial correlation map</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_auto_corr(locAuto_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of locational firing rate autocorrelation
 
@@ -4138,30 +3649,28 @@ def print_place_cells(
     plt.colorbar(pc)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_firing"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_firing"><code class="name flex">
 <span>def <span class="ident">loc_firing</span></span>(<span>place_data, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of locational correlation to spike-rate</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-directional correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Spike-plot and firing rate map in two subplots respectively</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_firing(place_data, **kwargs):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of locational correlation to spike-rate</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-directional correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Spike-plot and firing rate map in two subplots respectively</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_firing(place_data, **kwargs):
     &#34;&#34;&#34;
     Plots the analysis replay_data of locational correlation to spike-rate
 
@@ -4188,31 +3697,29 @@ def print_place_cells(
     # fig.colorbar(cax)
     fig.set_tight_layout(True)
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_firing_and_place"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_firing_and_place"><code class="name flex">
 <span>def <span class="ident">loc_firing_and_place</span></span>(<span>place_data, smooth=True, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis of locational correlation to spike-rate
-                                with a place map</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-directional correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Spike-plot and firing rate map and place field in three subplots respectively</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_firing_and_place(place_data, smooth=True, **kwargs):
+<dd>
+<section class="desc"><p>Plots the analysis of locational correlation to spike-rate
+with a place map</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-directional correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Spike-plot and firing rate map and place field in three subplots respectively</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_firing_and_place(place_data, smooth=True, **kwargs):
     &#34;&#34;&#34;
     Plots the analysis of locational correlation to spike-rate
     with a place map
@@ -4247,33 +3754,31 @@ def print_place_cells(
     fig.set_tight_layout(True)
     plt.subplots_adjust(wspace=0.25)
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_place_centroid"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_place_centroid"><code class="name flex">
 <span>def <span class="ident">loc_place_centroid</span></span>(<span>place_data, centroid)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of locational correlation to spike-rate
-                                along with the centroid of the place field.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to head-directional correlation</dd>
-                                <dt><strong><code>centroid</code></strong> :&ensp;<code>ndarray</code></dt>
-                                <dd>The centroid of the place field</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Spike-plot and firing rate map in two subplots respectively</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_place_centroid(place_data, centroid):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of locational correlation to spike-rate
+along with the centroid of the place field.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to head-directional correlation</dd>
+<dt><strong><code>centroid</code></strong> :&ensp;<code>ndarray</code></dt>
+<dd>The centroid of the place field</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Spike-plot and firing rate map in two subplots respectively</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_place_centroid(place_data, centroid):
     &#34;&#34;&#34;
     Plots the analysis replay_data of locational correlation to spike-rate
     along with the centroid of the place field.
@@ -4304,32 +3809,30 @@ def print_place_cells(
     ax.set_ylabel(&#39;cm&#39;)
     plt.tight_layout()
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_place_field"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_place_field"><code class="name flex">
 <span>def <span class="ident">loc_place_field</span></span>(<span>place_data, ax=None)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the location of the place field(s) of the unit.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the correlation of unit firing to location of the animal</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
-                                <dd>Axis object. If specified, the figure is plotted in this axis.</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
-                                <dd>Axis of the spike-plot</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_place_field(place_data, ax=None):
+<dd>
+<section class="desc"><p>Plots the location of the place field(s) of the unit.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the correlation of unit firing to location of the animal</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
+<dd>Axis object. If specified, the figure is plotted in this axis.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
+<dd>Axis of the spike-plot</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_place_field(place_data, ax=None):
     &#34;&#34;&#34;
     Plots the location of the place field(s) of the unit.
 
@@ -4371,43 +3874,41 @@ def print_place_cells(
     plt.colorbar(pmap, cax=cax, orientation=&#39;vertical&#39;, use_gridspec=True)
     # plt.autoscale(enable=True, axis=&#39;both&#39;, tight=True)
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_rate"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_rate"><code class="name flex">
 <span>def <span class="ident">loc_rate</span></span>(<span>place_data, ax=None, smooth=True, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots location vs spike rate</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to locational correlation</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
-                                <dd>Axis object. If specified, the figure is plotted in this axis.</dd>
-                            </dl>
-                            <p>kwargs :
-                                colormap : str
-                                viridis is used if not specified
-                                "default" uses the standard red green intensity colours
-                                but these are bad for colorblindness.
-                                style : str
-                                What kind of map to plot - can be
-                                "contour", "digitized" or "interpolated"
-                                levels : int
-                                Number of contour regions.
-                                Returns</p>
-                            <hr>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
-                                <dd>Axis of the firing rate map</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_rate(place_data, ax=None, smooth=True, **kwargs):
+<dd>
+<section class="desc"><p>Plots location vs spike rate</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to locational correlation</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
+<dd>Axis object. If specified, the figure is plotted in this axis.</dd>
+</dl>
+<p>kwargs :
+colormap : str
+viridis is used if not specified
+"default" uses the standard red green intensity colours
+but these are bad for colorblindness.
+style : str
+What kind of map to plot - can be
+"contour", "digitized" or "interpolated"
+levels : int
+Number of contour regions.
+Returns</p>
+<hr>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
+<dd>Axis of the firing rate map</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_rate(place_data, ax=None, smooth=True, **kwargs):
     &#34;&#34;&#34;
     Plots location vs spike rate
 
@@ -4515,31 +4016,28 @@ def print_place_cells(
         cbar.ax.set_yticklabels(split_text)
 
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_rate_time_lapse"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_rate_time_lapse"><code class="name flex">
 <span>def <span class="ident">loc_rate_time_lapse</span></span>(<span>place_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of locational time-lapse analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from locational time-lapsed anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of
-                                    <code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Time-lapsed firing-rate map</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_rate_time_lapse(place_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of locational time-lapse analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from locational time-lapsed anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of <code>matplotlib.pyplot.Figure</code></dt>
+<dd>Time-lapsed firing-rate map</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_rate_time_lapse(place_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of locational time-lapse analysis
 
@@ -4577,30 +4075,28 @@ def print_place_cells(
             ax.set_visible(False)
 
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_shuffle"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_shuffle"><code class="name flex">
 <span>def <span class="ident">loc_shuffle</span></span>(<span>loc_shuffle_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of locational shuffling analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>loc_shuffle_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional shuffling anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Distribution of Skaggs IC, sparsity and spatial coherecne in three subplots</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_shuffle(loc_shuffle_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of locational shuffling analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>loc_shuffle_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional shuffling anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Distribution of Skaggs IC, sparsity and spatial coherecne in three subplots</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_shuffle(loc_shuffle_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of locational shuffling analysis
 
@@ -4659,33 +4155,30 @@ def print_place_cells(
     plt.subplots_adjust(hspace=0.35, wspace=0.23)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_spike"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_spike"><code class="name flex">
 <span>def <span class="ident">loc_spike</span></span>(<span>place_data, ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the location of spiking-events (spike-plot) along with the trace of animal in the
-                                enviroment.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the correlation of unit firing to location of the animal</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
-                                <dd>Axis object. If specified, the figure is plotted in this axis.</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
-                                <dd>Axis of the spike-plot</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_spike(place_data, ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plots the location of spiking-events (spike-plot) along with the trace of animal in the enviroment.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the correlation of unit firing to location of the animal</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.axis</code></dt>
+<dd>Axis object. If specified, the figure is plotted in this axis.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.pyplot.Axis</code></dt>
+<dd>Axis of the spike-plot</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_spike(place_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plots the location of spiking-events (spike-plot) along with the trace of animal in the enviroment.
 
@@ -4725,31 +4218,28 @@ def print_place_cells(
     ax.set_aspect(&#39;equal&#39;)
     ax.invert_yaxis()
     return ax</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_spike_time_lapse"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_spike_time_lapse"><code class="name flex">
 <span>def <span class="ident">loc_spike_time_lapse</span></span>(<span>place_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of locational time-lapse analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from locational time-lapsed anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of
-                                    <code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Time-lapsed spike-plots</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_spike_time_lapse(place_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of locational time-lapse analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>place_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from locational time-lapsed anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>list</code> of <code>matplotlib.pyplot.Figure</code></dt>
+<dd>Time-lapsed spike-plots</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_spike_time_lapse(place_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of locational time-lapse analysis
 
@@ -4786,35 +4276,32 @@ def print_place_cells(
             ax.set_visible(False)
 
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.loc_time_shift"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.loc_time_shift"><code class="name flex">
 <span>def <span class="ident">loc_time_shift</span></span>(<span>loc_shift_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of locational time-shift analysis</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>loc_shift_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from head-directional time-shift anlaysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Skaggs information content of locational firing in shifted time of spiking events
-                                </dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Sparsity of locational firing in shifted time of spiking events</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Coherence of locational firing in shifted time of spiking events</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def loc_time_shift(loc_shift_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of locational time-shift analysis</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>loc_shift_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from head-directional time-shift anlaysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Skaggs information content of locational firing in shifted time of spiking events</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Sparsity of locational firing in shifted time of spiking events</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Coherence of locational firing in shifted time of spiking events</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loc_time_shift(loc_shift_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of locational time-shift analysis
 
@@ -4874,30 +4361,28 @@ def print_place_cells(
     #        fig1.suptitle(&#39;Specifity indices in time shift&#39;)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.multiple_regression"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.multiple_regression"><code class="name flex">
 <span>def <span class="ident">multiple_regression</span></span>(<span>mra_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the replay_data of multiple regression analysis.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>mra_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from multiple regression analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Bar plot of multiple regression replay_data</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def multiple_regression(mra_data):
+<dd>
+<section class="desc"><p>Plots the replay_data of multiple regression analysis.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>mra_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from multiple regression analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Bar plot of multiple regression replay_data</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multiple_regression(mra_data):
     &#34;&#34;&#34;
     Plots the replay_data of multiple regression analysis.
 
@@ -4926,36 +4411,34 @@ def print_place_cells(
     plt.autoscale(enable=True, axis=&#39;both&#39;, tight=True)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.plot_angle_between_points"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.plot_angle_between_points"><code class="name flex">
 <span>def <span class="ident">plot_angle_between_points</span></span>(<span>points, xlim, ylim, ax=None)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the angle between three points</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>points</code></strong> :&ensp;<code>list</code></dt>
-                                <dd>The list of points to plot the angle between</dd>
-                                <dt><strong><code>xlim</code></strong> :&ensp;<code>float</code></dt>
-                                <dd>The upper xlimit of the graph</dd>
-                                <dt><strong><code>ylim</code></strong> :&ensp;<code>float</code></dt>
-                                <dd>The upper ylimit of the graph</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Optional axis to plot into</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>The angle between the points</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def plot_angle_between_points(points, xlim, ylim, ax=None):
+<dd>
+<section class="desc"><p>Plots the angle between three points</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>points</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of points to plot the angle between</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>float</code></dt>
+<dd>The upper xlimit of the graph</dd>
+<dt><strong><code>ylim</code></strong> :&ensp;<code>float</code></dt>
+<dd>The upper ylimit of the graph</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Optional axis to plot into</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>The angle between the points</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_angle_between_points(points, xlim, ylim, ax=None):
     &#34;&#34;&#34;
     Plots the angle between three points
 
@@ -5008,34 +4491,31 @@ def print_place_cells(
     plt.tight_layout()
     plt.legend()
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.plv"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.plv"><code class="name flex">
 <span>def <span class="ident">plv</span></span>(<span>plv_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of Phase-locking value (PLV)</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the PLV analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of spike-triggered average (STA)</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of FFT of STA (fSTA), average power spectrum of spike-triggered LFP signals
-                                    (STP),
-                                    spike-field coherence and PLV in four subplots</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def plv(plv_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of Phase-locking value (PLV)</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the PLV analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of spike-triggered average (STA)</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of FFT of STA (fSTA), average power spectrum of spike-triggered LFP signals (STP),
+spike-field coherence and PLV in four subplots</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plv(plv_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data of Phase-locking value (PLV)
 
@@ -5098,34 +4578,32 @@ def print_place_cells(
 
     plt.subplots_adjust(wspace=0.3, hspace=0.35)
     return fig1, fig2</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.plv_bs"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.plv_bs"><code class="name flex">
 <span>def <span class="ident">plv_bs</span></span>(<span>plv_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of bootstrapped Phase-locking value (PLV)</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the time-resolved PLV analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of fSTA</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of STP</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of SFC</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def plv_bs(plv_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of bootstrapped Phase-locking value (PLV)</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the time-resolved PLV analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of fSTA</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of STP</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of SFC</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plv_bs(plv_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data of bootstrapped Phase-locking value (PLV)
 
@@ -5214,34 +4692,32 @@ def print_place_cells(
         &#39;Frequency analysis of spike-triggered lfp metrics (bootstrap)&#39;)
     plt.subplots_adjust(wspace=0.3, hspace=0.35)
     return fig1, fig2</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.plv_tr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.plv_tr"><code class="name flex">
 <span>def <span class="ident">plv_tr</span></span>(<span>plv_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of time-resolved Phase-locking value (PLV)</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the time-resolved PLV analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of fSTA</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of STP</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Plot of SFC</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def plv_tr(plv_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of time-resolved Phase-locking value (PLV)</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plv_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the time-resolved PLV analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of fSTA</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of STP</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Plot of SFC</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plv_tr(plv_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data of time-resolved Phase-locking value (PLV)
 
@@ -5296,18 +4772,18 @@ def print_place_cells(
     fig3.colorbar(pcm)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.print_place_cells"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.print_place_cells"><code class="name flex">
 <span>def <span class="ident">print_place_cells</span></span>(<span>rows, cols=7, size_multiplier=4, wspace=0.3, hspace=0.3, placedata=None, wavedata=None, graphdata=None, isidata=None, headdata=None, thetadata=None, point_size=10, units=None, output=['Wave', 'Path', 'Place', 'HD', 'LowISI', 'Theta', 'HighISI'], fixed_color=None, burst_ms=5, color_isi=True, one_by_one=False, raster=True, hd_predict=True)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc"></section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def print_place_cells(
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_place_cells(
         rows, cols=7, size_multiplier=4, wspace=0.3, hspace=0.3,
         placedata=None, wavedata=None, graphdata=None, isidata=None,
         headdata=None, thetadata=None, point_size=10, units=None,
@@ -5410,6 +4886,7 @@ def print_place_cells(
                         should_color=color_isi, burst_ms=burst_ms,
                         raster=raster)
                     plt.close(temp_fig)
+
         if one_by_one:
             figs.append(fig)
 
@@ -5417,30 +4894,28 @@ def print_place_cells(
         return figs
     else:
         return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.rot_corr"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.rot_corr"><code class="name flex">
 <span>def <span class="ident">rot_corr</span></span>(<span>plot_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis outcome of rotational correlation of spatial autocorrelation map.</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from spatial correlation of firing map</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Rotational correlation plot</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def rot_corr(plot_data):
+<dd>
+<section class="desc"><p>Plots the analysis outcome of rotational correlation of spatial autocorrelation map.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from spatial correlation of firing map</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Rotational correlation plot</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rot_corr(plot_data):
     &#34;&#34;&#34;
     Plots the analysis outcome of rotational correlation of spatial autocorrelation map.
 
@@ -5468,26 +4943,24 @@ def print_place_cells(
     ax.set_ylabel(&#39;Pearson correlation&#39;)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.scatterplot_matrix"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.scatterplot_matrix"><code class="name flex">
 <span>def <span class="ident">scatterplot_matrix</span></span>(<span>_data, names=[], **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots a scatterplot matrix of subplots.
-                                Each row of "_data" is plotted
-                                against other rows, resulting in a nrows by nrows grid of subplots with the
-                                diagonal subplots labeled with "names".
-                                Additional keyword arguments are
-                                passed on to matplotlib's "plot" command. Returns the matplotlib figure
-                                object containg the subplot grid.</p>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def scatterplot_matrix(_data, names=[], **kwargs):
+<dd>
+<section class="desc"><p>Plots a scatterplot matrix of subplots.
+Each row of "_data" is plotted
+against other rows, resulting in a nrows by nrows grid of subplots with the
+diagonal subplots labeled with "names".
+Additional keyword arguments are
+passed on to matplotlib's "plot" command. Returns the matplotlib figure
+object containg the subplot grid.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scatterplot_matrix(_data, names=[], **kwargs):
     &#34;&#34;&#34;Plots a scatterplot matrix of subplots.  Each row of &#34;_data&#34; is plotted
     against other rows, resulting in a nrows by nrows grid of subplots with the
     diagonal subplots labeled with &#34;names&#34;.  Additional keyword arguments are
@@ -5527,33 +5000,31 @@ def print_place_cells(
     for i, j in zip(range(numvars), itertools.cycle((-1, 0))):
         axs[j, i].xaxis.set_visible(True)
         axs[i, j].yaxis.set_visible(True)</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.set_backend"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.set_backend"><code class="name flex">
 <span>def <span class="ident">set_backend</span></span>(<span>backend)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Sets the
-                                backend of Matplotlib</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>backend</code></strong> :&ensp;<code>str</code></dt>
-                                <dd>The new backend for Matplotlib</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><code>None</code></dt>
-                                <dd>&nbsp;</dd>
-                            </dl>
-                            <h2 id="see-also">See also</h2>
-                            <p><code>matplotlib.pyplot.switch_backend()</code></p>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def set_backend(backend):
+<dd>
+<section class="desc"><p>Sets the
+backend of Matplotlib</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>backend</code></strong> :&ensp;<code>str</code></dt>
+<dd>The new backend for Matplotlib</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="see-also">See also</h2>
+<p><code>matplotlib.pyplot.switch_backend()</code></p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_backend(backend):
     &#34;&#34;&#34;
     Sets the  backend of Matplotlib
 
@@ -5574,30 +5045,28 @@ def print_place_cells(
 
     if backend:
         plt.switch_backend(backend)</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.speed"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.speed"><code class="name flex">
 <span>def <span class="ident">speed</span></span>(<span>speed_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the speed of the animal vs spike rate</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>speed_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the unit firing to speed correlation</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Scatter plot of speed vs spike-rate superimposed with fitted rate</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def speed(speed_data):
+<dd>
+<section class="desc"><p>Plots the speed of the animal vs spike rate</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>speed_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the unit firing to speed correlation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Scatter plot of speed vs spike-rate superimposed with fitted rate</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def speed(speed_data):
     &#34;&#34;&#34;
     Plots the speed of the animal vs spike rate
 
@@ -5627,34 +5096,32 @@ def print_place_cells(
     ax.set_ylim(0, speed_data[&#39;rate&#39;].max() + 1)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.spike_phase"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.spike_phase"><code class="name flex">
 <span>def <span class="ident">spike_phase</span></span>(<span>phase_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the analysis replay_data of spike-LFP phase locking</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>phase_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the spike-LFP phase locking analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Phase histogram</dd>
-                                <dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Phase distribution in circular plot</dd>
-                                <dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Phase-raster in one subplot, phase histogram in another</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def spike_phase(phase_data):
+<dd>
+<section class="desc"><p>Plots the analysis replay_data of spike-LFP phase locking</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>phase_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the spike-LFP phase locking analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Phase histogram</dd>
+<dt><strong><code>fig2</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Phase distribution in circular plot</dd>
+<dt><strong><code>fig3</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Phase-raster in one subplot, phase histogram in another</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def spike_phase(phase_data):
     &#34;&#34;&#34;
     Plots the analysis replay_data of spike-LFP phase locking
 
@@ -5725,38 +5192,36 @@ def print_place_cells(
     ax.set_ylabel(&#39;Spike count&#39;)
 
     return fig1, fig2, fig3</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.spike_raster"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.spike_raster"><code class="name flex">
 <span>def <span class="ident">spike_raster</span></span>(<span>events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the spike raster for a number of units</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>events</code></strong> :&ensp;<code>list</code></dt>
-                                <dd>The positions of the events</dd>
-                                <dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
-                                <dd>Optional start and end of raster plot</dd>
-                                <dt>colors :</dt>
-                                <dt>Optional list of colours, or single colour - default black</dt>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Optional axis to plot into</dd>
-                            </dl>
-                            <p>**kwargs :
-                                A set of keyword arguments to change graph appearance</p>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>The spike raster</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plots the spike raster for a number of units</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>events</code></strong> :&ensp;<code>list</code></dt>
+<dd>The positions of the events</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Optional start and end of raster plot</dd>
+<dt>colors :</dt>
+<dt>Optional list of colours, or single colour - default black</dt>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Optional axis to plot into</dd>
+</dl>
+<p>**kwargs :
+A set of keyword arguments to change graph appearance</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>The spike raster</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def spike_raster(events, xlim=None, colors=[0, 0, 0], ax=None, **kwargs):
     &#34;&#34;&#34;
     Plots the spike raster for a number of units
 
@@ -5814,30 +5279,28 @@ def print_place_cells(
         ax.get_yaxis().set_visible(False)
 
     return fig</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.stair_plot"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.stair_plot"><code class="name flex">
 <span>def <span class="ident">stair_plot</span></span>(<span>dist_data)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots the stairs of mean distance vs firing-rate bands</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>dist_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from border and gradient analysis</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Mean distance distance from border vs firing-rate percentage</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def stair_plot(dist_data):
+<dd>
+<section class="desc"><p>Plots the stairs of mean distance vs firing-rate bands</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dist_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from border and gradient analysis</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Mean distance distance from border vs firing-rate percentage</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stair_plot(dist_data):
     &#34;&#34;&#34;
     Plots the stairs of mean distance vs firing-rate bands
 
@@ -5869,34 +5332,32 @@ def print_place_cells(
     ax.set_ylabel(&#39;Mean distance (cm)&#39;)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.theta_cell"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.theta_cell"><code class="name flex">
 <span>def <span class="ident">theta_cell</span></span>(<span>plot_data, ax=None, **kwargs)</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots theta-modulated cell and theta-skipping cell analysis data</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the theta-modulated cell</dd>
-                                <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-                                <dd>Optional axes object to plot to.</dd>
-                            </dl>
-                            <p>kwargs :
-                                title : str</p>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>ISI correlation histogram superimposed with fitted sinusoidal curve.</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def theta_cell(plot_data, ax=None, **kwargs):
+<dd>
+<section class="desc"><p>Plots theta-modulated cell and theta-skipping cell analysis data</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>plot_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the theta-modulated cell</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Optional axes object to plot to.</dd>
+</dl>
+<p>kwargs :
+title : str</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>matplotlib.pyplot.Figure</code></dt>
+<dd>ISI correlation histogram superimposed with fitted sinusoidal curve.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def theta_cell(plot_data, ax=None, **kwargs):
     &#34;&#34;&#34;
     Plots theta-modulated cell and theta-skipping cell analysis data
 
@@ -5916,32 +5377,30 @@ def print_place_cells(
 
     &#34;&#34;&#34;
     return isi_corr(plot_data, ax=ax, plot_theta=True, **kwargs)</code></pre>
-                        </details>
-                    </dd>
-                    <dt id="neurochat.nc_plot.wave_property"><code class="name flex">
+</details>
+</dd>
+<dt id="neurochat.nc_plot.wave_property"><code class="name flex">
 <span>def <span class="ident">wave_property</span></span>(<span>wave_data, plots=[2, 2])</span>
 </code></dt>
-                    <dd>
-                        <section class="desc">
-                            <p>Plots mean +/-std of waveforms in electrode groups</p>
-                            <h2 id="parameters">Parameters</h2>
-                            <dl>
-                                <dt><strong><code>wave_data</code></strong> :&ensp;<code>dict</code></dt>
-                                <dd>Graphical data from the Waveform analysis</dd>
-                                <dt><strong><code>plots</code></strong> :&ensp;<code>list</code></dt>
-                                <dd>Subplot shape. [2, 2] for tetrode setup</dd>
-                            </dl>
-                            <h2 id="returns">Returns</h2>
-                            <dl>
-                                <dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
-                                <dd>Matlab figure object</dd>
-                            </dl>
-                        </section>
-                        <details class="source">
-                            <summary>
-                                <span>Expand source code</span>
-                            </summary>
-                            <pre><code class="python">def wave_property(wave_data, plots=[2, 2]):
+<dd>
+<section class="desc"><p>Plots mean +/-std of waveforms in electrode groups</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>wave_data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Graphical data from the Waveform analysis</dd>
+<dt><strong><code>plots</code></strong> :&ensp;<code>list</code></dt>
+<dd>Subplot shape. [2, 2] for tetrode setup</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fig1</code></strong> :&ensp;<code>matplotlib.pyplot.Figure</code></dt>
+<dd>Matlab figure object</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def wave_property(wave_data, plots=[2, 2]):
     &#34;&#34;&#34;
     Plots mean +/-std of waveforms in electrode groups
 
@@ -5971,125 +5430,80 @@ def print_place_cells(
                    color=&#39;green&#39;, linestyle=&#39;dashed&#39;)
 
     return fig1</code></pre>
-                        </details>
-                    </dd>
-                </dl>
-            </section>
-            <section>
-            </section>
-        </article>
-        <nav id="sidebar">
-            <h1>Index</h1>
-            <div class="toc">
-                <ul></ul>
-            </div>
-            <ul id="index">
-                <li>
-                    <h3>Super-module</h3>
-                    <ul>
-                        <li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
-                    </ul>
-                </li>
-                <li>
-                    <h3><a href="#header-functions">Functions</a></h3>
-                    <ul class="">
-                        <li><code><a title="neurochat.nc_plot.angular_velocity" href="#neurochat.nc_plot.angular_velocity">angular_velocity</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.border" href="#neurochat.nc_plot.border">border</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.dist_rate" href="#neurochat.nc_plot.dist_rate">dist_rate</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.gradient" href="#neurochat.nc_plot.gradient">gradient</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.grid" href="#neurochat.nc_plot.grid">grid</a></code></li>
-                        <li><code><a title="neurochat.nc_plot.hd_firing" href="#neurochat.nc_plot.hd_firing">hd_firing</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_rate" href="#neurochat.nc_plot.hd_rate">hd_rate</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_rate_ccw" href="#neurochat.nc_plot.hd_rate_ccw">hd_rate_ccw</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_rate_pred" href="#neurochat.nc_plot.hd_rate_pred">hd_rate_pred</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_rate_time_lapse" href="#neurochat.nc_plot.hd_rate_time_lapse">hd_rate_time_lapse</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_shuffle" href="#neurochat.nc_plot.hd_shuffle">hd_shuffle</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_spike" href="#neurochat.nc_plot.hd_spike">hd_spike</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_spike_time_lapse" href="#neurochat.nc_plot.hd_spike_time_lapse">hd_spike_time_lapse</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.hd_time_shift" href="#neurochat.nc_plot.hd_time_shift">hd_time_shift</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.isi" href="#neurochat.nc_plot.isi">isi</a></code></li>
-                        <li><code><a title="neurochat.nc_plot.isi_corr" href="#neurochat.nc_plot.isi_corr">isi_corr</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.largest_waveform" href="#neurochat.nc_plot.largest_waveform">largest_waveform</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.lfp_spectrum" href="#neurochat.nc_plot.lfp_spectrum">lfp_spectrum</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.lfp_spectrum_tr" href="#neurochat.nc_plot.lfp_spectrum_tr">lfp_spectrum_tr</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_auto_corr" href="#neurochat.nc_plot.loc_auto_corr">loc_auto_corr</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_firing" href="#neurochat.nc_plot.loc_firing">loc_firing</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_firing_and_place" href="#neurochat.nc_plot.loc_firing_and_place">loc_firing_and_place</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_place_centroid" href="#neurochat.nc_plot.loc_place_centroid">loc_place_centroid</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_place_field" href="#neurochat.nc_plot.loc_place_field">loc_place_field</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_rate" href="#neurochat.nc_plot.loc_rate">loc_rate</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_rate_time_lapse" href="#neurochat.nc_plot.loc_rate_time_lapse">loc_rate_time_lapse</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_shuffle" href="#neurochat.nc_plot.loc_shuffle">loc_shuffle</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_spike" href="#neurochat.nc_plot.loc_spike">loc_spike</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_spike_time_lapse" href="#neurochat.nc_plot.loc_spike_time_lapse">loc_spike_time_lapse</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.loc_time_shift" href="#neurochat.nc_plot.loc_time_shift">loc_time_shift</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.multiple_regression" href="#neurochat.nc_plot.multiple_regression">multiple_regression</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.plot_angle_between_points" href="#neurochat.nc_plot.plot_angle_between_points">plot_angle_between_points</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.plv" href="#neurochat.nc_plot.plv">plv</a></code></li>
-                        <li><code><a title="neurochat.nc_plot.plv_bs" href="#neurochat.nc_plot.plv_bs">plv_bs</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.plv_tr" href="#neurochat.nc_plot.plv_tr">plv_tr</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.print_place_cells" href="#neurochat.nc_plot.print_place_cells">print_place_cells</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.rot_corr" href="#neurochat.nc_plot.rot_corr">rot_corr</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.scatterplot_matrix" href="#neurochat.nc_plot.scatterplot_matrix">scatterplot_matrix</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.set_backend" href="#neurochat.nc_plot.set_backend">set_backend</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.speed" href="#neurochat.nc_plot.speed">speed</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.spike_phase" href="#neurochat.nc_plot.spike_phase">spike_phase</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.spike_raster" href="#neurochat.nc_plot.spike_raster">spike_raster</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.stair_plot" href="#neurochat.nc_plot.stair_plot">stair_plot</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.theta_cell" href="#neurochat.nc_plot.theta_cell">theta_cell</a></code>
-                        </li>
-                        <li><code><a title="neurochat.nc_plot.wave_property" href="#neurochat.nc_plot.wave_property">wave_property</a></code>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </main>
-    <footer id="footer">
-        <p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad()</script>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="neurochat.nc_plot.angular_velocity" href="#neurochat.nc_plot.angular_velocity">angular_velocity</a></code></li>
+<li><code><a title="neurochat.nc_plot.border" href="#neurochat.nc_plot.border">border</a></code></li>
+<li><code><a title="neurochat.nc_plot.dist_rate" href="#neurochat.nc_plot.dist_rate">dist_rate</a></code></li>
+<li><code><a title="neurochat.nc_plot.gradient" href="#neurochat.nc_plot.gradient">gradient</a></code></li>
+<li><code><a title="neurochat.nc_plot.grid" href="#neurochat.nc_plot.grid">grid</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_firing" href="#neurochat.nc_plot.hd_firing">hd_firing</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_rate" href="#neurochat.nc_plot.hd_rate">hd_rate</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_rate_ccw" href="#neurochat.nc_plot.hd_rate_ccw">hd_rate_ccw</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_rate_pred" href="#neurochat.nc_plot.hd_rate_pred">hd_rate_pred</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_rate_time_lapse" href="#neurochat.nc_plot.hd_rate_time_lapse">hd_rate_time_lapse</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_shuffle" href="#neurochat.nc_plot.hd_shuffle">hd_shuffle</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_spike" href="#neurochat.nc_plot.hd_spike">hd_spike</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_spike_time_lapse" href="#neurochat.nc_plot.hd_spike_time_lapse">hd_spike_time_lapse</a></code></li>
+<li><code><a title="neurochat.nc_plot.hd_time_shift" href="#neurochat.nc_plot.hd_time_shift">hd_time_shift</a></code></li>
+<li><code><a title="neurochat.nc_plot.isi" href="#neurochat.nc_plot.isi">isi</a></code></li>
+<li><code><a title="neurochat.nc_plot.isi_corr" href="#neurochat.nc_plot.isi_corr">isi_corr</a></code></li>
+<li><code><a title="neurochat.nc_plot.largest_waveform" href="#neurochat.nc_plot.largest_waveform">largest_waveform</a></code></li>
+<li><code><a title="neurochat.nc_plot.lfp_spectrum" href="#neurochat.nc_plot.lfp_spectrum">lfp_spectrum</a></code></li>
+<li><code><a title="neurochat.nc_plot.lfp_spectrum_tr" href="#neurochat.nc_plot.lfp_spectrum_tr">lfp_spectrum_tr</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_auto_corr" href="#neurochat.nc_plot.loc_auto_corr">loc_auto_corr</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_firing" href="#neurochat.nc_plot.loc_firing">loc_firing</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_firing_and_place" href="#neurochat.nc_plot.loc_firing_and_place">loc_firing_and_place</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_place_centroid" href="#neurochat.nc_plot.loc_place_centroid">loc_place_centroid</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_place_field" href="#neurochat.nc_plot.loc_place_field">loc_place_field</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_rate" href="#neurochat.nc_plot.loc_rate">loc_rate</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_rate_time_lapse" href="#neurochat.nc_plot.loc_rate_time_lapse">loc_rate_time_lapse</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_shuffle" href="#neurochat.nc_plot.loc_shuffle">loc_shuffle</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_spike" href="#neurochat.nc_plot.loc_spike">loc_spike</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_spike_time_lapse" href="#neurochat.nc_plot.loc_spike_time_lapse">loc_spike_time_lapse</a></code></li>
+<li><code><a title="neurochat.nc_plot.loc_time_shift" href="#neurochat.nc_plot.loc_time_shift">loc_time_shift</a></code></li>
+<li><code><a title="neurochat.nc_plot.multiple_regression" href="#neurochat.nc_plot.multiple_regression">multiple_regression</a></code></li>
+<li><code><a title="neurochat.nc_plot.plot_angle_between_points" href="#neurochat.nc_plot.plot_angle_between_points">plot_angle_between_points</a></code></li>
+<li><code><a title="neurochat.nc_plot.plv" href="#neurochat.nc_plot.plv">plv</a></code></li>
+<li><code><a title="neurochat.nc_plot.plv_bs" href="#neurochat.nc_plot.plv_bs">plv_bs</a></code></li>
+<li><code><a title="neurochat.nc_plot.plv_tr" href="#neurochat.nc_plot.plv_tr">plv_tr</a></code></li>
+<li><code><a title="neurochat.nc_plot.print_place_cells" href="#neurochat.nc_plot.print_place_cells">print_place_cells</a></code></li>
+<li><code><a title="neurochat.nc_plot.rot_corr" href="#neurochat.nc_plot.rot_corr">rot_corr</a></code></li>
+<li><code><a title="neurochat.nc_plot.scatterplot_matrix" href="#neurochat.nc_plot.scatterplot_matrix">scatterplot_matrix</a></code></li>
+<li><code><a title="neurochat.nc_plot.set_backend" href="#neurochat.nc_plot.set_backend">set_backend</a></code></li>
+<li><code><a title="neurochat.nc_plot.speed" href="#neurochat.nc_plot.speed">speed</a></code></li>
+<li><code><a title="neurochat.nc_plot.spike_phase" href="#neurochat.nc_plot.spike_phase">spike_phase</a></code></li>
+<li><code><a title="neurochat.nc_plot.spike_raster" href="#neurochat.nc_plot.spike_raster">spike_raster</a></code></li>
+<li><code><a title="neurochat.nc_plot.stair_plot" href="#neurochat.nc_plot.stair_plot">stair_plot</a></code></li>
+<li><code><a title="neurochat.nc_plot.theta_cell" href="#neurochat.nc_plot.theta_cell">theta_cell</a></code></li>
+<li><code><a title="neurochat.nc_plot.wave_property" href="#neurochat.nc_plot.wave_property">wave_property</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
 </body>
-
 </html>
