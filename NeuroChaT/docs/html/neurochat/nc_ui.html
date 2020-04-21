@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.3" />
+<meta name="generator" content="pdoc 0.7.5" />
 <title>neurochat.nc_ui API documentation</title>
 <meta name="description" content="This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
 other graphical and data objects and connects …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -26,7 +26,9 @@ other graphical and data objects and connects to the NeuroChaT class for setting
 in NeuroChaT.</p>
 <p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
@@ -749,6 +751,34 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         self.lfp_chan_box.clear()
         self.lfp_chan_box.addItems(items)
 
+    def unit_getitems(self):
+        &#34;&#34;&#34;Returns the list of units once spike data is set.&#34;&#34;&#34;
+        try:
+            file_format = self.file_format_box.itemText(
+                self.file_format_box.currentIndex())
+            if file_format == &#34;NWB&#34;:
+                self._control.open_hdf_file()
+                _, path = self._control.get_spike_file().split(&#34;+&#34;)
+                path = path + &#39;/Clustering/cluster_nums&#39;
+                items = self._control.hdf.f[path]
+            else:
+                data = self._control.ndata
+                data.load_spike()
+                items = data.get_unit_list()
+            if len(items) == 0:
+                logging.error(&#34;No units in this file.&#34;)
+                items = [i for i in range(256)]
+            str_items = [str(x) for x in items]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(str_items)
+            if file_format == &#34;NWB&#34;:
+                self._control.close_hdf_file()
+        except Exception as e:
+            log_exception(e, &#34;Populating unit list failed&#34;)
+            items = [str(i) for i in range(256)]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(items)
+
     def browse(self):
         &#34;&#34;&#34;
         Opens a file dialog asking the user to select spike and spatial data files.
@@ -777,6 +807,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
 #                    spike_file = words[-1]
 #                    self._curr_dir = directory
                     self._control.set_spike_file(spike_file)
+                    self._control.ndata.set_spike_file(spike_file)
                     logging.info(&#34;New spike file added: &#34; + \
                                         words[-1])
                     spatial_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -790,6 +821,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         logging.info(&#34;New spatial file added: &#34; + \
                                         words[-1])
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
             elif file_format == &#34;NWB&#34;:
                 nwb_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -808,7 +840,6 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         path = &#39;/processing/Shank&#39;
                         self._control.open_hdf_file()
                         items= self._control.get_hdf_groups(path=path)
-                        self._control.close_hdf_file()
                         # hdf = Nhdf()
                         # hdf.set_filename(nwb_file)
                         # path = &#39;/processing/Shank&#39;
@@ -817,22 +848,33 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
                         # else:
                         #     logging.warning(&#39;No Shank data stored in the path:&#39;+ path)
                         if items:
-                            item, ok = QtWidgets.QInputDialog.getItem(self, &#34;Select electrode group&#34;,
-                                                                      &#34;Electrode groups: &#34;, items, 0, False)
+                            item, ok = QtWidgets.QInputDialog.getItem(
+                                self, &#34;Select electrode group&#34;,
+                                &#34;Electrode groups: &#34;, items, 0, False)
                             if ok:
-                                self._control.set_spike_file(nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
-                                logging.info(&#39;Spike data set to electrode group: &#39;+ path+ &#39;/&#39;+ item)
+                                self._control.set_spike_file(
+                                    nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
+                                logging.info(
+                                    &#39;Spike data set to electrode group: &#39;
+                                    + path+ &#39;/&#39;+ item)
 
                                 path = &#39;/processing/Behavioural/Position&#39;
                                 if self._control.exist_hdf_path(path=path):
-                                    self._control.set_spatial_file(nwb_file+ &#39;+&#39;+ path)
-                                    logging.info(&#39;Position data set to group: &#39;+ path)
+                                    self._control.set_spatial_file(
+                                        nwb_file+ &#39;+&#39;+ path)
+                                    logging.info(
+                                        &#39;Position data set to group: &#39;+ path)
                                 else:
-                                    logging.warning(path+ &#39; not found! Spatial data cannot be set!&#39;)
-                    except:
-                        logging.error(&#39;Cannot read the hdf file&#39;)
+                                    logging.warning(
+                                        path+ 
+                                        &#39; not found! Spatial data not set.&#39;)
+                        self._control.close_hdf_file()
+                    except Exception as e:
+                        log_exception(
+                            e, &#34;Cannot read hdf file in nc_ui browse&#34;)
 
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
         elif mode_id == 2:
             excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -907,9 +949,11 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         Called when the selection in the &#39;Unit No&#39; is changed. Sets the unit number accordingly.
 
         &#34;&#34;&#34;
-
-        self._control.set_unit_no(value)
-        logging.info(&#34;Selected Unit: &#34;+ str(value))
+        if value &lt; 0:
+            return
+        unit_no = int(self.unit_no_box.itemText(value))
+        self._control.set_unit_no(unit_no)
+        logging.info(&#34;Selected Unit: &#34;+ str(unit_no))
 
     def set_lfp_chan(self, value):
         &#34;&#34;&#34;
@@ -949,7 +993,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         pass
     
     def about_nc(self):
-        url = &#34;https://github.com/seankmartin/NeuroChaT/wiki&#34;
+        url = &#34;https://github.com/shanemomara/omaraneurolab/wiki/NeuroChaT&#34;
         webbrowser.open_new(url)
 
     def _set_dictation(self):
@@ -1034,6 +1078,7 @@ class NeuroChaT_Ui(QtWidgets.QMainWindow):
         getattr(self, self._control.get_graphic_format() + &#39;_button&#39;).setChecked(True)
         self.graphic_format_select()
 
+        self.unit_getitems()
         index = self._control.get_unit_no()
         if index &gt;= 0 &amp; index &lt; 256:
             self.unit_no_box.setCurrentIndex(index)
@@ -2257,20 +2302,36 @@ class UiParameters(QtWidgets.QDialog):
 
         self.loc_field_smooth = add_check_box(obj_name=&#39;loc_field_smooth&#39;)
         self.loc_field_smooth.setChecked(False)
+
+        self.loc_style = add_combo_box(obj_name=&#34;loc_style&#34;)
+        self.loc_style.addItems(
+            [&#34;contour&#34;, &#34;digitized&#34;, &#34;interpolated&#34;])
+
+        self.loc_colormap = add_combo_box(obj_name=&#34;loc_colormap&#34;)
+        self.loc_colormap.addItems(
+            [&#34;viridis&#34;, &#34;default&#34;, &#34;gray&#34;, &#34;plasma&#34;,
+             &#34;inferno&#34;, &#34;magma&#34;, &#34;cividis&#34;])
 #        self.locAngVelCutoff = add_spin_box(min_val=0, 100, &#34;locAngVelCutoff&#34;)
 #        self.locAngVelCutoff.setValue(30)
 #        self.locAngVelCutoff.setSingleStep(5)
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
-        box_layout.addRow(&#34;Bound for Chopping Edges&#34;, self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
+        box_layout.addRow(
+            &#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
+        box_layout.addRow(
+            &#34;Bound for Chopping Edges&#34;, 
+            self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
 #        box_layout.addRow(&#34;Angular Velocity Cutoff&#34;, self.locAngVelCutoff, &#34;deg/sec [range: 0-100, step: 5]&#34;)
-        box_layout.addRow(&#34;Place field threshold&#34;, self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
-        box_layout.addRow(&#34;Smooth firing map before centroid calculation&#34;, self.loc_field_smooth, &#34;True or False&#34;)
+        box_layout.addRow(
+            &#34;Place Field Threshold&#34;, 
+            self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
+        box_layout.addRow(
+            &#34;Whether to Smooth Firing Map Before Centroid Calculation&#34;,
+            self.loc_field_smooth, &#34;True or False&#34;)
 
         self.loc_rate_gb1.setLayout(box_layout)
 
-#        # Box- 2
+        # Box- 2
         self.loc_rate_gb2 = add_group_box(title=&#34;Smoothing Box Kernal&#34;, obj_name=&#34;loc_rate_gb2&#34;)
 
         self.loc_rate_filter = add_combo_box(obj_name=&#34;loc_rate_filter&#34;)
@@ -2282,15 +2343,28 @@ class UiParameters(QtWidgets.QDialog):
         # Change step size to 0.5 if Gaussian is selected
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
-        box_layout.addRow(&#34;Spike Rate Pixels/Sigma&#34;, self.loc_rate_kern_len, \
-        &#34;[range: 1-11]\n\r Box: odds&#34;)
+        box_layout.addRow(
+            &#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Spike Rate Pixels/Sigma&#34;, 
+            self.loc_rate_kern_len, &#34;[range: 1-11]\n\r Box: odds&#34;)
 
         self.loc_rate_gb2.setLayout(box_layout)
+
+        # Box 3
+        self.loc_rate_gb3 = add_group_box(
+            title=&#34;Plotting Style&#34;, obj_name=&#34;loc_rate_gb3&#34;)
+        box_layout = ParamBoxLayout()
+        box_layout.addRow(
+            &#34;Firing Rate Map Style&#34;, self.loc_style, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Firing Rate Map Colormap&#34;, self.loc_colormap, &#34;&#34;)
+        self.loc_rate_gb3.setLayout(box_layout)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.loc_rate_gb1)
         layout.addWidget(self.loc_rate_gb2)
+        layout.addWidget(self.loc_rate_gb3)
 
         widget.setContents(layout)
 
@@ -2858,7 +2932,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <dd>
 <section class="desc"><p>QMainWindow(parent: QWidget = None, flags: Union[Qt.WindowFlags, Qt.WindowType] = Qt.WindowFlags())</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -3527,6 +3603,34 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
         self.lfp_chan_box.clear()
         self.lfp_chan_box.addItems(items)
 
+    def unit_getitems(self):
+        &#34;&#34;&#34;Returns the list of units once spike data is set.&#34;&#34;&#34;
+        try:
+            file_format = self.file_format_box.itemText(
+                self.file_format_box.currentIndex())
+            if file_format == &#34;NWB&#34;:
+                self._control.open_hdf_file()
+                _, path = self._control.get_spike_file().split(&#34;+&#34;)
+                path = path + &#39;/Clustering/cluster_nums&#39;
+                items = self._control.hdf.f[path]
+            else:
+                data = self._control.ndata
+                data.load_spike()
+                items = data.get_unit_list()
+            if len(items) == 0:
+                logging.error(&#34;No units in this file.&#34;)
+                items = [i for i in range(256)]
+            str_items = [str(x) for x in items]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(str_items)
+            if file_format == &#34;NWB&#34;:
+                self._control.close_hdf_file()
+        except Exception as e:
+            log_exception(e, &#34;Populating unit list failed&#34;)
+            items = [str(i) for i in range(256)]
+            self.unit_no_box.clear()
+            self.unit_no_box.addItems(items)
+
     def browse(self):
         &#34;&#34;&#34;
         Opens a file dialog asking the user to select spike and spatial data files.
@@ -3555,6 +3659,7 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 #                    spike_file = words[-1]
 #                    self._curr_dir = directory
                     self._control.set_spike_file(spike_file)
+                    self._control.ndata.set_spike_file(spike_file)
                     logging.info(&#34;New spike file added: &#34; + \
                                         words[-1])
                     spatial_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -3568,6 +3673,7 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
                         logging.info(&#34;New spatial file added: &#34; + \
                                         words[-1])
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
             elif file_format == &#34;NWB&#34;:
                 nwb_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -3586,7 +3692,6 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
                         path = &#39;/processing/Shank&#39;
                         self._control.open_hdf_file()
                         items= self._control.get_hdf_groups(path=path)
-                        self._control.close_hdf_file()
                         # hdf = Nhdf()
                         # hdf.set_filename(nwb_file)
                         # path = &#39;/processing/Shank&#39;
@@ -3595,22 +3700,33 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
                         # else:
                         #     logging.warning(&#39;No Shank data stored in the path:&#39;+ path)
                         if items:
-                            item, ok = QtWidgets.QInputDialog.getItem(self, &#34;Select electrode group&#34;,
-                                                                      &#34;Electrode groups: &#34;, items, 0, False)
+                            item, ok = QtWidgets.QInputDialog.getItem(
+                                self, &#34;Select electrode group&#34;,
+                                &#34;Electrode groups: &#34;, items, 0, False)
                             if ok:
-                                self._control.set_spike_file(nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
-                                logging.info(&#39;Spike data set to electrode group: &#39;+ path+ &#39;/&#39;+ item)
+                                self._control.set_spike_file(
+                                    nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
+                                logging.info(
+                                    &#39;Spike data set to electrode group: &#39;
+                                    + path+ &#39;/&#39;+ item)
 
                                 path = &#39;/processing/Behavioural/Position&#39;
                                 if self._control.exist_hdf_path(path=path):
-                                    self._control.set_spatial_file(nwb_file+ &#39;+&#39;+ path)
-                                    logging.info(&#39;Position data set to group: &#39;+ path)
+                                    self._control.set_spatial_file(
+                                        nwb_file+ &#39;+&#39;+ path)
+                                    logging.info(
+                                        &#39;Position data set to group: &#39;+ path)
                                 else:
-                                    logging.warning(path+ &#39; not found! Spatial data cannot be set!&#39;)
-                    except:
-                        logging.error(&#39;Cannot read the hdf file&#39;)
+                                    logging.warning(
+                                        path+ 
+                                        &#39; not found! Spatial data not set.&#39;)
+                        self._control.close_hdf_file()
+                    except Exception as e:
+                        log_exception(
+                            e, &#34;Cannot read hdf file in nc_ui browse&#34;)
 
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
         elif mode_id == 2:
             excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -3685,9 +3801,11 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
         Called when the selection in the &#39;Unit No&#39; is changed. Sets the unit number accordingly.
 
         &#34;&#34;&#34;
-
-        self._control.set_unit_no(value)
-        logging.info(&#34;Selected Unit: &#34;+ str(value))
+        if value &lt; 0:
+            return
+        unit_no = int(self.unit_no_box.itemText(value))
+        self._control.set_unit_no(unit_no)
+        logging.info(&#34;Selected Unit: &#34;+ str(unit_no))
 
     def set_lfp_chan(self, value):
         &#34;&#34;&#34;
@@ -3727,7 +3845,7 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
         pass
     
     def about_nc(self):
-        url = &#34;https://github.com/seankmartin/NeuroChaT/wiki&#34;
+        url = &#34;https://github.com/shanemomara/omaraneurolab/wiki/NeuroChaT&#34;
         webbrowser.open_new(url)
 
     def _set_dictation(self):
@@ -3812,6 +3930,7 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
         getattr(self, self._control.get_graphic_format() + &#39;_button&#39;).setChecked(True)
         self.graphic_format_select()
 
+        self.unit_getitems()
         index = self._control.get_unit_no()
         if index &gt;= 0 &amp; index &lt; 256:
             self.unit_no_box.setCurrentIndex(index)
@@ -4341,9 +4460,11 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def about_nc(self):
-    url = &#34;https://github.com/seankmartin/NeuroChaT/wiki&#34;
+    url = &#34;https://github.com/shanemomara/omaraneurolab/wiki/NeuroChaT&#34;
     webbrowser.open_new(url)</code></pre>
 </details>
 </dd>
@@ -4353,7 +4474,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <dd>
 <section class="desc"><p>Opens the UiMerge() object for the user to accumulate the selected PDF or Postscript files.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def accumulate_output(self):
     &#34;&#34;&#34;
     Opens the UiMerge() object for the user to accumulate the selected PDF or Postscript files.
@@ -4375,7 +4498,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <h2 id="see-also">See also</h2>
 <p><code>NeuroChaT.angle_calculation</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def angle_calculation(self):
     &#34;&#34;&#34;
     Open an excel file and calculate angles between centroids.
@@ -4408,7 +4533,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <dd>
 <section class="desc"><p>Sets up the behaviour of NeuroChaT_ui widgets</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def behaviour_ui(self):
     &#34;&#34;&#34;
     Sets up the behaviour of NeuroChaT_ui widgets
@@ -4465,7 +4592,9 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
 <section class="desc"><p>Opens a file dialog asking the user to select spike and spatial data files.
 Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def browse(self):
         &#34;&#34;&#34;
         Opens a file dialog asking the user to select spike and spatial data files.
@@ -4494,6 +4623,7 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
 #                    spike_file = words[-1]
 #                    self._curr_dir = directory
                     self._control.set_spike_file(spike_file)
+                    self._control.ndata.set_spike_file(spike_file)
                     logging.info(&#34;New spike file added: &#34; + \
                                         words[-1])
                     spatial_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -4507,6 +4637,7 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
                         logging.info(&#34;New spatial file added: &#34; + \
                                         words[-1])
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
             elif file_format == &#34;NWB&#34;:
                 nwb_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -4525,7 +4656,6 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
                         path = &#39;/processing/Shank&#39;
                         self._control.open_hdf_file()
                         items= self._control.get_hdf_groups(path=path)
-                        self._control.close_hdf_file()
                         # hdf = Nhdf()
                         # hdf.set_filename(nwb_file)
                         # path = &#39;/processing/Shank&#39;
@@ -4534,22 +4664,33 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
                         # else:
                         #     logging.warning(&#39;No Shank data stored in the path:&#39;+ path)
                         if items:
-                            item, ok = QtWidgets.QInputDialog.getItem(self, &#34;Select electrode group&#34;,
-                                                                      &#34;Electrode groups: &#34;, items, 0, False)
+                            item, ok = QtWidgets.QInputDialog.getItem(
+                                self, &#34;Select electrode group&#34;,
+                                &#34;Electrode groups: &#34;, items, 0, False)
                             if ok:
-                                self._control.set_spike_file(nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
-                                logging.info(&#39;Spike data set to electrode group: &#39;+ path+ &#39;/&#39;+ item)
+                                self._control.set_spike_file(
+                                    nwb_file+ &#39;+&#39;+ path+ &#39;/&#39; + item)
+                                logging.info(
+                                    &#39;Spike data set to electrode group: &#39;
+                                    + path+ &#39;/&#39;+ item)
 
                                 path = &#39;/processing/Behavioural/Position&#39;
                                 if self._control.exist_hdf_path(path=path):
-                                    self._control.set_spatial_file(nwb_file+ &#39;+&#39;+ path)
-                                    logging.info(&#39;Position data set to group: &#39;+ path)
+                                    self._control.set_spatial_file(
+                                        nwb_file+ &#39;+&#39;+ path)
+                                    logging.info(
+                                        &#39;Position data set to group: &#39;+ path)
                                 else:
-                                    logging.warning(path+ &#39; not found! Spatial data cannot be set!&#39;)
-                    except:
-                        logging.error(&#39;Cannot read the hdf file&#39;)
+                                    logging.warning(
+                                        path+ 
+                                        &#39; not found! Spatial data not set.&#39;)
+                        self._control.close_hdf_file()
+                    except Exception as e:
+                        log_exception(
+                            e, &#34;Cannot read hdf file in nc_ui browse&#34;)
 
                     self.lfp_chan_getitems()
+                    self.unit_getitems()
 
         elif mode_id == 2:
             excel_file = QtCore.QDir.toNativeSeparators(QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -4573,7 +4714,9 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
 <dd>
 <section class="desc"><p>Sets the analysis checkboxes based on the type of cell selected.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def cell_type_analysis(self, cell_type):
         &#34;&#34;&#34;
         Sets the analysis checkboxes based on the type of cell selected.
@@ -4896,7 +5039,9 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
 <section class="desc"><p>Called when there is a change in the cell type selection button groups.
 Sets the cell type to the selected item.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cell_type_select(self):
     &#34;&#34;&#34;
     Called when there is a change in the cell type selection button groups.
@@ -4917,7 +5062,9 @@ Sets the cell type to the selected item.</p></section>
 <dd>
 <section class="desc"><p>Clears the texts in the log box.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def clear_log(self):
     &#34;&#34;&#34;
     Clears the texts in the log box.
@@ -4935,7 +5082,9 @@ Sets the cell type to the selected item.</p></section>
 <section class="desc"><p>Called when NeuroChaT window is about to close. Opens a dialogue for saving the
 session information in NeuroChaT configuration file (.ncfg).</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def closeEvent(self, event):
     &#34;&#34;&#34;
     Called when NeuroChaT window is about to close. Opens a dialogue for saving the
@@ -4985,7 +5134,9 @@ and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.</p>
 <h2 id="see-also">See also</h2>
 <p><code>NeuroChaT().cluster_evaluate()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cluster_evaluate(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for cluster evaluation
@@ -5016,7 +5167,9 @@ and compares the units through NeuroChaT().cluster_similarity() method.</p>
 <h2 id="see-also">See also</h2>
 <p><code>NeuroChaT().cluster_similarity()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def compare_units(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for comparing units
@@ -5050,7 +5203,9 @@ It then converts the files using the NeuroChaT().convert_to_nwb() method.</p>
 <h2 id="see-also">See also</h2>
 <p><code>NeuroChaT().convert_to_nwb()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def convert_to_nwb(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for NWB file for conversion.
@@ -5079,7 +5234,9 @@ It then converts the files using the NeuroChaT().convert_to_nwb() method.</p>
 <section class="desc"><p>Called when there is a change in the data format selection combo box.
 Sets the data format to the selected item.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def data_format_select(self, ind):
     &#34;&#34;&#34;
     Called when there is a change in the data format selection combo box.
@@ -5101,7 +5258,9 @@ Sets the data format to the selected item.</p></section>
 <dd>
 <section class="desc"><p>Called when 'Exit' menu item is clicked. Closes the NeuroChaT window.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def exit_nc(self):
     &#34;&#34;&#34;
     Called when &#39;Exit&#39; menu item is clicked. Closes the NeuroChaT window.
@@ -5117,7 +5276,9 @@ Sets the data format to the selected item.</p></section>
 <section class="desc"><p>Called when 'Export graphic file info' menu is clicked. Opens a file dialogue for the
 selection of an Excel file, and exports the graphic file infor in the table to the file</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def export_graphic_info(self):
     &#34;&#34;&#34;
     Called when &#39;Export graphic file info&#39; menu is clicked. Opens a file dialogue for the
@@ -5146,7 +5307,9 @@ selection of an Excel file, and exports the graphic file infor in the table to t
 <section class="desc"><p>Called when 'Export Results' button is clicked. Opens a file dialogue for the
 selection of an Excel file, and exports the results in the table to the file</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def export_results(self):
     &#34;&#34;&#34;
     Called when &#39;Export Results&#39; button is clicked. Opens a file dialogue for the
@@ -5175,7 +5338,9 @@ selection of an Excel file, and exports the results in the table to the file</p>
 <section class="desc"><p>Called when there is a change in the graphic format selection button groups.
 Sets the output graphic format to the selected item.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def graphic_format_select(self):
     &#34;&#34;&#34;
     Called when there is a change in the graphic format selection button groups.
@@ -5196,7 +5361,9 @@ Sets the output graphic format to the selected item.</p></section>
 <section class="desc"><p>Returns the list of LFP files (Neuralynx) or their file extension (Axona)
 once the spike data is set using the 'Browse' button</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def lfp_chan_getitems(self):
         &#34;&#34;&#34;
         Returns the list of LFP files (Neuralynx) or their file extension (Axona)
@@ -5242,7 +5409,9 @@ once the spike data is set using the 'Browse' button</p></section>
 <dd>
 <section class="desc"><p>Prompts the user to select a .ncfg file and loads the settings and parameters from the file to the GUI elements.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_session(self):
     &#34;&#34;&#34;
     Prompts the user to select a .ncfg file and loads the settings and parameters from the file to the GUI elements.
@@ -5265,6 +5434,7 @@ once the spike data is set using the 'Browse' button</p></section>
     getattr(self, self._control.get_graphic_format() + &#39;_button&#39;).setChecked(True)
     self.graphic_format_select()
 
+    self.unit_getitems()
     index = self._control.get_unit_no()
     if index &gt;= 0 &amp; index &lt; 256:
         self.unit_no_box.setCurrentIndex(index)
@@ -5313,7 +5483,9 @@ once the spike data is set using the 'Browse' button</p></section>
 <dd>
 <section class="desc"><p>Sets up the menu items in NeuroChaT GUI</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def menu_ui(self):
     &#34;&#34;&#34;
     Sets up the menu items in NeuroChaT GUI
@@ -5396,7 +5568,9 @@ once the spike data is set using the 'Browse' button</p></section>
 <dd>
 <section class="desc"><p>Opens the UiMerge() object for the user to merge the selected PDF or Postscript files.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def merge_output(self):
     &#34;&#34;&#34;
     Opens the UiMerge() object for the user to merge the selected PDF or Postscript files.
@@ -5416,7 +5590,9 @@ once the spike data is set using the 'Browse' button</p></section>
 <section class="desc"><p>Called when there is a change in the analysis mode selection combo box.
 Sets the data analysis mode to the selected item.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def mode_select(self, ind):
     &#34;&#34;&#34;
     Called when there is a change in the analysis mode selection combo box.
@@ -5435,7 +5611,9 @@ Sets the data analysis mode to the selected item.</p></section>
 <dd>
 <section class="desc"><p>Plot place cell figures for each set file in a directory.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def place_cell_plots(self):
     &#34;&#34;&#34;
     Plot place cell figures for each set file in a directory.
@@ -5461,7 +5639,9 @@ Sets the data analysis mode to the selected item.</p></section>
 <dd>
 <section class="desc"><p>After reactivating the start button, it displays the results in the UI table.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def restore_start_button(self):
     &#34;&#34;&#34;
     After reactivating the start button, it displays the results in the UI table.
@@ -5478,7 +5658,9 @@ Sets the data analysis mode to the selected item.</p></section>
 <dd>
 <section class="desc"><p>Sets up the title and icon in NeuroChaT GUI</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def retranslate_ui(self):
     &#34;&#34;&#34;
     Sets up the title and icon in NeuroChaT GUI
@@ -5500,7 +5682,9 @@ Sets the data analysis mode to the selected item.</p></section>
 <section class="desc"><p>Opens a file dialog for the user to select a text file where the current
 texts of the log-box are exported</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def save_log(self):
     &#34;&#34;&#34;
     Opens a file dialog for the user to select a text file where the current
@@ -5527,7 +5711,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Prompts the user to select a .ncfg file and saves the current settings and parameters from the GUI elements to the file.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def save_session(self):
     &#34;&#34;&#34;
     Prompts the user to select a .ncfg file and saves the current settings and parameters from the GUI elements to the file.
@@ -5550,7 +5736,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Sets up the graphic format selection panel in NeuroChaT GUI</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def selectGraphicFormatUi(self):
     &#34;&#34;&#34;
     Sets up the graphic format selection panel in NeuroChaT GUI
@@ -5581,7 +5769,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Called when 'Select All' box is checked or unchecked. It checks or unchecks all other analyses.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def select_all(self):
     &#34;&#34;&#34;
     Called when &#39;Select All&#39; box is checked or unchecked. It checks or unchecks all other analyses.
@@ -5604,7 +5794,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Sets up the analysis type selection panel in NeuroChaT GUI</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def select_analysis_ui(self):
         &#34;&#34;&#34;
         Sets up the analysis type selection panel in NeuroChaT GUI
@@ -5714,7 +5906,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Sets up the cell type selection panel in NeuroChaT GUI</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def select_cell_type_ui(self):
     &#34;&#34;&#34;
     Sets up the cell type selection panel in NeuroChaT GUI
@@ -5772,7 +5966,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Called when the selection in the 'LFP Ch No' is changed. Sets the lfp channel accordingly.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_lfp_chan(self, value):
     &#34;&#34;&#34;
     Called when the selection in the &#39;LFP Ch No&#39; is changed. Sets the lfp channel accordingly.
@@ -5806,7 +6002,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Shows the UiParameters() widget once the user clicks the 'Parameters' menu item for setting the paramters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_parameters(self):
     &#34;&#34;&#34;
     Shows the UiParameters() widget once the user clicks the &#39;Parameters&#39; menu item for setting the paramters.
@@ -5821,15 +6019,19 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Called when the selection in the 'Unit No' is changed. Sets the unit number accordingly.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_unit_no(self, value):
     &#34;&#34;&#34;
     Called when the selection in the &#39;Unit No&#39; is changed. Sets the unit number accordingly.
 
     &#34;&#34;&#34;
-
-    self._control.set_unit_no(value)
-    logging.info(&#34;Selected Unit: &#34;+ str(value))</code></pre>
+    if value &lt; 0:
+        return
+    unit_no = int(self.unit_no_box.itemText(value))
+    self._control.set_unit_no(unit_no)
+    logging.info(&#34;Selected Unit: &#34;+ str(unit_no))</code></pre>
 </details>
 </dd>
 <dt id="neurochat.nc_ui.NeuroChaT_Ui.setup_ui"><code class="name flex">
@@ -5838,7 +6040,9 @@ texts of the log-box are exported</p></section>
 <dd>
 <section class="desc"><p>Sets up the elements of NeuroChaT_ui class</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def setup_ui(self):
         &#34;&#34;&#34;
         Sets up the elements of NeuroChaT_ui class
@@ -5963,7 +6167,9 @@ texts of the log-box are exported</p></section>
 <section class="desc"><p>Called when start button is clicked. Starts the entire backend operation
 in NeuroChaT</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def start(self):
     &#34;&#34;&#34;
     Called when start button is clicked. Starts the entire backend operation
@@ -5981,9 +6187,49 @@ in NeuroChaT</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def tutorial(self):
     pass</code></pre>
+</details>
+</dd>
+<dt id="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems"><code class="name flex">
+<span>def <span class="ident">unit_getitems</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the list of units once spike data is set.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unit_getitems(self):
+    &#34;&#34;&#34;Returns the list of units once spike data is set.&#34;&#34;&#34;
+    try:
+        file_format = self.file_format_box.itemText(
+            self.file_format_box.currentIndex())
+        if file_format == &#34;NWB&#34;:
+            self._control.open_hdf_file()
+            _, path = self._control.get_spike_file().split(&#34;+&#34;)
+            path = path + &#39;/Clustering/cluster_nums&#39;
+            items = self._control.hdf.f[path]
+        else:
+            data = self._control.ndata
+            data.load_spike()
+            items = data.get_unit_list()
+        if len(items) == 0:
+            logging.error(&#34;No units in this file.&#34;)
+            items = [i for i in range(256)]
+        str_items = [str(x) for x in items]
+        self.unit_no_box.clear()
+        self.unit_no_box.addItems(str_items)
+        if file_format == &#34;NWB&#34;:
+            self._control.close_hdf_file()
+    except Exception as e:
+        log_exception(e, &#34;Populating unit list failed&#34;)
+        items = [str(i) for i in range(256)]
+        self.unit_no_box.clear()
+        self.unit_no_box.addItems(items)</code></pre>
 </details>
 </dd>
 <dt id="neurochat.nc_ui.NeuroChaT_Ui.update_log"><code class="name flex">
@@ -6002,7 +6248,9 @@ in NeuroChaT</p></section>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def update_log(self, msg):
     &#34;&#34;&#34;
     Updates the log-box with new message
@@ -6030,7 +6278,9 @@ and verifies the unit using the NeuroChaT().verify_units() method.</p>
 <h2 id="see-also">See also</h2>
 <p><code>NeuroChaT().compare_units()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def verify_units(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
@@ -6058,7 +6308,9 @@ and verifies the unit using the NeuroChaT().verify_units() method.</p>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def view_help(self):
     script_dir = os.path.dirname(__file__)
     rel_path = &#34;../docs/index.html&#34;
@@ -6072,13 +6324,15 @@ and verifies the unit using the NeuroChaT().verify_units() method.</p>
 </dd>
 <dt id="neurochat.nc_ui.ParamBoxLayout"><code class="flex name class">
 <span>class <span class="ident">ParamBoxLayout</span></span>
-<span>(</span><span>*args, **kwargs)</span>
+<span>(</span><span>...)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
 parameter selection window.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class ParamBoxLayout(QtWidgets.QVBoxLayout):
     &#34;&#34;&#34;
     Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
@@ -6137,7 +6391,9 @@ parameter selection window.</p></section>
 <dd>Additional description of the parameter, i.e., unit, range etc.</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def addRow(self, label_1, widg, label_2):
     &#34;&#34;&#34;
     Adds a new row of widget using the QtWidgets.QHBoxLayout().
@@ -6170,7 +6426,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>NeuroChaT user interface for setting analysis specific parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class UiParameters(QtWidgets.QDialog):
     &#34;&#34;&#34;
     NeuroChaT user interface for setting analysis specific parameters.
@@ -6796,20 +7054,36 @@ parameter selection window.</p></section>
 
         self.loc_field_smooth = add_check_box(obj_name=&#39;loc_field_smooth&#39;)
         self.loc_field_smooth.setChecked(False)
+
+        self.loc_style = add_combo_box(obj_name=&#34;loc_style&#34;)
+        self.loc_style.addItems(
+            [&#34;contour&#34;, &#34;digitized&#34;, &#34;interpolated&#34;])
+
+        self.loc_colormap = add_combo_box(obj_name=&#34;loc_colormap&#34;)
+        self.loc_colormap.addItems(
+            [&#34;viridis&#34;, &#34;default&#34;, &#34;gray&#34;, &#34;plasma&#34;,
+             &#34;inferno&#34;, &#34;magma&#34;, &#34;cividis&#34;])
 #        self.locAngVelCutoff = add_spin_box(min_val=0, 100, &#34;locAngVelCutoff&#34;)
 #        self.locAngVelCutoff.setValue(30)
 #        self.locAngVelCutoff.setSingleStep(5)
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
-        box_layout.addRow(&#34;Bound for Chopping Edges&#34;, self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
+        box_layout.addRow(
+            &#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
+        box_layout.addRow(
+            &#34;Bound for Chopping Edges&#34;, 
+            self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
 #        box_layout.addRow(&#34;Angular Velocity Cutoff&#34;, self.locAngVelCutoff, &#34;deg/sec [range: 0-100, step: 5]&#34;)
-        box_layout.addRow(&#34;Place field threshold&#34;, self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
-        box_layout.addRow(&#34;Smooth firing map before centroid calculation&#34;, self.loc_field_smooth, &#34;True or False&#34;)
+        box_layout.addRow(
+            &#34;Place Field Threshold&#34;, 
+            self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
+        box_layout.addRow(
+            &#34;Whether to Smooth Firing Map Before Centroid Calculation&#34;,
+            self.loc_field_smooth, &#34;True or False&#34;)
 
         self.loc_rate_gb1.setLayout(box_layout)
 
-#        # Box- 2
+        # Box- 2
         self.loc_rate_gb2 = add_group_box(title=&#34;Smoothing Box Kernal&#34;, obj_name=&#34;loc_rate_gb2&#34;)
 
         self.loc_rate_filter = add_combo_box(obj_name=&#34;loc_rate_filter&#34;)
@@ -6821,15 +7095,28 @@ parameter selection window.</p></section>
         # Change step size to 0.5 if Gaussian is selected
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
-        box_layout.addRow(&#34;Spike Rate Pixels/Sigma&#34;, self.loc_rate_kern_len, \
-        &#34;[range: 1-11]\n\r Box: odds&#34;)
+        box_layout.addRow(
+            &#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Spike Rate Pixels/Sigma&#34;, 
+            self.loc_rate_kern_len, &#34;[range: 1-11]\n\r Box: odds&#34;)
 
         self.loc_rate_gb2.setLayout(box_layout)
+
+        # Box 3
+        self.loc_rate_gb3 = add_group_box(
+            title=&#34;Plotting Style&#34;, obj_name=&#34;loc_rate_gb3&#34;)
+        box_layout = ParamBoxLayout()
+        box_layout.addRow(
+            &#34;Firing Rate Map Style&#34;, self.loc_style, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Firing Rate Map Colormap&#34;, self.loc_colormap, &#34;&#34;)
+        self.loc_rate_gb3.setLayout(box_layout)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.loc_rate_gb1)
         layout.addWidget(self.loc_rate_gb2)
+        layout.addWidget(self.loc_rate_gb3)
 
         widget.setContents(layout)
 
@@ -7367,7 +7654,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'ang_vel' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ang_vel_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;ang_vel&#39; analysis parameters.
@@ -7430,7 +7719,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the behaviour of the GUI elements.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def behaviour_ui(self):
     &#34;&#34;&#34;
     Sets the behaviour of the GUI elements.
@@ -7449,7 +7740,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'border' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def border_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;border&#39; analysis parameters.
@@ -7491,7 +7784,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'burst' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def burst_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;burst&#39; analysis parameters.
@@ -7531,7 +7826,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Changes the stacked widgets of parameter setting according to the analysis selected from the lis on left of the window.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def change_stack_page(self):
     &#34;&#34;&#34;
     Changes the stacked widgets of parameter setting according to the analysis selected from the lis on left of the window.
@@ -7547,7 +7844,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'gradient' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def gradient_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;gradient&#39; analysis parameters.
@@ -7589,7 +7888,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'grid' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;grid&#39; analysis parameters.
@@ -7626,7 +7927,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'hd_rate' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def hd_rate_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_rate&#39; analysis parameters.
@@ -7676,7 +7979,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'hd_shuffle' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def hd_shuffle_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_shuffle&#39; analysis parameters.
@@ -7719,7 +8024,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'hd_time_lapse' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def hd_time_lapse_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_time_lapse&#39; analysis parameters.
@@ -7747,7 +8054,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'hd_time_shift' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def hd_time_shift_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_time_shift&#39; analysis parameters.
@@ -7786,7 +8095,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'inter_depend' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def inter_depend_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;inter_depend&#39; analysis parameters.
@@ -7813,7 +8124,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'isi_corr' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def isi_corr_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;isi_corr&#39; analysis parameters.
@@ -7866,7 +8179,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'isi' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def isi_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;isi&#39; analysis parameters.
@@ -7934,7 +8249,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'lfp_spectrum' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def lfp_spectrum_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;lfp_spectrum&#39; analysis parameters.
@@ -8035,7 +8352,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'lfp_spike_causality' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def lfp_spike_causality_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;lfp_spike_causality&#39; analysis parameters.
@@ -8062,7 +8381,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'loc_rate' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def loc_rate_page(self):
         &#34;&#34;&#34;
         Sets the ui elements for the &#39;loc_rate&#39; analysis parameters.
@@ -8085,20 +8406,36 @@ parameter selection window.</p></section>
 
         self.loc_field_smooth = add_check_box(obj_name=&#39;loc_field_smooth&#39;)
         self.loc_field_smooth.setChecked(False)
+
+        self.loc_style = add_combo_box(obj_name=&#34;loc_style&#34;)
+        self.loc_style.addItems(
+            [&#34;contour&#34;, &#34;digitized&#34;, &#34;interpolated&#34;])
+
+        self.loc_colormap = add_combo_box(obj_name=&#34;loc_colormap&#34;)
+        self.loc_colormap.addItems(
+            [&#34;viridis&#34;, &#34;default&#34;, &#34;gray&#34;, &#34;plasma&#34;,
+             &#34;inferno&#34;, &#34;magma&#34;, &#34;cividis&#34;])
 #        self.locAngVelCutoff = add_spin_box(min_val=0, 100, &#34;locAngVelCutoff&#34;)
 #        self.locAngVelCutoff.setValue(30)
 #        self.locAngVelCutoff.setSingleStep(5)
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
-        box_layout.addRow(&#34;Bound for Chopping Edges&#34;, self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
+        box_layout.addRow(
+            &#34;Pixel Size&#34;, self.loc_pixel_size, &#34;cm [range: 1-100]&#34;)
+        box_layout.addRow(
+            &#34;Bound for Chopping Edges&#34;, 
+            self.loc_chop_bound, &#34;pixels [range: 3-20]&#34;)
 #        box_layout.addRow(&#34;Angular Velocity Cutoff&#34;, self.locAngVelCutoff, &#34;deg/sec [range: 0-100, step: 5]&#34;)
-        box_layout.addRow(&#34;Place field threshold&#34;, self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
-        box_layout.addRow(&#34;Smooth firing map before centroid calculation&#34;, self.loc_field_smooth, &#34;True or False&#34;)
+        box_layout.addRow(
+            &#34;Place Field Threshold&#34;, 
+            self.loc_field_thresh, &#34;ratio [range: 0-1, step: 0.01]&#34;)
+        box_layout.addRow(
+            &#34;Whether to Smooth Firing Map Before Centroid Calculation&#34;,
+            self.loc_field_smooth, &#34;True or False&#34;)
 
         self.loc_rate_gb1.setLayout(box_layout)
 
-#        # Box- 2
+        # Box- 2
         self.loc_rate_gb2 = add_group_box(title=&#34;Smoothing Box Kernal&#34;, obj_name=&#34;loc_rate_gb2&#34;)
 
         self.loc_rate_filter = add_combo_box(obj_name=&#34;loc_rate_filter&#34;)
@@ -8110,15 +8447,28 @@ parameter selection window.</p></section>
         # Change step size to 0.5 if Gaussian is selected
 
         box_layout = ParamBoxLayout()
-        box_layout.addRow(&#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
-        box_layout.addRow(&#34;Spike Rate Pixels/Sigma&#34;, self.loc_rate_kern_len, \
-        &#34;[range: 1-11]\n\r Box: odds&#34;)
+        box_layout.addRow(
+            &#34;Smoothing Filter&#34;, self.loc_rate_filter, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Spike Rate Pixels/Sigma&#34;, 
+            self.loc_rate_kern_len, &#34;[range: 1-11]\n\r Box: odds&#34;)
 
         self.loc_rate_gb2.setLayout(box_layout)
+
+        # Box 3
+        self.loc_rate_gb3 = add_group_box(
+            title=&#34;Plotting Style&#34;, obj_name=&#34;loc_rate_gb3&#34;)
+        box_layout = ParamBoxLayout()
+        box_layout.addRow(
+            &#34;Firing Rate Map Style&#34;, self.loc_style, &#34;&#34;)
+        box_layout.addRow(
+            &#34;Firing Rate Map Colormap&#34;, self.loc_colormap, &#34;&#34;)
+        self.loc_rate_gb3.setLayout(box_layout)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.loc_rate_gb1)
         layout.addWidget(self.loc_rate_gb2)
+        layout.addWidget(self.loc_rate_gb3)
 
         widget.setContents(layout)
 
@@ -8131,7 +8481,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'loc_shuffle' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def loc_shuffle_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_shuffle&#39; analysis parameters.
@@ -8174,7 +8526,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'loc_time_lapse' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def loc_time_lapse_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_time_lapse&#39; analysis parameters.
@@ -8202,7 +8556,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'loc_time_shift' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def loc_time_shift_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_time_shift&#39; analysis parameters.
@@ -8242,7 +8598,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'multiple_regression' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def multiple_regresison_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;multiple_regression&#39; analysis parameters.
@@ -8285,7 +8643,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'phase_lock' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phase_lock_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;phase_lock&#39; analysis parameters.
@@ -8335,7 +8695,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the filters for locational firing rate map.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_loc_rate_filter(self, filt_type):
     &#34;&#34;&#34;
     Sets the ui elements for the filters for locational firing rate map.
@@ -8356,7 +8718,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the filters for spatial autocorrelation of locational firing rate map.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_spat_corr_filter(self, filt_type):
     &#34;&#34;&#34;
     Sets the ui elements for the filters for spatial autocorrelation of locational firing rate map.
@@ -8377,7 +8741,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the GUI elements for the widget.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def setup_ui(self):
         &#34;&#34;&#34;
         Sets the GUI elements for the widget.
@@ -8467,7 +8833,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'spatial_corr' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def spatial_corr_page(self):
         &#34;&#34;&#34;
         Sets the ui elements for the &#39;spatial_corr&#39; analysis parameters.
@@ -8532,7 +8900,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'burst' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def speed_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;burst&#39; analysis parameters.
@@ -8590,7 +8960,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'spike_phase' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def spike_phase_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;spike_phase&#39; analysis parameters.
@@ -8648,7 +9020,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'theta_cell' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def theta_cell_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;theta_cell&#39; analysis parameters.
@@ -8711,7 +9085,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'theta_skip_cell' analysis parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def theta_skip_cell_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;theta_skip_cell&#39; analysis parameters.
@@ -8740,7 +9116,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>Sets the ui elements for the 'Waveform Analysis' parameters.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def waveform_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;Waveform Analysis&#39; parameters.
@@ -8769,7 +9147,9 @@ parameter selection window.</p></section>
 <dd>
 <section class="desc"><p>NeuroChaT user interface for displaying the analysis results and and facilitating their export.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class UiResults(QtWidgets.QDialog):
     &#34;&#34;&#34;
     NeuroChaT user interface for displaying the analysis results and and facilitating their export.
@@ -8858,7 +9238,9 @@ parameter selection window.</p></section>
 <dd>PandasModel as the table-data</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_data(self, pd_model):
     &#34;&#34;&#34;
     Sets the PandasModel as the data model for the table-view.
@@ -8880,7 +9262,9 @@ parameter selection window.</p></section>
 <section class="desc"><p>Not implemented. Can be used for clearing the table and the data model
 underneath.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_default(self):
     &#34;&#34;&#34;
     Not implemented. Can be used for clearing the table and the data model
@@ -8900,7 +9284,9 @@ underneath.</p></section>
 <h2 id="see-also">See also</h2>
 <p><code>PandasModel</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def setup_ui(self):
     &#34;&#34;&#34;
     Sets up the GUI elements of the widget and their behaviour. Clicking on the
@@ -8991,6 +9377,7 @@ underneath.</p></section>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.setup_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.setup_ui">setup_ui</a></code></li>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.start" href="#neurochat.nc_ui.NeuroChaT_Ui.start">start</a></code></li>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.tutorial" href="#neurochat.nc_ui.NeuroChaT_Ui.tutorial">tutorial</a></code></li>
+<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems" href="#neurochat.nc_ui.NeuroChaT_Ui.unit_getitems">unit_getitems</a></code></li>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.update_log" href="#neurochat.nc_ui.NeuroChaT_Ui.update_log">update_log</a></code></li>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.verify_units" href="#neurochat.nc_ui.NeuroChaT_Ui.verify_units">verify_units</a></code></li>
 <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.view_help" href="#neurochat.nc_ui.NeuroChaT_Ui.view_help">view_help</a></code></li>
@@ -9052,7 +9439,7 @@ underneath.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

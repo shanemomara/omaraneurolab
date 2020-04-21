@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.3" />
+<meta name="generator" content="pdoc 0.7.5" />
 <title>neurochat.nc_lfp API documentation</title>
 <meta name="description" content="This module implements NLfp Class for NeuroChaT software …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -23,7 +23,9 @@
 <p>This module implements NLfp Class for NeuroChaT software</p>
 <p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements NLfp Class for NeuroChaT software
@@ -44,7 +46,7 @@ from math import floor, ceil
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import butter_filter
 from neurochat.nc_utils import find_peaks
-
+from neurochat.nc_utils import find_true_ranges
 from neurochat.nc_utils import butter_filter, fft_psd, find
 
 from neurochat.nc_circular import CircStat
@@ -639,7 +641,7 @@ class NLfp(NBase):
                     window=window, nperseg=window.size, noverlap=noverlap, nfft=nfft, \
                     detrend=&#39;constant&#39;, return_onesided=True, scaling=ptype)
 
-            graph_data[&#39;t&#39;] = t
+            graph_data[&#39;t&#39;] = t + self.get_timestamp()[0]
             graph_data[&#39;f&#39;] = f[find(f &lt;= fmax)]
 
             if db:
@@ -1209,11 +1211,13 @@ class NLfp(NBase):
         low, high = band
         method = kwargs.get(&#34;method&#34;, &#34;welch&#34;)
         window_sec = kwargs.get(&#34;window_sec&#34;, 2 / (low + 0.000001))
+        unit = kwargs.get(&#34;unit&#34;, &#34;milli&#34;)
+        scale = 1000 if unit == &#34;micro&#34; else 1
         sf = self.get_sampling_rate()
-        lfp_samples = self.get_samples()
+        lfp_samples = self.get_samples() * scale
 
         band_total = kwargs.get(&#39;band_total&#39;, False)
-        _filter = kwargs.get(&#39;total_band&#39;, [1.5, 40])
+        _filter = kwargs.get(&#39;total_band&#39;, [1.5, 90])
 
         # if prefilt:
         #     lfp_samples = butter_filter(lfp_samples, sf, *_filter)
@@ -1396,11 +1400,10 @@ class NLfp(NBase):
         None
 
         &#34;&#34;&#34;
-
-        words = file_name.split(sep=os.sep)
-        file_directory = os.sep.join(words[0:-1])
-        file_tag, file_extension = words[-1].split(&#39;.&#39;)
-        set_file = file_directory + os.sep + file_tag + &#39;.set&#39;
+        file_directory, file_basename = os.path.split(file_name)
+        file_tag, file_extension = os.path.splitext(file_basename)
+        file_extension = file_extension[1:]
+        set_file = os.path.join(file_directory, file_tag + &#39;.set&#39;)
 
         self._set_data_source(file_name)
         self._set_source_format(&#39;Axona&#39;)
@@ -1615,7 +1618,57 @@ class NLfp(NBase):
             self._set_samples(lfp_wave)
             self._set_total_samples(lfp_wave.size)
             self._set_timestamp(time)
-            self._set_sampling_rate(resamp_freq)</code></pre>
+            self._set_sampling_rate(resamp_freq)
+
+    def find_artf(self, sd_thresh=3, min_artf_freq=8):
+        &#34;&#34;&#34;
+        Obtains locations of signal above threshold in windows.
+        
+        NOTE this function is still a work in progress and may see future changes.
+
+        Parameters
+        ----------
+        sd_thresh: float
+            threshold to exclude artf
+        min_artf_freq: float
+            minimum artf freq - Used to locate artf blocks
+            eg. 250 Hz sampling rate, 40Hz min_artf_freq: locates artf within 9 samples of each other
+
+        &#34;&#34;&#34;
+        samples = self.get_samples()
+        Fs = self.get_sampling_rate()
+        std = np.std(samples)
+        mean = np.mean(samples)
+        over_thresh = np.logical_or(
+            samples &gt;= mean + sd_thresh*std,
+            samples &lt;= mean - sd_thresh*std)
+        # use np.where on the logical or if not using find_true_ranges    
+        _, thr_locs = find_true_ranges(
+            [i for i in range(len(samples))], over_thresh, 
+            min_range=1, return_idxs=True)
+        final_thr_locs = []
+        if len(thr_locs) == 0:
+            print(&#34;No artefacts found.&#34;)
+            thr_vals = []
+            thr_time = []
+        else:
+            for i in range(len(thr_locs)-1):
+                # Set based on sampling freq/max freq of interest.
+                if thr_locs[i+1] - thr_locs[i] &lt;= ceil(Fs/min_artf_freq):
+                    for j in range(thr_locs[i], thr_locs[i+1]):
+                        final_thr_locs.append(j)
+                else:
+                    final_thr_locs.append(thr_locs[i])
+            final_thr_locs.append(thr_locs[-1])
+
+            # print(&#39;original: &#39;, len(thr_locs))
+            thr_locs = np.array(final_thr_locs)
+            # print(&#39;changed: &#39;, len(thr_locs))
+            thr_vals = self.get_samples()[thr_locs]
+            thr_time = self.get_timestamp()[thr_locs]
+        per_removed = len(thr_locs)/len(samples)*100
+        # print(len(thr_locs), len(thr_time))
+        return mean, std, thr_locs, thr_vals, thr_time, per_removed</code></pre>
 </details>
 </section>
 <section>
@@ -1642,7 +1695,9 @@ LFP signal in the recording.</p>
 <dd>Keyword arguments</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class NLfp(NBase):
     &#34;&#34;&#34;
     This data class is the placeholder for the dataset that contains information
@@ -2224,7 +2279,7 @@ LFP signal in the recording.</p>
                     window=window, nperseg=window.size, noverlap=noverlap, nfft=nfft, \
                     detrend=&#39;constant&#39;, return_onesided=True, scaling=ptype)
 
-            graph_data[&#39;t&#39;] = t
+            graph_data[&#39;t&#39;] = t + self.get_timestamp()[0]
             graph_data[&#39;f&#39;] = f[find(f &lt;= fmax)]
 
             if db:
@@ -2794,11 +2849,13 @@ LFP signal in the recording.</p>
         low, high = band
         method = kwargs.get(&#34;method&#34;, &#34;welch&#34;)
         window_sec = kwargs.get(&#34;window_sec&#34;, 2 / (low + 0.000001))
+        unit = kwargs.get(&#34;unit&#34;, &#34;milli&#34;)
+        scale = 1000 if unit == &#34;micro&#34; else 1
         sf = self.get_sampling_rate()
-        lfp_samples = self.get_samples()
+        lfp_samples = self.get_samples() * scale
 
         band_total = kwargs.get(&#39;band_total&#39;, False)
-        _filter = kwargs.get(&#39;total_band&#39;, [1.5, 40])
+        _filter = kwargs.get(&#39;total_band&#39;, [1.5, 90])
 
         # if prefilt:
         #     lfp_samples = butter_filter(lfp_samples, sf, *_filter)
@@ -2981,11 +3038,10 @@ LFP signal in the recording.</p>
         None
 
         &#34;&#34;&#34;
-
-        words = file_name.split(sep=os.sep)
-        file_directory = os.sep.join(words[0:-1])
-        file_tag, file_extension = words[-1].split(&#39;.&#39;)
-        set_file = file_directory + os.sep + file_tag + &#39;.set&#39;
+        file_directory, file_basename = os.path.split(file_name)
+        file_tag, file_extension = os.path.splitext(file_basename)
+        file_extension = file_extension[1:]
+        set_file = os.path.join(file_directory, file_tag + &#39;.set&#39;)
 
         self._set_data_source(file_name)
         self._set_source_format(&#39;Axona&#39;)
@@ -3200,7 +3256,57 @@ LFP signal in the recording.</p>
             self._set_samples(lfp_wave)
             self._set_total_samples(lfp_wave.size)
             self._set_timestamp(time)
-            self._set_sampling_rate(resamp_freq)</code></pre>
+            self._set_sampling_rate(resamp_freq)
+
+    def find_artf(self, sd_thresh=3, min_artf_freq=8):
+        &#34;&#34;&#34;
+        Obtains locations of signal above threshold in windows.
+        
+        NOTE this function is still a work in progress and may see future changes.
+
+        Parameters
+        ----------
+        sd_thresh: float
+            threshold to exclude artf
+        min_artf_freq: float
+            minimum artf freq - Used to locate artf blocks
+            eg. 250 Hz sampling rate, 40Hz min_artf_freq: locates artf within 9 samples of each other
+
+        &#34;&#34;&#34;
+        samples = self.get_samples()
+        Fs = self.get_sampling_rate()
+        std = np.std(samples)
+        mean = np.mean(samples)
+        over_thresh = np.logical_or(
+            samples &gt;= mean + sd_thresh*std,
+            samples &lt;= mean - sd_thresh*std)
+        # use np.where on the logical or if not using find_true_ranges    
+        _, thr_locs = find_true_ranges(
+            [i for i in range(len(samples))], over_thresh, 
+            min_range=1, return_idxs=True)
+        final_thr_locs = []
+        if len(thr_locs) == 0:
+            print(&#34;No artefacts found.&#34;)
+            thr_vals = []
+            thr_time = []
+        else:
+            for i in range(len(thr_locs)-1):
+                # Set based on sampling freq/max freq of interest.
+                if thr_locs[i+1] - thr_locs[i] &lt;= ceil(Fs/min_artf_freq):
+                    for j in range(thr_locs[i], thr_locs[i+1]):
+                        final_thr_locs.append(j)
+                else:
+                    final_thr_locs.append(thr_locs[i])
+            final_thr_locs.append(thr_locs[-1])
+
+            # print(&#39;original: &#39;, len(thr_locs))
+            thr_locs = np.array(final_thr_locs)
+            # print(&#39;changed: &#39;, len(thr_locs))
+            thr_vals = self.get_samples()[thr_locs]
+            thr_time = self.get_timestamp()[thr_locs]
+        per_removed = len(thr_locs)/len(samples)*100
+        # print(len(thr_locs), len(thr_time))
+        return mean, std, thr_locs, thr_vals, thr_time, per_removed</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3223,7 +3329,9 @@ LFP signal in the recording.</p>
 <p><code>:obj:Nlfp</code>
 A new NLfp() object</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def add_lfp(self, lfp=None, **kwargs):
     &#34;&#34;&#34;
     Adds new LFP node to current NLfp() object
@@ -3259,7 +3367,9 @@ A new NLfp() object</p></section>
 <p><code>:obj:NSpike()</code>
 A new NSpike() object</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def add_spike(self, spike=None, **kwargs):
     &#34;&#34;&#34;
     Adds new spike node to current NLfp() object
@@ -3322,7 +3432,9 @@ Default [1.5, 40]</p>
 <dd>"bandpower", "total_power" and "relative_power".</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def bandpower(self, band, **kwargs):
     &#34;&#34;&#34;Compute the average power of the signal x in a specific frequency band.
 
@@ -3359,11 +3471,13 @@ Default [1.5, 40]</p>
     low, high = band
     method = kwargs.get(&#34;method&#34;, &#34;welch&#34;)
     window_sec = kwargs.get(&#34;window_sec&#34;, 2 / (low + 0.000001))
+    unit = kwargs.get(&#34;unit&#34;, &#34;milli&#34;)
+    scale = 1000 if unit == &#34;micro&#34; else 1
     sf = self.get_sampling_rate()
-    lfp_samples = self.get_samples()
+    lfp_samples = self.get_samples() * scale
 
     band_total = kwargs.get(&#39;band_total&#39;, False)
-    _filter = kwargs.get(&#39;total_band&#39;, [1.5, 40])
+    _filter = kwargs.get(&#39;total_band&#39;, [1.5, 90])
 
     # if prefilt:
     #     lfp_samples = butter_filter(lfp_samples, sf, *_filter)
@@ -3427,7 +3541,9 @@ second_name - str name of band 2, default "Band 2"</p>
 <h2 id="see-also">See also</h2>
 <p><code>nc_lfp.NLfp().bandpower()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def bandpower_ratio(self, first_band, second_band, win_sec, **kwargs):
     &#34;&#34;&#34;
     Calculate the ratio in power between two bandpass filtered signals.
@@ -3501,7 +3617,9 @@ event triggered average of the LFP signal</dd>
 <dd>Graphical data of the analysis</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def event_trig_average(self, event_stamp=None, **kwargs):
     &#34;&#34;&#34;
     Averaging event-triggered LFP signals
@@ -3561,6 +3679,75 @@ event triggered average of the LFP signal</dd>
     return graph_data</code></pre>
 </details>
 </dd>
+<dt id="neurochat.nc_lfp.NLfp.find_artf"><code class="name flex">
+<span>def <span class="ident">find_artf</span></span>(<span>self, sd_thresh=3, min_artf_freq=8)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Obtains locations of signal above threshold in windows.</p>
+<p>NOTE this function is still a work in progress and may see future changes.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>sd_thresh</code></strong> :&ensp;<code>float</code></dt>
+<dd>threshold to exclude artf</dd>
+<dt><strong><code>min_artf_freq</code></strong> :&ensp;<code>float</code></dt>
+<dd>minimum artf freq - Used to locate artf blocks
+eg. 250 Hz sampling rate, 40Hz min_artf_freq: locates artf within 9 samples of each other</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_artf(self, sd_thresh=3, min_artf_freq=8):
+    &#34;&#34;&#34;
+    Obtains locations of signal above threshold in windows.
+    
+    NOTE this function is still a work in progress and may see future changes.
+
+    Parameters
+    ----------
+    sd_thresh: float
+        threshold to exclude artf
+    min_artf_freq: float
+        minimum artf freq - Used to locate artf blocks
+        eg. 250 Hz sampling rate, 40Hz min_artf_freq: locates artf within 9 samples of each other
+
+    &#34;&#34;&#34;
+    samples = self.get_samples()
+    Fs = self.get_sampling_rate()
+    std = np.std(samples)
+    mean = np.mean(samples)
+    over_thresh = np.logical_or(
+        samples &gt;= mean + sd_thresh*std,
+        samples &lt;= mean - sd_thresh*std)
+    # use np.where on the logical or if not using find_true_ranges    
+    _, thr_locs = find_true_ranges(
+        [i for i in range(len(samples))], over_thresh, 
+        min_range=1, return_idxs=True)
+    final_thr_locs = []
+    if len(thr_locs) == 0:
+        print(&#34;No artefacts found.&#34;)
+        thr_vals = []
+        thr_time = []
+    else:
+        for i in range(len(thr_locs)-1):
+            # Set based on sampling freq/max freq of interest.
+            if thr_locs[i+1] - thr_locs[i] &lt;= ceil(Fs/min_artf_freq):
+                for j in range(thr_locs[i], thr_locs[i+1]):
+                    final_thr_locs.append(j)
+            else:
+                final_thr_locs.append(thr_locs[i])
+        final_thr_locs.append(thr_locs[-1])
+
+        # print(&#39;original: &#39;, len(thr_locs))
+        thr_locs = np.array(final_thr_locs)
+        # print(&#39;changed: &#39;, len(thr_locs))
+        thr_vals = self.get_samples()[thr_locs]
+        thr_time = self.get_timestamp()[thr_locs]
+    per_removed = len(thr_locs)/len(samples)*100
+    # print(len(thr_locs), len(thr_time))
+    return mean, std, thr_locs, thr_vals, thr_time, per_removed</code></pre>
+</details>
+</dd>
 <dt id="neurochat.nc_lfp.NLfp.get_bytes_per_sample"><code class="name flex">
 <span>def <span class="ident">get_bytes_per_sample</span></span>(<span>self)</span>
 </code></dt>
@@ -3577,7 +3764,9 @@ event triggered average of the LFP signal</dd>
 <dd>Number of bytes to represent each sample of the LFP waveform</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_bytes_per_sample(self):
     &#34;&#34;&#34;
     Returns the number of bytes to represent each LFP waveform sample
@@ -3612,7 +3801,9 @@ event triggered average of the LFP signal</dd>
 <dd>LFP channel ID</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_channel_id(self):
     &#34;&#34;&#34;
     Returns the electrode channels ID
@@ -3648,7 +3839,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>File tag or extension for the LFP dataset</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_file_tag(self):
     &#34;&#34;&#34;
     Returns the file tag or extension for the LFP dataset. For example, Axona recordings usually
@@ -3683,7 +3876,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Fullscale ADC value in mV</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_fullscale_mv(self):
     &#34;&#34;&#34;
     Returns the fullscale value of the ADC in mV
@@ -3718,7 +3913,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Recording time in seconds</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_recording_time(self):
     &#34;&#34;&#34;
     Returns the recording time in seconds
@@ -3752,7 +3949,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Samples of the LFP signal</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_samples(self):
     &#34;&#34;&#34;
     Returns LFP waveform samples
@@ -3787,7 +3986,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Sampling rate for spike waveforms</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_sampling_rate(self):
     &#34;&#34;&#34;
     Returns the sampling rate of spike waveforms
@@ -3822,7 +4023,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Timestamps of the LFP signal</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_timestamp(self):
     &#34;&#34;&#34;
     Returns the timestamps of the LFP waveform
@@ -3857,7 +4060,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Number of bytes to represent timestamps</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_timestamp_bytes(self):
     &#34;&#34;&#34;
     Returns the number of bytes to represent each timestamp in the binary file
@@ -3892,7 +4097,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Total number of electrode channels</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_total_channel(self):
     &#34;&#34;&#34;
     Returns total number of electrode channels in the LFP data file
@@ -3926,7 +4133,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Total number of LFP samples</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_total_samples(self):
     &#34;&#34;&#34;
     Returns total number of LFP samples
@@ -3960,7 +4169,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def get_type(self):
     &#34;&#34;&#34;
     Returns the type of object. For NLfp, this is always `lfp` type
@@ -3997,7 +4208,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <h2 id="see-also">See also</h2>
 <p><code>load_lfp_axona()</code>, <code>load_lfp_NLX()</code>, <code>load_lfp_NWB()</code></p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load(self, filename=None, system=None):
     &#34;&#34;&#34;
     Loads LFP datasets
@@ -4047,7 +4260,9 @@ filenames</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_lfp(self, names=None):
     &#34;&#34;&#34;
     Loads datasets of the LFP nodes. Name of each node is used for obtaining the
@@ -4088,7 +4303,9 @@ filenames</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_lfp_Axona(self, file_name):
     &#34;&#34;&#34;
     Decodes LFP data from Axona file format
@@ -4103,11 +4320,10 @@ filenames</p>
     None
 
     &#34;&#34;&#34;
-
-    words = file_name.split(sep=os.sep)
-    file_directory = os.sep.join(words[0:-1])
-    file_tag, file_extension = words[-1].split(&#39;.&#39;)
-    set_file = file_directory + os.sep + file_tag + &#39;.set&#39;
+    file_directory, file_basename = os.path.split(file_name)
+    file_tag, file_extension = os.path.splitext(file_basename)
+    file_extension = file_extension[1:]
+    set_file = os.path.join(file_directory, file_tag + &#39;.set&#39;)
 
     self._set_data_source(file_name)
     self._set_source_format(&#39;Axona&#39;)
@@ -4231,7 +4447,9 @@ filenames</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_lfp_NWB(self, file_name):
     &#34;&#34;&#34;
     Decodes LFP data from NWB (HDF5) file format
@@ -4292,7 +4510,9 @@ filenames</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_lfp_Neuralynx(self, file_name):
     &#34;&#34;&#34;
     Decodes LFP data from Neuralynx file format
@@ -4421,7 +4641,9 @@ filenames</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def load_spike(self, names=&#39;all&#39;):
     &#34;&#34;&#34;
     Loads datasets of the spike nodes. Name of each node is used for obtaining the
@@ -4463,7 +4685,9 @@ keyword arguments</p>
 Phase values for each position
 </code></pre></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phase_at_events(self, event_stamps, **kwargs):
     &#34;&#34;&#34;
     Phase based on times.
@@ -4525,7 +4749,9 @@ distribution</dd>
 <dd>Graphical data of the analysis</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def phase_dist(self, event_stamp, **kwargs):
         &#34;&#34;&#34;
         Analysis of spike to LFP phase distribution
@@ -4689,7 +4915,9 @@ locking</dd>
 <dd>Graphical data of the analysis</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def plv(self, event_stamp, **kwargs):
     &#34;&#34;&#34;
     Calculates phase-locking value of the spike train to underlying LFP signal.
@@ -4869,7 +5097,9 @@ locking</dd>
 <h2 id="also-see">Also see</h2>
 <p>nc_hdf.Nhdf().save_lfp()</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def save_to_hdf5(self, file_name=None, system=None):
     &#34;&#34;&#34;
     Stores NLfp() object to HDF5 file
@@ -4920,7 +5150,9 @@ locking</dd>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_channel_id(self, channel_id=&#39;&#39;):
     &#34;&#34;&#34;
     Sets the electrode channels ID
@@ -4955,7 +5187,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>&nbsp;</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def set_file_tag(self, file_tag):
     &#34;&#34;&#34;
     Sets the file tag or extension for the LFP dataset. For example, Axona recordings usually
@@ -5002,7 +5236,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>lfp times, lfp samples, swr times, lfp sample rate</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def sharp_wave_ripples(self, in_range=None, **kwargs):
     &#34;&#34;&#34;
     Detect SWR events in the lfp, optionally in a given range
@@ -5075,7 +5311,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 <dd>Graphical data of the analysis</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">    def spectrum(self, **kwargs):
         &#34;&#34;&#34;
         Analyses frequency spectrum of the LFP signal
@@ -5132,7 +5370,7 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
                     window=window, nperseg=window.size, noverlap=noverlap, nfft=nfft, \
                     detrend=&#39;constant&#39;, return_onesided=True, scaling=ptype)
 
-            graph_data[&#39;t&#39;] = t
+            graph_data[&#39;t&#39;] = t + self.get_timestamp()[0]
             graph_data[&#39;f&#39;] = f[find(f &lt;= fmax)]
 
             if db:
@@ -5179,7 +5417,9 @@ have file tags like 'eeg' or 'eeg8' etc.</p>
 implemented yet.</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def spike_lfp_causality(self, spike=None, **kwargs):
     &#34;&#34;&#34;
     (Not implemented yet)
@@ -5220,7 +5460,9 @@ implemented yet.</dd>
 <dd>subsampled version of initial lfp object</dd>
 </dl></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def subsample(self, sample_range=None):
     &#34;&#34;&#34;
     Extract a time range from the lfp.
@@ -5328,6 +5570,7 @@ implemented yet.</dd>
 <li><code><a title="neurochat.nc_lfp.NLfp.bandpower" href="#neurochat.nc_lfp.NLfp.bandpower">bandpower</a></code></li>
 <li><code><a title="neurochat.nc_lfp.NLfp.bandpower_ratio" href="#neurochat.nc_lfp.NLfp.bandpower_ratio">bandpower_ratio</a></code></li>
 <li><code><a title="neurochat.nc_lfp.NLfp.event_trig_average" href="#neurochat.nc_lfp.NLfp.event_trig_average">event_trig_average</a></code></li>
+<li><code><a title="neurochat.nc_lfp.NLfp.find_artf" href="#neurochat.nc_lfp.NLfp.find_artf">find_artf</a></code></li>
 <li><code><a title="neurochat.nc_lfp.NLfp.get_bytes_per_sample" href="#neurochat.nc_lfp.NLfp.get_bytes_per_sample">get_bytes_per_sample</a></code></li>
 <li><code><a title="neurochat.nc_lfp.NLfp.get_channel_id" href="#neurochat.nc_lfp.NLfp.get_channel_id">get_channel_id</a></code></li>
 <li><code><a title="neurochat.nc_lfp.NLfp.get_file_tag" href="#neurochat.nc_lfp.NLfp.get_file_tag">get_file_tag</a></code></li>
@@ -5364,7 +5607,7 @@ implemented yet.</dd>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
