@@ -18,7 +18,7 @@ from math import floor, ceil
 from neurochat.nc_utils import window_rms
 from neurochat.nc_utils import butter_filter
 from neurochat.nc_utils import find_peaks
-
+from neurochat.nc_utils import find_true_ranges
 from neurochat.nc_utils import butter_filter, fft_psd, find
 
 from neurochat.nc_circular import CircStat
@@ -613,7 +613,7 @@ class NLfp(NBase):
                     window=window, nperseg=window.size, noverlap=noverlap, nfft=nfft, \
                     detrend='constant', return_onesided=True, scaling=ptype)
 
-            graph_data['t'] = t
+            graph_data['t'] = t + self.get_timestamp()[0]
             graph_data['f'] = f[find(f <= fmax)]
 
             if db:
@@ -1183,11 +1183,13 @@ class NLfp(NBase):
         low, high = band
         method = kwargs.get("method", "welch")
         window_sec = kwargs.get("window_sec", 2 / (low + 0.000001))
+        unit = kwargs.get("unit", "milli")
+        scale = 1000 if unit == "micro" else 1
         sf = self.get_sampling_rate()
-        lfp_samples = self.get_samples()
+        lfp_samples = self.get_samples() * scale
 
         band_total = kwargs.get('band_total', False)
-        _filter = kwargs.get('total_band', [1.5, 40])
+        _filter = kwargs.get('total_band', [1.5, 90])
 
         # if prefilt:
         #     lfp_samples = butter_filter(lfp_samples, sf, *_filter)
@@ -1370,11 +1372,10 @@ class NLfp(NBase):
         None
 
         """
-
-        words = file_name.split(sep=os.sep)
-        file_directory = os.sep.join(words[0:-1])
-        file_tag, file_extension = words[-1].split('.')
-        set_file = file_directory + os.sep + file_tag + '.set'
+        file_directory, file_basename = os.path.split(file_name)
+        file_tag, file_extension = os.path.splitext(file_basename)
+        file_extension = file_extension[1:]
+        set_file = os.path.join(file_directory, file_tag + '.set')
 
         self._set_data_source(file_name)
         self._set_source_format('Axona')
@@ -1590,3 +1591,53 @@ class NLfp(NBase):
             self._set_total_samples(lfp_wave.size)
             self._set_timestamp(time)
             self._set_sampling_rate(resamp_freq)
+
+    def find_artf(self, sd_thresh=3, min_artf_freq=8):
+        """
+        Obtains locations of signal above threshold in windows.
+        
+        NOTE this function is still a work in progress and may see future changes.
+
+        Parameters
+        ----------
+        sd_thresh: float
+            threshold to exclude artf
+        min_artf_freq: float
+            minimum artf freq - Used to locate artf blocks
+            eg. 250 Hz sampling rate, 40Hz min_artf_freq: locates artf within 9 samples of each other
+
+        """
+        samples = self.get_samples()
+        Fs = self.get_sampling_rate()
+        std = np.std(samples)
+        mean = np.mean(samples)
+        over_thresh = np.logical_or(
+            samples >= mean + sd_thresh*std,
+            samples <= mean - sd_thresh*std)
+        # use np.where on the logical or if not using find_true_ranges    
+        _, thr_locs = find_true_ranges(
+            [i for i in range(len(samples))], over_thresh, 
+            min_range=1, return_idxs=True)
+        final_thr_locs = []
+        if len(thr_locs) == 0:
+            print("No artefacts found.")
+            thr_vals = []
+            thr_time = []
+        else:
+            for i in range(len(thr_locs)-1):
+                # Set based on sampling freq/max freq of interest.
+                if thr_locs[i+1] - thr_locs[i] <= ceil(Fs/min_artf_freq):
+                    for j in range(thr_locs[i], thr_locs[i+1]):
+                        final_thr_locs.append(j)
+                else:
+                    final_thr_locs.append(thr_locs[i])
+            final_thr_locs.append(thr_locs[-1])
+
+            # print('original: ', len(thr_locs))
+            thr_locs = np.array(final_thr_locs)
+            # print('changed: ', len(thr_locs))
+            thr_vals = self.get_samples()[thr_locs]
+            thr_time = self.get_timestamp()[thr_locs]
+        per_removed = len(thr_locs)/len(samples)*100
+        # print(len(thr_locs), len(thr_time))
+        return mean, std, thr_locs, thr_vals, thr_time, per_removed
