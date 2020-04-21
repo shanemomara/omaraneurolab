@@ -1,6 +1,6 @@
 # NeuroChaT
 
-NeuroChaT is an open-source neuron characterisation toolbox.
+NeuroChaT (RRID:SCR_018020) is an open-source neuron characterisation toolbox. It is described in our paper on [Wellcome Open Research](https://wellcomeopenresearch.org/articles/4-196).
 
 ## Author Contributions
 
@@ -22,7 +22,7 @@ This work was supported by a Joint Senior Investigator Award made by The Wellcom
 
 ## Installation
 
-For Windows users, [a standalone executable](https://github.com/shanemomara/omaraneurolab/releases/download/1.0.0/NeuroChaT.exe) is available to run the GUI based version of NeuroChaT. Otherwise, Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
+Python version 3.5 upwards is required to install neurochat. Installation steps are listed in detail below:
 
 ### Option 1: Use Pip
 
@@ -49,9 +49,18 @@ python neurochat_gui\neurochat_ui.py
 
 This method only allows the GUI program to function, any other file will need to modify the python path to use neurochat.
 
+## Getting Started
+
+The best ways to get started with NeuroChaT are:
+
+1. For using the UI, download the [executable file for Windows](https://github.com/seankmartin/NeuroChaT/releases/tag/v1.1.0) and check out the [user manual](https://github.com/shanemomara/omaraneurolab/tree/master/NeuroChaT/docs/NeuroChaT%20User%20Guide.pdf).
+2. For using the Python Code, checkout the nice [notebook](https://github.com/shanemomara/omaraneurolab/tree/master/NeuroChaT/notebooks/api_use_guide.ipynb) made by Md Nurul Islam, a [repository](https://github.com/seankmartin/NeuroChaT_API_Scripts) containing a set of scripts using NeuroChat by Sean Martin, and [examples](https://github.com/shanemomara/omaraneurolab/tree/master/NeuroChaT/examples) in this repository.
+
+We are open to collaborators, questions, etc. so feel free to get in touch!
+
 ## Documentation
 
-See the docs folder for a [user guide](https://github.com/shanemomara/omaraneurolab/blob/master/NeuroChaT/docs/NeuroChaT%20User%20Guide.pdf) which should be the first port of call. For coding with NeuroChaT, the [API guide](https://github.com/shanemomara/omaraneurolab/blob/master/NeuroChaT/notebooks/api_use_guide.ipynb) is a good starting point. There is also [html docs](https://seankmartin.github.io/NeuroChaT/docs/html/neurochat/index.html) available for the neurochat package, which can also be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu.
+See the docs folder for a pdf user guide which should be the first port of call. There is also html docs available for the neurochat package, which can be accessed by opening docs/index.html in a browser, or from the NeuroChaT UI help menu, or on [Github Pages](https://seankmartin.github.io/NeuroChaT/docs/html/neurochat/index.html).
 
 ## Open Science Framework Storage
 

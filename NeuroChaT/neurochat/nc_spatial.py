@@ -780,7 +780,7 @@ class NSpatial(NAbstract):
         if filename is None:
             filename = self._filename
         else:
-            filename = self._filename
+            self._filename = filename
         loader = getattr(self, 'load_spatial_'+ system)
         loader(filename)
         try:
@@ -1390,14 +1390,17 @@ class NSpatial(NAbstract):
         thresh = kwargs.get('fieldThresh', 0.2)
         required_neighbours = kwargs.get('minPlaceFieldNeighbours', 9)
         smooth_place = kwargs.get('smoothPlace', False)
+        # Can pass another NData object to estimate the border from
+        # Can be useful in some cases, such as when the animal
+        # only explores a subset of the arena.
         separate_border_data = kwargs.get(
-            "separateBorderData", False)
+            "separateBorderData", None)
 
         # xedges = np.arange(0, np.ceil(np.max(self._pos_x)), pixel)
         # yedges = np.arange(0, np.ceil(np.max(self._pos_y)), pixel)
 
         # Update the border to match the requested pixel size
-        if separate_border_data:
+        if separate_border_data is not None:
             self.set_border(
                 separate_border_data.calc_border(**kwargs))
             times = self._time
@@ -1469,7 +1472,7 @@ class NSpatial(NAbstract):
              maxes[0] / p_shape[1],
              maxes[1] / p_shape[0])
         co_ords = np.array(np.where(pfield == largest_group))
-        boundary = [None, None]
+        boundary = [[None, None], [None, None]]
         for i in range(2):
             j = (i + 1) % 2
             boundary[i] = (
@@ -1723,7 +1726,13 @@ class NSpatial(NAbstract):
 
         hd_rate = np.divide(spike_count, tcount, out=np.zeros_like(spike_count), where=tcount != 0, casting='unsafe')
 
-        smoothRate = smooth_1d(hd_rate, filttype, filtsize)
+        extra_for_smooth = int(np.floor(filtsize / 2))
+        to_smooth_hd = np.concatenate([
+            hd_rate[len(hd_rate) - extra_for_smooth:],
+            hd_rate, 
+            hd_rate[:extra_for_smooth]])
+        smoothRate = smooth_1d(to_smooth_hd, filttype, filtsize)
+        smoothRate = smoothRate[2:len(smoothRate)-2]
 
         if update:
             _results['HD Skaggs'] = self.skaggs_info(hd_rate, tcount)
@@ -1770,7 +1779,13 @@ class NSpatial(NAbstract):
                 tmap /= self.get_sampling_rate()
                 hdPred[i] = np.sum(fmap*tmap)/ tmap.sum()
 
-            graph_data['hdPred'] = smooth_1d(hdPred, 'b', 5)
+            to_smooth_hd_pred = np.concatenate([
+                hdPred[len(hdPred) - extra_for_smooth:],
+                hdPred, 
+                hdPred[:extra_for_smooth]])
+            smoothRatePred = smooth_1d(to_smooth_hd_pred, filttype, filtsize)
+            smoothRatePred = smoothRatePred[2:len(smoothRatePred)-2]
+            graph_data['hdPred'] = smoothRatePred
             self.update_result(_results)
 
         graph_data['hd'] = direction
@@ -1832,13 +1847,28 @@ class NSpatial(NAbstract):
         tcount = tcount/ self.get_sampling_rate()
         spike_count = histogram(cwSpike_hd, edges)[0].astype(tcount.dtype)
         cwRate = np.divide(spike_count, tcount, out=np.zeros_like(spike_count), where=tcount != 0, casting='unsafe')
-        cwRate = np.interp(binInterp, bins, smooth_1d(cwRate, filttype, filtsize))
+        extra_for_smooth = int(np.floor(filtsize / 2))
+        to_smooth_hd = np.concatenate([
+            cwRate[len(cwRate) - extra_for_smooth:],
+            cwRate,
+            cwRate[:extra_for_smooth]])
+        smoothRate = smooth_1d(to_smooth_hd, filttype, filtsize)
+        smoothRate = smoothRate[2:len(smoothRate) - 2]
+        smoothcwRate = smoothRate
+        cwRate = smoothcwRate
 
         tcount, ind, bins = histogram(ccw_dir, edges)
         tcount = tcount/ self.get_sampling_rate()
         spike_count = histogram(ccwSpike_hd, edges)[0].astype(tcount.dtype)
         ccwRate = np.divide(spike_count, tcount, out=np.zeros_like(spike_count), where=tcount != 0, casting='unsafe')
-        ccwRate = np.interp(binInterp, bins, smooth_1d(ccwRate, filttype, filtsize))
+        to_smooth_hd = np.concatenate([
+            ccwRate[len(ccwRate) - extra_for_smooth:],
+            ccwRate, 
+            ccwRate[:extra_for_smooth]])
+        smoothRate = smooth_1d(to_smooth_hd, filttype, filtsize)
+        smoothRate = smoothRate[2:len(smoothRate)-2]
+        smoothccwRate = smoothRate
+        ccwRate = smoothccwRate
 
         if update:
             _results['HD Delta'] = binInterp[np.argmax(ccwRate)]- binInterp[np.argmax(cwRate)]
@@ -1848,7 +1878,7 @@ class NSpatial(NAbstract):
             _results['HD Peak Rate CCW'] = np.amax(ccwRate)
             self.update_result(_results)
 
-        graph_data['bins'] = binInterp
+        graph_data['bins'] = bins
         graph_data['hdRateCW'] = cwRate
         graph_data['hdRateCCW'] = ccwRate
 
