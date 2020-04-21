@@ -1,33 +1,479 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.3" />
-<title>neurochat.nc_ui API documentation</title>
-<meta name="description" content="This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <meta name="generator" content="pdoc 0.7.5" />
+    <title>neurochat.nc_ui API documentation</title>
+    <meta name="description" content="This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
 other graphical and data objects and connects …" />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
-<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <style>
+        .flex {
+            display: flex !important
+        }
+
+        body {
+            line-height: 1.5em
+        }
+
+        #content {
+            padding: 20px
+        }
+
+        #sidebar {
+            padding: 30px;
+            overflow: hidden
+        }
+
+        .http-server-breadcrumbs {
+            font-size: 130%;
+            margin: 0 0 15px 0
+        }
+
+        #footer {
+            font-size: .75em;
+            padding: 5px 30px;
+            border-top: 1px solid #ddd;
+            text-align: right
+        }
+
+        #footer p {
+            margin: 0 0 0 1em;
+            display: inline-block
+        }
+
+        #footer p:last-child {
+            margin-right: 30px
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-weight: 300
+        }
+
+        h1 {
+            font-size: 2.5em;
+            line-height: 1.1em
+        }
+
+        h2 {
+            font-size: 1.75em;
+            margin: 1em 0 .50em 0
+        }
+
+        h3 {
+            font-size: 1.4em;
+            margin: 25px 0 10px 0
+        }
+
+        h4 {
+            margin: 0;
+            font-size: 105%
+        }
+
+        a {
+            color: #058;
+            text-decoration: none;
+            transition: color .3s ease-in-out
+        }
+
+        a:hover {
+            color: #e82
+        }
+
+        .title code {
+            font-weight: bold
+        }
+
+        h2[id^="header-"] {
+            margin-top: 2em
+        }
+
+        .ident {
+            color: #900
+        }
+
+        pre code {
+            background: #f8f8f8;
+            font-size: .8em;
+            line-height: 1.4em
+        }
+
+        code {
+            background: #f2f2f1;
+            padding: 1px 4px;
+            overflow-wrap: break-word
+        }
+
+        h1 code {
+            background: transparent
+        }
+
+        pre {
+            background: #f8f8f8;
+            border: 0;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            margin: 1em 0;
+            padding: 1ex
+        }
+
+        #http-server-module-list {
+            display: flex;
+            flex-flow: column
+        }
+
+        #http-server-module-list div {
+            display: flex
+        }
+
+        #http-server-module-list dt {
+            min-width: 10%
+        }
+
+        #http-server-module-list p {
+            margin-top: 0
+        }
+
+        .toc ul,
+        #index {
+            list-style-type: none;
+            margin: 0;
+            padding: 0
+        }
+
+        #index code {
+            background: transparent
+        }
+
+        #index h3 {
+            border-bottom: 1px solid #ddd
+        }
+
+        #index ul {
+            padding: 0
+        }
+
+        #index h4 {
+            font-weight: bold
+        }
+
+        #index h4+ul {
+            margin-bottom: .6em
+        }
+
+        @media (min-width:200ex) {
+            #index .two-column {
+                column-count: 2
+            }
+        }
+
+        @media (min-width:300ex) {
+            #index .two-column {
+                column-count: 3
+            }
+        }
+
+        dl {
+            margin-bottom: 2em
+        }
+
+        dl dl:last-child {
+            margin-bottom: 4em
+        }
+
+        dd {
+            margin: 0 0 1em 3em
+        }
+
+        #header-classes+dl>dd {
+            margin-bottom: 3em
+        }
+
+        dd dd {
+            margin-left: 2em
+        }
+
+        dd p {
+            margin: 10px 0
+        }
+
+        .name {
+            background: #eee;
+            font-weight: bold;
+            font-size: .85em;
+            padding: 5px 10px;
+            display: inline-block;
+            min-width: 40%
+        }
+
+        .name:hover {
+            background: #e0e0e0
+        }
+
+        .name>span:first-child {
+            white-space: nowrap
+        }
+
+        .name.class>span:nth-child(2) {
+            margin-left: .4em
+        }
+
+        .inherited {
+            color: #999;
+            border-left: 5px solid #eee;
+            padding-left: 1em
+        }
+
+        .inheritance em {
+            font-style: normal;
+            font-weight: bold
+        }
+
+        .desc h2 {
+            font-weight: 400;
+            font-size: 1.25em
+        }
+
+        .desc h3 {
+            font-size: 1em
+        }
+
+        .desc dt code {
+            background: inherit
+        }
+
+        .source summary,
+        .git-link-div {
+            color: #666;
+            text-align: right;
+            font-weight: 400;
+            font-size: .8em;
+            text-transform: uppercase
+        }
+
+        .source summary>* {
+            white-space: nowrap;
+            cursor: pointer
+        }
+
+        .git-link {
+            color: inherit;
+            margin-left: 1em
+        }
+
+        .source pre {
+            max-height: 500px;
+            overflow: auto;
+            margin: 0
+        }
+
+        .source pre code {
+            font-size: 12px;
+            overflow: visible
+        }
+
+        .hlist {
+            list-style: none
+        }
+
+        .hlist li {
+            display: inline
+        }
+
+        .hlist li:after {
+            content: ',\2002'
+        }
+
+        .hlist li:last-child:after {
+            content: none
+        }
+
+        .hlist .hlist {
+            display: inline;
+            padding-left: 1em
+        }
+
+        img {
+            max-width: 100%
+        }
+
+        .admonition {
+            padding: .1em .5em;
+            margin-bottom: 1em
+        }
+
+        .admonition-title {
+            font-weight: bold
+        }
+
+        .admonition.note,
+        .admonition.info,
+        .admonition.important {
+            background: #aef
+        }
+
+        .admonition.todo,
+        .admonition.versionadded,
+        .admonition.tip,
+        .admonition.hint {
+            background: #dfd
+        }
+
+        .admonition.warning,
+        .admonition.versionchanged,
+        .admonition.deprecated {
+            background: #fd4
+        }
+
+        .admonition.error,
+        .admonition.danger,
+        .admonition.caution {
+            background: lightpink
+        }
+    </style>
+    <style media="screen and (min-width: 700px)">
+        @media screen and (min-width:700px) {
+            #sidebar {
+                width: 30%
+            }
+
+            #content {
+                width: 70%;
+                max-width: 100ch;
+                padding: 3em 4em;
+                border-left: 1px solid #ddd
+            }
+
+            pre code {
+                font-size: 1em
+            }
+
+            .item .name {
+                font-size: 1em
+            }
+
+            main {
+                display: flex;
+                flex-direction: row-reverse;
+                justify-content: flex-end
+            }
+
+            .toc ul ul,
+            #index ul {
+                padding-left: 1.5em
+            }
+
+            .toc>ul>li {
+                margin-top: .5em
+            }
+        }
+    </style>
+    <style media="print">
+        @media print {
+            #sidebar h1 {
+                page-break-before: always
+            }
+
+            .source {
+                display: none
+            }
+        }
+
+        @media print {
+            * {
+                background: transparent !important;
+                color: #000 !important;
+                box-shadow: none !important;
+                text-shadow: none !important
+            }
+
+            a[href]:after {
+                content: " ("attr(href) ")";
+                font-size: 90%
+            }
+
+            a[href][title]:after {
+                content: none
+            }
+
+            abbr[title]:after {
+                content: " ("attr(title) ")"
+            }
+
+            .ir a:after,
+            a[href^="javascript:"]:after,
+            a[href^="#"]:after {
+                content: ""
+            }
+
+            pre,
+            blockquote {
+                border: 1px solid #999;
+                page-break-inside: avoid
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            tr,
+            img {
+                page-break-inside: avoid
+            }
+
+            img {
+                max-width: 100% !important
+            }
+
+            @page {
+                margin: 0.5cm
+            }
+
+            p,
+            h2,
+            h3 {
+                orphans: 3;
+                widows: 3
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid
+            }
+        }
+    </style>
 </head>
+
 <body>
-<main>
-<article id="content">
-<header>
-<h1 class="title">Module <code>neurochat.nc_ui</code></h1>
-</header>
-<section id="section-intro">
-<p>This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
-other graphical and data objects and connects to the NeuroChaT class for setting configuration and analysis
-in NeuroChaT.</p>
-<p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python"># -*- coding: utf-8 -*-
+    <main>
+        <article id="content">
+            <header>
+                <h1 class="title">Module <code>neurochat.nc_ui</code></h1>
+            </header>
+            <section id="section-intro">
+                <p>This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It
+                    contains
+                    other graphical and data objects and connects to the NeuroChaT class for setting configuration and
+                    analysis
+                    in NeuroChaT.</p>
+                <p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
+                <details class="source">
+                    <summary>
+                        <span>Expand source code</span>
+                    </summary>
+                    <pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements NeuroChaT_Ui, the main class for NeuroChaT graphical user interface. It contains
 other graphical and data objects and connects to the NeuroChaT class for setting configuration and analysis
@@ -2913,25 +3359,30 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
         hLayout.addWidget(widg, 0, QtCore.Qt.AlignLeft)
         hLayout.addWidget(QtWidgets.QLabel(label_2), 0, QtCore.Qt.AlignLeft)
         self.addLayout(hLayout)</code></pre>
-</details>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui"><code class="flex name class">
+                </details>
+            </section>
+            <section>
+            </section>
+            <section>
+            </section>
+            <section>
+            </section>
+            <section>
+                <h2 class="section-title" id="header-classes">Classes</h2>
+                <dl>
+                    <dt id="neurochat.nc_ui.NeuroChaT_Ui"><code class="flex name class">
 <span>class <span class="ident">NeuroChaT_Ui</span></span>
 </code></dt>
-<dd>
-<section class="desc"><p>QMainWindow(parent: QWidget = None, flags: Union[Qt.WindowFlags, Qt.WindowType] = Qt.WindowFlags())</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class NeuroChaT_Ui(QtWidgets.QMainWindow):
+                    <dd>
+                        <section class="desc">
+                            <p>QMainWindow(parent: QWidget = None, flags: Union[Qt.WindowFlags, Qt.WindowType] =
+                                Qt.WindowFlags())</p>
+                        </section>
+                        <details class="source">
+                            <summary>
+                                <span>Expand source code</span>
+                            </summary>
+                            <pre><code class="python">class NeuroChaT_Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
@@ -4438,38 +4889,45 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
             self.spike_phase.setChecked(True)
             self.phase_lock.setChecked(True)
             self.lfp_spike_causality.setChecked(True)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>PyQt5.QtWidgets.QMainWindow</li>
-<li>PyQt5.QtWidgets.QWidget</li>
-<li>PyQt5.QtCore.QObject</li>
-<li>sip.wrapper</li>
-<li>PyQt5.QtGui.QPaintDevice</li>
-<li>sip.simplewrapper</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.about_nc"><code class="name flex">
+                        </details>
+                        <h3>Ancestors</h3>
+                        <ul class="hlist">
+                            <li>PyQt5.QtWidgets.QMainWindow</li>
+                            <li>PyQt5.QtWidgets.QWidget</li>
+                            <li>PyQt5.QtCore.QObject</li>
+                            <li>sip.wrapper</li>
+                            <li>PyQt5.QtGui.QPaintDevice</li>
+                            <li>sip.simplewrapper</li>
+                        </ul>
+                        <h3>Methods</h3>
+                        <dl>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.about_nc"><code class="name flex">
 <span>def <span class="ident">about_nc</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def about_nc(self):
+                            <dd>
+                                <section class="desc"></section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def about_nc(self):
     url = &#34;https://github.com/shanemomara/omaraneurolab/wiki/NeuroChaT&#34;
     webbrowser.open_new(url)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.accumulate_output"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.accumulate_output"><code class="name flex">
 <span>def <span class="ident">accumulate_output</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens the UiMerge() object for the user to accumulate the selected PDF or Postscript files.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def accumulate_output(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens the UiMerge() object for the user to accumulate the selected PDF or
+                                        Postscript files.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def accumulate_output(self):
     &#34;&#34;&#34;
     Opens the UiMerge() object for the user to accumulate the selected PDF or Postscript files.
 
@@ -4480,18 +4938,22 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
     self._merge_ui.set_default()
     self._merge_ui.show()
     logging.info(&#34;Tool to ACCUMULATE graphic files activated&#34;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.angle_calculation"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.angle_calculation"><code class="name flex">
 <span>def <span class="ident">angle_calculation</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Open an excel file and calculate angles between centroids.</p>
-<h2 id="see-also">See also</h2>
-<p><code>NeuroChaT.angle_calculation</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def angle_calculation(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Open an excel file and calculate angles between centroids.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>NeuroChaT.angle_calculation</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def angle_calculation(self):
     &#34;&#34;&#34;
     Open an excel file and calculate angles between centroids.
 
@@ -4515,16 +4977,20 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
             &#34;pdf_name&#34;: pdf_name}
         self._control.set_special_analysis(dict_info)
         self.start()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui"><code class="name flex">
 <span>def <span class="ident">behaviour_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the behaviour of NeuroChaT_ui widgets</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def behaviour_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the behaviour of NeuroChaT_ui widgets</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def behaviour_ui(self):
     &#34;&#34;&#34;
     Sets up the behaviour of NeuroChaT_ui widgets
 
@@ -4571,17 +5037,21 @@ class ParamBoxLayout(QtWidgets.QVBoxLayout):
     self._results_ui.export_button.clicked.connect(self.export_results)
 
     self.cell_type_group.buttonClicked.connect(self.cell_type_select)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.browse"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.browse"><code class="name flex">
 <span>def <span class="ident">browse</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog asking the user to select spike and spatial data files.
-Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def browse(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog asking the user to select spike and spatial data files.
+                                        Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def browse(self):
         &#34;&#34;&#34;
         Opens a file dialog asking the user to select spike and spatial data files.
         Once selected, it also set the LFP channels in the &#39;LFP Ch No&#39; combo box.
@@ -4692,16 +5162,20 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
                 self._control.set_excel_file(excel_file)
                 logging.info(&#34;New excel file added: &#34;+ \
                                         words[-1])</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis"><code class="name flex">
 <span>def <span class="ident">cell_type_analysis</span></span>(<span>self, cell_type)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the analysis checkboxes based on the type of cell selected.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def cell_type_analysis(self, cell_type):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the analysis checkboxes based on the type of cell selected.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def cell_type_analysis(self, cell_type):
         &#34;&#34;&#34;
         Sets the analysis checkboxes based on the type of cell selected.
 
@@ -5014,17 +5488,21 @@ Once selected, it also set the LFP channels in the 'LFP Ch No' combo box.</p></s
             self.spike_phase.setChecked(True)
             self.phase_lock.setChecked(True)
             self.lfp_spike_causality.setChecked(True)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.cell_type_select"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.cell_type_select"><code class="name flex">
 <span>def <span class="ident">cell_type_select</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when there is a change in the cell type selection button groups.
-Sets the cell type to the selected item.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def cell_type_select(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when there is a change in the cell type selection button groups.
+                                        Sets the cell type to the selected item.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def cell_type_select(self):
     &#34;&#34;&#34;
     Called when there is a change in the cell type selection button groups.
     Sets the cell type to the selected item.
@@ -5036,16 +5514,20 @@ Sets the cell type to the selected item.</p></section>
     self._control.set_cell_type(text)
     logging.info(&#34;Cell type set to: &#34; + text)
     self.cell_type_analysis(text)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.clear_log"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.clear_log"><code class="name flex">
 <span>def <span class="ident">clear_log</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Clears the texts in the log box.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def clear_log(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Clears the texts in the log box.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def clear_log(self):
     &#34;&#34;&#34;
     Clears the texts in the log box.
 
@@ -5053,17 +5535,21 @@ Sets the cell type to the selected item.</p></section>
 
     self.log_text.clear()
     logging.info(&#34;Log cleared!&#34;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.closeEvent"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.closeEvent"><code class="name flex">
 <span>def <span class="ident">closeEvent</span></span>(<span>self, event)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when NeuroChaT window is about to close. Opens a dialogue for saving the
-session information in NeuroChaT configuration file (.ncfg).</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def closeEvent(self, event):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when NeuroChaT window is about to close. Opens a dialogue for saving the
+                                        session information in NeuroChaT configuration file (.ncfg).</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def closeEvent(self, event):
     &#34;&#34;&#34;
     Called when NeuroChaT window is about to close. Opens a dialogue for saving the
     session information in NeuroChaT configuration file (.ncfg).
@@ -5101,19 +5587,24 @@ session information in NeuroChaT configuration file (.ncfg).</p></section>
         save_last(event)
     else:
         event.ignore()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate"><code class="name flex">
 <span>def <span class="ident">cluster_evaluate</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog for selecting the Excel list that contains specifications for cluster evaluation
-and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.</p>
-<h2 id="see-also">See also</h2>
-<p><code>NeuroChaT().cluster_evaluate()</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def cluster_evaluate(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog for selecting the Excel list that contains specifications for
+                                        cluster evaluation
+                                        and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>NeuroChaT().cluster_evaluate()</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def cluster_evaluate(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for cluster evaluation
     and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.
@@ -5132,19 +5623,24 @@ and evaluates the clusters using the NeuroChaT().cluster_evaluate() method.</p>
         logging.info(&#34;New excel file added: &#34;+ \
                                     excel_file.rstrip(&#34;\n\r&#34;).split(os.sep)[-1])
         self._control.cluster_evaluate(excel_file)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.compare_units"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.compare_units"><code class="name flex">
 <span>def <span class="ident">compare_units</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog for selecting the Excel list that contains specifications for comparing units
-and compares the units through NeuroChaT().cluster_similarity() method.</p>
-<h2 id="see-also">See also</h2>
-<p><code>NeuroChaT().cluster_similarity()</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def compare_units(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog for selecting the Excel list that contains specifications for
+                                        comparing units
+                                        and compares the units through NeuroChaT().cluster_similarity() method.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>NeuroChaT().cluster_similarity()</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def compare_units(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for comparing units
     and compares the units through NeuroChaT().cluster_similarity() method.
@@ -5166,19 +5662,24 @@ and compares the units through NeuroChaT().cluster_similarity() method.</p>
     excel_data = pd.read_excel(excel_file)
     print(&#39;Create an excel read warpper from PANDAS&#39;)
     print(excel_data)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb"><code class="name flex">
 <span>def <span class="ident">convert_to_nwb</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog for selecting the Excel list that contains specifications for NWB file for conversion.
-It then converts the files using the NeuroChaT().convert_to_nwb() method.</p>
-<h2 id="see-also">See also</h2>
-<p><code>NeuroChaT().convert_to_nwb()</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def convert_to_nwb(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog for selecting the Excel list that contains specifications for
+                                        NWB file for conversion.
+                                        It then converts the files using the NeuroChaT().convert_to_nwb() method.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>NeuroChaT().convert_to_nwb()</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def convert_to_nwb(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for NWB file for conversion.
     It then converts the files using the NeuroChaT().convert_to_nwb() method.
@@ -5197,17 +5698,21 @@ It then converts the files using the NeuroChaT().convert_to_nwb() method.</p>
         logging.info(&#34;New excel file added: &#34;+ \
                                     excel_file.rstrip(&#34;\n\r&#34;).split(os.sep)[-1])
         self._control.convert_to_nwb(excel_file)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.data_format_select"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.data_format_select"><code class="name flex">
 <span>def <span class="ident">data_format_select</span></span>(<span>self, ind)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when there is a change in the data format selection combo box.
-Sets the data format to the selected item.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def data_format_select(self, ind):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when there is a change in the data format selection combo box.
+                                        Sets the data format to the selected item.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def data_format_select(self, ind):
     &#34;&#34;&#34;
     Called when there is a change in the data format selection combo box.
     Sets the data format to the selected item.
@@ -5220,32 +5725,42 @@ Sets the data format to the selected item.</p></section>
     self._set_dictation()
     if data_format == &#39;Axona&#39; or data_format == &#39;Neuralynx&#39;:
         self._control.set_nwb_file(&#39;&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.exit_nc"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.exit_nc"><code class="name flex">
 <span>def <span class="ident">exit_nc</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when 'Exit' menu item is clicked. Closes the NeuroChaT window.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def exit_nc(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when 'Exit' menu item is clicked. Closes the NeuroChaT window.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def exit_nc(self):
     &#34;&#34;&#34;
     Called when &#39;Exit&#39; menu item is clicked. Closes the NeuroChaT window.
 
     &#34;&#34;&#34;
     self.close()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info"><code class="name flex">
 <span>def <span class="ident">export_graphic_info</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when 'Export graphic file info' menu is clicked. Opens a file dialogue for the
-selection of an Excel file, and exports the graphic file infor in the table to the file</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def export_graphic_info(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when 'Export graphic file info' menu is clicked. Opens a file dialogue for
+                                        the
+                                        selection of an Excel file, and exports the graphic file infor in the table to
+                                        the file</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def export_graphic_info(self):
     &#34;&#34;&#34;
     Called when &#39;Export graphic file info&#39; menu is clicked. Opens a file dialogue for the
     selection of an Excel file, and exports the graphic file infor in the table to the file
@@ -5264,17 +5779,21 @@ selection of an Excel file, and exports the graphic file infor in the table to t
                                         excel_file.rstrip(&#34;\n\r&#34;).split(os.sep)[-1])
         except:
             logging.error(&#39;Failed to export graphics information!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.export_results"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.export_results"><code class="name flex">
 <span>def <span class="ident">export_results</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when 'Export Results' button is clicked. Opens a file dialogue for the
-selection of an Excel file, and exports the results in the table to the file</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def export_results(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when 'Export Results' button is clicked. Opens a file dialogue for the
+                                        selection of an Excel file, and exports the results in the table to the file</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def export_results(self):
     &#34;&#34;&#34;
     Called when &#39;Export Results&#39; button is clicked. Opens a file dialogue for the
     selection of an Excel file, and exports the results in the table to the file
@@ -5293,17 +5812,21 @@ selection of an Excel file, and exports the results in the table to the file</p>
                                         excel_file.rstrip(&#34;\n\r&#34;).split(os.sep)[-1])
         except:
             logging.error(&#39;Failed to export results!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select"><code class="name flex">
 <span>def <span class="ident">graphic_format_select</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when there is a change in the graphic format selection button groups.
-Sets the output graphic format to the selected item.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def graphic_format_select(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when there is a change in the graphic format selection button groups.
+                                        Sets the output graphic format to the selected item.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def graphic_format_select(self):
     &#34;&#34;&#34;
     Called when there is a change in the graphic format selection button groups.
     Sets the output graphic format to the selected item.
@@ -5314,17 +5837,21 @@ Sets the output graphic format to the selected item.</p></section>
     text = button.text()
     self._control.set_graphic_format(text)
     logging.info(&#34;Graphic file format set to: &#34; + text)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems"><code class="name flex">
 <span>def <span class="ident">lfp_chan_getitems</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the list of LFP files (Neuralynx) or their file extension (Axona)
-once the spike data is set using the 'Browse' button</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def lfp_chan_getitems(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the list of LFP files (Neuralynx) or their file extension (Axona)
+                                        once the spike data is set using the 'Browse' button</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def lfp_chan_getitems(self):
         &#34;&#34;&#34;
         Returns the list of LFP files (Neuralynx) or their file extension (Axona)
         once the spike data is set using the &#39;Browse&#39; button
@@ -5361,16 +5888,21 @@ once the spike data is set using the 'Browse' button</p></section>
 
         self.lfp_chan_box.clear()
         self.lfp_chan_box.addItems(items)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.load_session"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.load_session"><code class="name flex">
 <span>def <span class="ident">load_session</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Prompts the user to select a .ncfg file and loads the settings and parameters from the file to the GUI elements.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def load_session(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Prompts the user to select a .ncfg file and loads the settings and parameters
+                                        from the file to the GUI elements.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def load_session(self):
     &#34;&#34;&#34;
     Prompts the user to select a .ncfg file and loads the settings and parameters from the file to the GUI elements.
 
@@ -5433,16 +5965,20 @@ once the spike data is set using the 'Browse' button</p></section>
             param_widget.setChecked(self._control.get_params(name))
         else:
             param_widget.setValue(self._control.get_params(name))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.menu_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.menu_ui"><code class="name flex">
 <span>def <span class="ident">menu_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the menu items in NeuroChaT GUI</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def menu_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the menu items in NeuroChaT GUI</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def menu_ui(self):
     &#34;&#34;&#34;
     Sets up the menu items in NeuroChaT GUI
 
@@ -5516,16 +6052,21 @@ once the spike data is set using the 'Browse' button</p></section>
     # self.tutorial_act = self.help_menu.addAction(&#34;NeuroChaT tutorial&#34;)
     # self.help_menu.addSeparator()
     self.about_nc_act = self.help_menu.addAction(&#34;About NeuroChaT&#34;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.merge_output"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.merge_output"><code class="name flex">
 <span>def <span class="ident">merge_output</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens the UiMerge() object for the user to merge the selected PDF or Postscript files.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def merge_output(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens the UiMerge() object for the user to merge the selected PDF or Postscript
+                                        files.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def merge_output(self):
     &#34;&#34;&#34;
     Opens the UiMerge() object for the user to merge the selected PDF or Postscript files.
 
@@ -5535,17 +6076,21 @@ once the spike data is set using the 'Browse' button</p></section>
     self._merge_ui.set_default()
     self._merge_ui.show()
     logging.info(&#34;Tool to MERGE graphic files activated! Only PDF files can be merged!&#34;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.mode_select"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.mode_select"><code class="name flex">
 <span>def <span class="ident">mode_select</span></span>(<span>self, ind)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when there is a change in the analysis mode selection combo box.
-Sets the data analysis mode to the selected item.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def mode_select(self, ind):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when there is a change in the analysis mode selection combo box.
+                                        Sets the data analysis mode to the selected item.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def mode_select(self, ind):
     &#34;&#34;&#34;
     Called when there is a change in the analysis mode selection combo box.
     Sets the data analysis mode to the selected item.
@@ -5555,16 +6100,20 @@ Sets the data analysis mode to the selected item.</p></section>
     self._control.set_analysis_mode(ind)
     logging.info(&#34;Analysis mode set to: &#34; + self.mode_box.itemText(ind))
     self._set_dictation()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots"><code class="name flex">
 <span>def <span class="ident">place_cell_plots</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Plot place cell figures for each set file in a directory.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def place_cell_plots(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Plot place cell figures for each set file in a directory.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def place_cell_plots(self):
     &#34;&#34;&#34;
     Plot place cell figures for each set file in a directory.
     &#34;&#34;&#34;
@@ -5581,16 +6130,20 @@ Sets the data analysis mode to the selected item.</p></section>
             &#34;dpi&#34;: 400}
         self._control.set_special_analysis(dict_info)
         self.start()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.restore_start_button"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.restore_start_button"><code class="name flex">
 <span>def <span class="ident">restore_start_button</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>After reactivating the start button, it displays the results in the UI table.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def restore_start_button(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>After reactivating the start button, it displays the results in the UI table.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def restore_start_button(self):
     &#34;&#34;&#34;
     After reactivating the start button, it displays the results in the UI table.
 
@@ -5598,16 +6151,20 @@ Sets the data analysis mode to the selected item.</p></section>
     pd_model = PandasModel(self._control.get_results())
     self._results_ui.set_data(pd_model)
     self._results_ui.show()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui"><code class="name flex">
 <span>def <span class="ident">retranslate_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the title and icon in NeuroChaT GUI</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def retranslate_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the title and icon in NeuroChaT GUI</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def retranslate_ui(self):
     &#34;&#34;&#34;
     Sets up the title and icon in NeuroChaT GUI
 
@@ -5619,17 +6176,21 @@ Sets the data analysis mode to the selected item.</p></section>
     rel_path = &#34;../NeuroChat.png&#34;
     abs_file_path = os.path.join(script_dir, rel_path)
     self.setWindowIcon(QtGui.QIcon(abs_file_path))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.save_log"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.save_log"><code class="name flex">
 <span>def <span class="ident">save_log</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog for the user to select a text file where the current
-texts of the log-box are exported</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def save_log(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog for the user to select a text file where the current
+                                        texts of the log-box are exported</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def save_log(self):
     &#34;&#34;&#34;
     Opens a file dialog for the user to select a text file where the current
     texts of the log-box are exported
@@ -5647,16 +6208,21 @@ texts of the log-box are exported</p></section>
             logging.info(&#34;Log saved in: &#34;+ name)
         except:
             logging.error(&#39;Log is not saved! See if the file is open in another application!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.save_session"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.save_session"><code class="name flex">
 <span>def <span class="ident">save_session</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Prompts the user to select a .ncfg file and saves the current settings and parameters from the GUI elements to the file.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def save_session(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Prompts the user to select a .ncfg file and saves the current settings and
+                                        parameters from the GUI elements to the file.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def save_session(self):
     &#34;&#34;&#34;
     Prompts the user to select a .ncfg file and saves the current settings and parameters from the GUI elements to the file.
 
@@ -5670,16 +6236,20 @@ texts of the log-box are exported</p></section>
         self._control.save_config(ncfg_file)
         logging.info(&#34;Session saved in: &#34; + ncfg_file)
         os.chdir(os.path.dirname(ncfg_file))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi"><code class="name flex">
 <span>def <span class="ident">selectGraphicFormatUi</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the graphic format selection panel in NeuroChaT GUI</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def selectGraphicFormatUi(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the graphic format selection panel in NeuroChaT GUI</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def selectGraphicFormatUi(self):
     &#34;&#34;&#34;
     Sets up the graphic format selection panel in NeuroChaT GUI
 
@@ -5701,16 +6271,21 @@ texts of the log-box are exported</p></section>
     self.graphic_format_group.addButton(self.ps_button)
 
     return graphic_format_box</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.select_all"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.select_all"><code class="name flex">
 <span>def <span class="ident">select_all</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when 'Select All' box is checked or unchecked. It checks or unchecks all other analyses.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def select_all(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when 'Select All' box is checked or unchecked. It checks or unchecks all
+                                        other analyses.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def select_all(self):
     &#34;&#34;&#34;
     Called when &#39;Select All&#39; box is checked or unchecked. It checks or unchecks all other analyses.
 
@@ -5724,16 +6299,20 @@ texts of the log-box are exported</p></section>
         logging.info(&#34;Deselected ALL analyses&#34;)
         for checkbox in self.function_widget.findChildren(QtWidgets.QCheckBox):
             checkbox.setChecked(False)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui"><code class="name flex">
 <span>def <span class="ident">select_analysis_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the analysis type selection panel in NeuroChaT GUI</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def select_analysis_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the analysis type selection panel in NeuroChaT GUI</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def select_analysis_ui(self):
         &#34;&#34;&#34;
         Sets up the analysis type selection panel in NeuroChaT GUI
 
@@ -5834,16 +6413,20 @@ texts of the log-box are exported</p></section>
         layout.addWidget(self.function_widget, 5)
 
         return layout</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui"><code class="name flex">
 <span>def <span class="ident">select_cell_type_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the cell type selection panel in NeuroChaT GUI</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def select_cell_type_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the cell type selection panel in NeuroChaT GUI</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def select_cell_type_ui(self):
     &#34;&#34;&#34;
     Sets up the cell type selection panel in NeuroChaT GUI
 
@@ -5892,16 +6475,21 @@ texts of the log-box are exported</p></section>
     self.cell_type_group.addButton(self.theta_skip_cell_button)
 
     return cell_type_box</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan"><code class="name flex">
 <span>def <span class="ident">set_lfp_chan</span></span>(<span>self, value)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when the selection in the 'LFP Ch No' is changed. Sets the lfp channel accordingly.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_lfp_chan(self, value):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when the selection in the 'LFP Ch No' is changed. Sets the lfp channel
+                                        accordingly.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_lfp_chan(self, value):
     &#34;&#34;&#34;
     Called when the selection in the &#39;LFP Ch No&#39; is changed. Sets the lfp channel accordingly.
 
@@ -5926,31 +6514,41 @@ texts of the log-box are exported</p></section>
         else:
             logging.error(&#39;The input data format not supported!&#39;)
         self._control.set_lfp_file(lfp_file)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.set_parameters"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.set_parameters"><code class="name flex">
 <span>def <span class="ident">set_parameters</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Shows the UiParameters() widget once the user clicks the 'Parameters' menu item for setting the paramters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_parameters(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Shows the UiParameters() widget once the user clicks the 'Parameters' menu item
+                                        for setting the paramters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_parameters(self):
     &#34;&#34;&#34;
     Shows the UiParameters() widget once the user clicks the &#39;Parameters&#39; menu item for setting the paramters.
 
     &#34;&#34;&#34;
     self._param_ui.show()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.set_unit_no"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.set_unit_no"><code class="name flex">
 <span>def <span class="ident">set_unit_no</span></span>(<span>self, value)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when the selection in the 'Unit No' is changed. Sets the unit number accordingly.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_unit_no(self, value):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when the selection in the 'Unit No' is changed. Sets the unit number
+                                        accordingly.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_unit_no(self, value):
     &#34;&#34;&#34;
     Called when the selection in the &#39;Unit No&#39; is changed. Sets the unit number accordingly.
 
@@ -5960,16 +6558,20 @@ texts of the log-box are exported</p></section>
     unit_no = int(self.unit_no_box.itemText(value))
     self._control.set_unit_no(unit_no)
     logging.info(&#34;Selected Unit: &#34;+ str(unit_no))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.setup_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.setup_ui"><code class="name flex">
 <span>def <span class="ident">setup_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the elements of NeuroChaT_ui class</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def setup_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the elements of NeuroChaT_ui class</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def setup_ui(self):
         &#34;&#34;&#34;
         Sets up the elements of NeuroChaT_ui class
 
@@ -6084,17 +6686,21 @@ texts of the log-box are exported</p></section>
 
         # Set the callbacks
         self.behaviour_ui()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.start"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.start"><code class="name flex">
 <span>def <span class="ident">start</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Called when start button is clicked. Starts the entire backend operation
-in NeuroChaT</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def start(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Called when start button is clicked. Starts the entire backend operation
+                                        in NeuroChaT</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def start(self):
     &#34;&#34;&#34;
     Called when start button is clicked. Starts the entire backend operation
     in NeuroChaT
@@ -6103,27 +6709,33 @@ in NeuroChaT</p></section>
     self._get_config()
     self._control.finished.connect(self.restore_start_button)
     self._control.start()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.tutorial"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.tutorial"><code class="name flex">
 <span>def <span class="ident">tutorial</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def tutorial(self):
+                            <dd>
+                                <section class="desc"></section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def tutorial(self):
     pass</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems"><code class="name flex">
 <span>def <span class="ident">unit_getitems</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the list of units once spike data is set.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def unit_getitems(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the list of units once spike data is set.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def unit_getitems(self):
     &#34;&#34;&#34;Returns the list of units once spike data is set.&#34;&#34;&#34;
     try:
         file_format = self.file_format_box.itemText(
@@ -6150,26 +6762,30 @@ in NeuroChaT</p></section>
         items = [str(i) for i in range(256)]
         self.unit_no_box.clear()
         self.unit_no_box.addItems(items)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.update_log"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.update_log"><code class="name flex">
 <span>def <span class="ident">update_log</span></span>(<span>self, msg)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Updates the log-box with new message</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>msg</code></strong></dt>
-<dd>New log message or record</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def update_log(self, msg):
+                            <dd>
+                                <section class="desc">
+                                    <p>Updates the log-box with new message</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>msg</code></strong></dt>
+                                        <dd>New log message or record</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def update_log(self, msg):
     &#34;&#34;&#34;
     Updates the log-box with new message
 
@@ -6185,19 +6801,24 @@ in NeuroChaT</p></section>
     &#34;&#34;&#34;
 
     self.log_text.insert_log(msg)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.verify_units"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.verify_units"><code class="name flex">
 <span>def <span class="ident">verify_units</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
-and verifies the unit using the NeuroChaT().verify_units() method.</p>
-<h2 id="see-also">See also</h2>
-<p><code>NeuroChaT().compare_units()</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def verify_units(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens a file dialog for selecting the Excel list that contains specifications for
+                                        verifying the units
+                                        and verifies the unit using the NeuroChaT().verify_units() method.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>NeuroChaT().compare_units()</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def verify_units(self):
     &#34;&#34;&#34;
     Opens a file dialog for selecting the Excel list that contains specifications for verifying the units
     and verifies the unit using the NeuroChaT().verify_units() method.
@@ -6216,36 +6837,42 @@ and verifies the unit using the NeuroChaT().verify_units() method.</p>
         logging.info(&#34;New excel file added: &#34;+ \
                                     excel_file.rstrip(&#34;\n\r&#34;).split(os.sep)[-1])
         self._control.verify_units(excel_file)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.NeuroChaT_Ui.view_help"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.NeuroChaT_Ui.view_help"><code class="name flex">
 <span>def <span class="ident">view_help</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def view_help(self):
+                            <dd>
+                                <section class="desc"></section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def view_help(self):
     script_dir = os.path.dirname(__file__)
     rel_path = &#34;../docs/index.html&#34;
     url = os.path.join(script_dir, rel_path)
     if not os.path.isfile(url):
         url = &#34;https://seankmartin.github.io/NeuroChaT/&#34;
     webbrowser.open_new(url)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="neurochat.nc_ui.ParamBoxLayout"><code class="flex name class">
+                                </details>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt id="neurochat.nc_ui.ParamBoxLayout"><code class="flex name class">
 <span>class <span class="ident">ParamBoxLayout</span></span>
-<span>(</span><span>*args, **kwargs)</span>
+<span>(</span><span>...)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
-parameter selection window.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class ParamBoxLayout(QtWidgets.QVBoxLayout):
+                    <dd>
+                        <section class="desc">
+                            <p>Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
+                                parameter selection window.</p>
+                        </section>
+                        <details class="source">
+                            <summary>
+                                <span>Expand source code</span>
+                            </summary>
+                            <pre><code class="python">class ParamBoxLayout(QtWidgets.QVBoxLayout):
     &#34;&#34;&#34;
     Subclass of QtWidgets.QVBoxLayout to faciliate adding new widget item to the analysis
     parameter selection window.
@@ -6275,36 +6902,40 @@ parameter selection window.</p></section>
         hLayout.addWidget(widg, 0, QtCore.Qt.AlignLeft)
         hLayout.addWidget(QtWidgets.QLabel(label_2), 0, QtCore.Qt.AlignLeft)
         self.addLayout(hLayout)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>PyQt5.QtWidgets.QVBoxLayout</li>
-<li>PyQt5.QtWidgets.QBoxLayout</li>
-<li>PyQt5.QtWidgets.QLayout</li>
-<li>PyQt5.QtCore.QObject</li>
-<li>PyQt5.QtWidgets.QLayoutItem</li>
-<li>sip.wrapper</li>
-<li>sip.simplewrapper</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="neurochat.nc_ui.ParamBoxLayout.addRow"><code class="name flex">
+                        </details>
+                        <h3>Ancestors</h3>
+                        <ul class="hlist">
+                            <li>PyQt5.QtWidgets.QVBoxLayout</li>
+                            <li>PyQt5.QtWidgets.QBoxLayout</li>
+                            <li>PyQt5.QtWidgets.QLayout</li>
+                            <li>PyQt5.QtCore.QObject</li>
+                            <li>PyQt5.QtWidgets.QLayoutItem</li>
+                            <li>sip.wrapper</li>
+                            <li>sip.simplewrapper</li>
+                        </ul>
+                        <h3>Methods</h3>
+                        <dl>
+                            <dt id="neurochat.nc_ui.ParamBoxLayout.addRow"><code class="name flex">
 <span>def <span class="ident">addRow</span></span>(<span>self, label_1, widg, label_2)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Adds a new row of widget using the QtWidgets.QHBoxLayout().</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>label_1</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the parameter</dd>
-<dt><strong><code>widg</code></strong></dt>
-<dd>PyQt5 widget to add</dd>
-<dt><strong><code>label_2</code></strong> :&ensp;<code>str</code></dt>
-<dd>Additional description of the parameter, i.e., unit, range etc.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def addRow(self, label_1, widg, label_2):
+                            <dd>
+                                <section class="desc">
+                                    <p>Adds a new row of widget using the QtWidgets.QHBoxLayout().</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>label_1</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the parameter</dd>
+                                        <dt><strong><code>widg</code></strong></dt>
+                                        <dd>PyQt5 widget to add</dd>
+                                        <dt><strong><code>label_2</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Additional description of the parameter, i.e., unit, range etc.</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def addRow(self, label_1, widg, label_2):
     &#34;&#34;&#34;
     Adds a new row of widget using the QtWidgets.QHBoxLayout().
 
@@ -6325,19 +6956,23 @@ parameter selection window.</p></section>
     hLayout.addWidget(widg, 0, QtCore.Qt.AlignLeft)
     hLayout.addWidget(QtWidgets.QLabel(label_2), 0, QtCore.Qt.AlignLeft)
     self.addLayout(hLayout)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters"><code class="flex name class">
+                                </details>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt id="neurochat.nc_ui.UiParameters"><code class="flex name class">
 <span>class <span class="ident">UiParameters</span></span>
 <span>(</span><span>parent=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>NeuroChaT user interface for setting analysis specific parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class UiParameters(QtWidgets.QDialog):
+                    <dd>
+                        <section class="desc">
+                            <p>NeuroChaT user interface for setting analysis specific parameters.</p>
+                        </section>
+                        <details class="source">
+                            <summary>
+                                <span>Expand source code</span>
+                            </summary>
+                            <pre><code class="python">class UiParameters(QtWidgets.QDialog):
     &#34;&#34;&#34;
     NeuroChaT user interface for setting analysis specific parameters.
 
@@ -7544,26 +8179,30 @@ parameter selection window.</p></section>
 
         widget.setContents(layout)
         return widget</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>PyQt5.QtWidgets.QDialog</li>
-<li>PyQt5.QtWidgets.QWidget</li>
-<li>PyQt5.QtCore.QObject</li>
-<li>sip.wrapper</li>
-<li>PyQt5.QtGui.QPaintDevice</li>
-<li>sip.simplewrapper</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="neurochat.nc_ui.UiParameters.ang_vel_page"><code class="name flex">
+                        </details>
+                        <h3>Ancestors</h3>
+                        <ul class="hlist">
+                            <li>PyQt5.QtWidgets.QDialog</li>
+                            <li>PyQt5.QtWidgets.QWidget</li>
+                            <li>PyQt5.QtCore.QObject</li>
+                            <li>sip.wrapper</li>
+                            <li>PyQt5.QtGui.QPaintDevice</li>
+                            <li>sip.simplewrapper</li>
+                        </ul>
+                        <h3>Methods</h3>
+                        <dl>
+                            <dt id="neurochat.nc_ui.UiParameters.ang_vel_page"><code class="name flex">
 <span>def <span class="ident">ang_vel_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'ang_vel' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def ang_vel_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'ang_vel' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def ang_vel_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;ang_vel&#39; analysis parameters.
 
@@ -7617,16 +8256,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.behaviour_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.behaviour_ui"><code class="name flex">
 <span>def <span class="ident">behaviour_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the behaviour of the GUI elements.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def behaviour_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the behaviour of the GUI elements.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def behaviour_ui(self):
     &#34;&#34;&#34;
     Sets the behaviour of the GUI elements.
 
@@ -7636,16 +8279,20 @@ parameter selection window.</p></section>
     self.loc_rate_filter.activated[str].connect(self.set_loc_rate_filter)
     self.spatial_corr_filter.activated[str].connect(self.set_spat_corr_filter)
     self.param_list.itemActivated.connect(self.change_stack_page)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.border_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.border_page"><code class="name flex">
 <span>def <span class="ident">border_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'border' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def border_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'border' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def border_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;border&#39; analysis parameters.
 
@@ -7678,16 +8325,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.burst_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.burst_page"><code class="name flex">
 <span>def <span class="ident">burst_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'burst' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def burst_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'burst' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def burst_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;burst&#39; analysis parameters.
 
@@ -7718,32 +8369,41 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.change_stack_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.change_stack_page"><code class="name flex">
 <span>def <span class="ident">change_stack_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Changes the stacked widgets of parameter setting according to the analysis selected from the lis on left of the window.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def change_stack_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Changes the stacked widgets of parameter setting according to the analysis
+                                        selected from the lis on left of the window.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def change_stack_page(self):
     &#34;&#34;&#34;
     Changes the stacked widgets of parameter setting according to the analysis selected from the lis on left of the window.
 
     &#34;&#34;&#34;
 
     self.param_stack.setCurrentWidget(self.param_stack.widget(self.param_list.currentRow()))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.gradient_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.gradient_page"><code class="name flex">
 <span>def <span class="ident">gradient_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'gradient' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def gradient_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'gradient' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def gradient_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;gradient&#39; analysis parameters.
 
@@ -7776,16 +8436,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.grid_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.grid_page"><code class="name flex">
 <span>def <span class="ident">grid_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'grid' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def grid_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'grid' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def grid_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;grid&#39; analysis parameters.
 
@@ -7813,16 +8477,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.hd_rate_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.hd_rate_page"><code class="name flex">
 <span>def <span class="ident">hd_rate_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'hd_rate' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def hd_rate_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'hd_rate' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def hd_rate_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_rate&#39; analysis parameters.
 
@@ -7863,16 +8531,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.hd_shuffle_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.hd_shuffle_page"><code class="name flex">
 <span>def <span class="ident">hd_shuffle_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'hd_shuffle' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def hd_shuffle_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'hd_shuffle' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def hd_shuffle_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_shuffle&#39; analysis parameters.
 
@@ -7906,16 +8578,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.hd_time_lapse_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.hd_time_lapse_page"><code class="name flex">
 <span>def <span class="ident">hd_time_lapse_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'hd_time_lapse' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def hd_time_lapse_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'hd_time_lapse' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def hd_time_lapse_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_time_lapse&#39; analysis parameters.
 
@@ -7934,16 +8610,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.hd_time_shift_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.hd_time_shift_page"><code class="name flex">
 <span>def <span class="ident">hd_time_shift_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'hd_time_shift' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def hd_time_shift_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'hd_time_shift' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def hd_time_shift_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;hd_time_shift&#39; analysis parameters.
 
@@ -7973,16 +8653,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.inter_depend_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.inter_depend_page"><code class="name flex">
 <span>def <span class="ident">inter_depend_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'inter_depend' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def inter_depend_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'inter_depend' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def inter_depend_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;inter_depend&#39; analysis parameters.
 
@@ -8000,16 +8684,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.isi_corr_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.isi_corr_page"><code class="name flex">
 <span>def <span class="ident">isi_corr_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'isi_corr' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def isi_corr_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'isi_corr' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def isi_corr_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;isi_corr&#39; analysis parameters.
 
@@ -8053,16 +8741,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.isi_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.isi_page"><code class="name flex">
 <span>def <span class="ident">isi_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'isi' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def isi_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'isi' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def isi_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;isi&#39; analysis parameters.
 
@@ -8121,16 +8813,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.lfp_spectrum_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.lfp_spectrum_page"><code class="name flex">
 <span>def <span class="ident">lfp_spectrum_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'lfp_spectrum' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def lfp_spectrum_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'lfp_spectrum' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def lfp_spectrum_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;lfp_spectrum&#39; analysis parameters.
 
@@ -8222,16 +8918,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.lfp_spike_causality_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.lfp_spike_causality_page"><code class="name flex">
 <span>def <span class="ident">lfp_spike_causality_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'lfp_spike_causality' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def lfp_spike_causality_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'lfp_spike_causality' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def lfp_spike_causality_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;lfp_spike_causality&#39; analysis parameters.
 
@@ -8249,16 +8949,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.loc_rate_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.loc_rate_page"><code class="name flex">
 <span>def <span class="ident">loc_rate_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'loc_rate' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def loc_rate_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'loc_rate' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def loc_rate_page(self):
         &#34;&#34;&#34;
         Sets the ui elements for the &#39;loc_rate&#39; analysis parameters.
 
@@ -8347,16 +9051,20 @@ parameter selection window.</p></section>
         widget.setContents(layout)
 
         return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.loc_shuffle_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.loc_shuffle_page"><code class="name flex">
 <span>def <span class="ident">loc_shuffle_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'loc_shuffle' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def loc_shuffle_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'loc_shuffle' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def loc_shuffle_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_shuffle&#39; analysis parameters.
 
@@ -8390,16 +9098,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.loc_time_lapse_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.loc_time_lapse_page"><code class="name flex">
 <span>def <span class="ident">loc_time_lapse_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'loc_time_lapse' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def loc_time_lapse_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'loc_time_lapse' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def loc_time_lapse_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_time_lapse&#39; analysis parameters.
 
@@ -8418,16 +9130,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.loc_time_shift_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.loc_time_shift_page"><code class="name flex">
 <span>def <span class="ident">loc_time_shift_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'loc_time_shift' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def loc_time_shift_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'loc_time_shift' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def loc_time_shift_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;loc_time_shift&#39; analysis parameters.
 
@@ -8458,16 +9174,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.multiple_regresison_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.multiple_regresison_page"><code class="name flex">
 <span>def <span class="ident">multiple_regresison_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'multiple_regression' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def multiple_regresison_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'multiple_regression' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def multiple_regresison_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;multiple_regression&#39; analysis parameters.
 
@@ -8501,16 +9221,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.phase_lock_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.phase_lock_page"><code class="name flex">
 <span>def <span class="ident">phase_lock_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'phase_lock' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def phase_lock_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'phase_lock' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def phase_lock_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;phase_lock&#39; analysis parameters.
 
@@ -8551,16 +9275,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.set_loc_rate_filter"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.set_loc_rate_filter"><code class="name flex">
 <span>def <span class="ident">set_loc_rate_filter</span></span>(<span>self, filt_type)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the filters for locational firing rate map.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_loc_rate_filter(self, filt_type):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the filters for locational firing rate map.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_loc_rate_filter(self, filt_type):
     &#34;&#34;&#34;
     Sets the ui elements for the filters for locational firing rate map.
 
@@ -8572,16 +9300,21 @@ parameter selection window.</p></section>
     elif filt_type == &#34;Box&#34;:
         self.loc_rate_kern_len.setSingleStep(2)
         self.loc_rate_kern_len.setValue(5)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.set_spat_corr_filter"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.set_spat_corr_filter"><code class="name flex">
 <span>def <span class="ident">set_spat_corr_filter</span></span>(<span>self, filt_type)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the filters for spatial autocorrelation of locational firing rate map.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_spat_corr_filter(self, filt_type):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the filters for spatial autocorrelation of locational
+                                        firing rate map.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_spat_corr_filter(self, filt_type):
     &#34;&#34;&#34;
     Sets the ui elements for the filters for spatial autocorrelation of locational firing rate map.
 
@@ -8593,16 +9326,20 @@ parameter selection window.</p></section>
     elif filt_type == &#34;Box&#34;:
         self.spatial_corr_kern_len.setSingleStep(2)
         self.spatial_corr_kern_len.setValue(5)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.setup_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.setup_ui"><code class="name flex">
 <span>def <span class="ident">setup_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the GUI elements for the widget.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def setup_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the GUI elements for the widget.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def setup_ui(self):
         &#34;&#34;&#34;
         Sets the GUI elements for the widget.
 
@@ -8683,16 +9420,20 @@ parameter selection window.</p></section>
         self.param_stack.addWidget(self.phase_lock_page())
 
         self.param_stack.addWidget(self.lfp_spike_causality_page())</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.spatial_corr_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.spatial_corr_page"><code class="name flex">
 <span>def <span class="ident">spatial_corr_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'spatial_corr' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">    def spatial_corr_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'spatial_corr' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">    def spatial_corr_page(self):
         &#34;&#34;&#34;
         Sets the ui elements for the &#39;spatial_corr&#39; analysis parameters.
 
@@ -8748,16 +9489,20 @@ parameter selection window.</p></section>
         widget.setContents(layout)
 
         return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.speed_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.speed_page"><code class="name flex">
 <span>def <span class="ident">speed_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'burst' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def speed_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'burst' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def speed_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;burst&#39; analysis parameters.
 
@@ -8806,16 +9551,20 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.spike_phase_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.spike_phase_page"><code class="name flex">
 <span>def <span class="ident">spike_phase_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'spike_phase' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def spike_phase_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'spike_phase' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def spike_phase_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;spike_phase&#39; analysis parameters.
 
@@ -8864,16 +9613,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.theta_cell_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.theta_cell_page"><code class="name flex">
 <span>def <span class="ident">theta_cell_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'theta_cell' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def theta_cell_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'theta_cell' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def theta_cell_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;theta_cell&#39; analysis parameters.
 
@@ -8927,16 +9680,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.theta_skip_cell_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.theta_skip_cell_page"><code class="name flex">
 <span>def <span class="ident">theta_skip_cell_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'theta_skip_cell' analysis parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def theta_skip_cell_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'theta_skip_cell' analysis parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def theta_skip_cell_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;theta_skip_cell&#39; analysis parameters.
 
@@ -8956,16 +9713,20 @@ parameter selection window.</p></section>
     widget.setContents(layout)
 
     return widget</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiParameters.waveform_page"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiParameters.waveform_page"><code class="name flex">
 <span>def <span class="ident">waveform_page</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the ui elements for the 'Waveform Analysis' parameters.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def waveform_page(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the ui elements for the 'Waveform Analysis' parameters.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def waveform_page(self):
     &#34;&#34;&#34;
     Sets the ui elements for the &#39;Waveform Analysis&#39; parameters.
 
@@ -8982,19 +9743,24 @@ parameter selection window.</p></section>
 
     widget.setContents(layout)
     return widget</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="neurochat.nc_ui.UiResults"><code class="flex name class">
+                                </details>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt id="neurochat.nc_ui.UiResults"><code class="flex name class">
 <span>class <span class="ident">UiResults</span></span>
 <span>(</span><span>parent=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>NeuroChaT user interface for displaying the analysis results and and facilitating their export.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class UiResults(QtWidgets.QDialog):
+                    <dd>
+                        <section class="desc">
+                            <p>NeuroChaT user interface for displaying the analysis results and and facilitating their
+                                export.</p>
+                        </section>
+                        <details class="source">
+                            <summary>
+                                <span>Expand source code</span>
+                            </summary>
+                            <pre><code class="python">class UiResults(QtWidgets.QDialog):
     &#34;&#34;&#34;
     NeuroChaT user interface for displaying the analysis results and and facilitating their export.
 
@@ -9059,31 +9825,35 @@ parameter selection window.</p></section>
         &#34;&#34;&#34;
 
         pass</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>PyQt5.QtWidgets.QDialog</li>
-<li>PyQt5.QtWidgets.QWidget</li>
-<li>PyQt5.QtCore.QObject</li>
-<li>sip.wrapper</li>
-<li>PyQt5.QtGui.QPaintDevice</li>
-<li>sip.simplewrapper</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="neurochat.nc_ui.UiResults.set_data"><code class="name flex">
+                        </details>
+                        <h3>Ancestors</h3>
+                        <ul class="hlist">
+                            <li>PyQt5.QtWidgets.QDialog</li>
+                            <li>PyQt5.QtWidgets.QWidget</li>
+                            <li>PyQt5.QtCore.QObject</li>
+                            <li>sip.wrapper</li>
+                            <li>PyQt5.QtGui.QPaintDevice</li>
+                            <li>sip.simplewrapper</li>
+                        </ul>
+                        <h3>Methods</h3>
+                        <dl>
+                            <dt id="neurochat.nc_ui.UiResults.set_data"><code class="name flex">
 <span>def <span class="ident">set_data</span></span>(<span>self, pd_model)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the PandasModel as the data model for the table-view.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>pd_model</code></strong> :&ensp;<code>PandasModel</code></dt>
-<dd>PandasModel as the table-data</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_data(self, pd_model):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the PandasModel as the data model for the table-view.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>pd_model</code></strong> :&ensp;<code>PandasModel</code></dt>
+                                        <dd>PandasModel as the table-data</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_data(self, pd_model):
     &#34;&#34;&#34;
     Sets the PandasModel as the data model for the table-view.
 
@@ -9095,17 +9865,21 @@ parameter selection window.</p></section>
     &#34;&#34;&#34;
 
     self.table.setModel(pd_model)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiResults.set_default"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiResults.set_default"><code class="name flex">
 <span>def <span class="ident">set_default</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Not implemented. Can be used for clearing the table and the data model
-underneath.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_default(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Not implemented. Can be used for clearing the table and the data model
+                                        underneath.</p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_default(self):
     &#34;&#34;&#34;
     Not implemented. Can be used for clearing the table and the data model
     underneath.
@@ -9113,19 +9887,23 @@ underneath.</p></section>
     &#34;&#34;&#34;
 
     pass</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_ui.UiResults.setup_ui"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_ui.UiResults.setup_ui"><code class="name flex">
 <span>def <span class="ident">setup_ui</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets up the GUI elements of the widget and their behaviour. Clicking on the
-'Export Results' button calls the NeuroChaT_Ui.export_results() method.</p>
-<h2 id="see-also">See also</h2>
-<p><code>PandasModel</code></p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def setup_ui(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets up the GUI elements of the widget and their behaviour. Clicking on the
+                                        'Export Results' button calls the NeuroChaT_Ui.export_results() method.</p>
+                                    <h2 id="see-also">See also</h2>
+                                    <p><code>PandasModel</code></p>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def setup_ui(self):
     &#34;&#34;&#34;
     Sets up the GUI elements of the widget and their behaviour. Clicking on the
     &#39;Export Results&#39; button calls the NeuroChaT_Ui.export_results() method.
@@ -9155,131 +9933,214 @@ underneath.</p></section>
     self.layout.addWidget(self.table)
     self.setLayout(self.layout)
     self.set_default()</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-</dl>
-</section>
-</article>
-<nav id="sidebar">
-<h1>Index</h1>
-<div class="toc">
-<ul></ul>
-</div>
-<ul id="index">
-<li><h3>Super-module</h3>
-<ul>
-<li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="neurochat.nc_ui.NeuroChaT_Ui" href="#neurochat.nc_ui.NeuroChaT_Ui">NeuroChaT_Ui</a></code></h4>
-<ul class="">
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.about_nc" href="#neurochat.nc_ui.NeuroChaT_Ui.about_nc">about_nc</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.accumulate_output" href="#neurochat.nc_ui.NeuroChaT_Ui.accumulate_output">accumulate_output</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.angle_calculation" href="#neurochat.nc_ui.NeuroChaT_Ui.angle_calculation">angle_calculation</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui">behaviour_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.browse" href="#neurochat.nc_ui.NeuroChaT_Ui.browse">browse</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis" href="#neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis">cell_type_analysis</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cell_type_select" href="#neurochat.nc_ui.NeuroChaT_Ui.cell_type_select">cell_type_select</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.clear_log" href="#neurochat.nc_ui.NeuroChaT_Ui.clear_log">clear_log</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.closeEvent" href="#neurochat.nc_ui.NeuroChaT_Ui.closeEvent">closeEvent</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate" href="#neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate">cluster_evaluate</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.compare_units" href="#neurochat.nc_ui.NeuroChaT_Ui.compare_units">compare_units</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb" href="#neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb">convert_to_nwb</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.data_format_select" href="#neurochat.nc_ui.NeuroChaT_Ui.data_format_select">data_format_select</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.exit_nc" href="#neurochat.nc_ui.NeuroChaT_Ui.exit_nc">exit_nc</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info" href="#neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info">export_graphic_info</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.export_results" href="#neurochat.nc_ui.NeuroChaT_Ui.export_results">export_results</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select" href="#neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select">graphic_format_select</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems" href="#neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems">lfp_chan_getitems</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.load_session" href="#neurochat.nc_ui.NeuroChaT_Ui.load_session">load_session</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.menu_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.menu_ui">menu_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.merge_output" href="#neurochat.nc_ui.NeuroChaT_Ui.merge_output">merge_output</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.mode_select" href="#neurochat.nc_ui.NeuroChaT_Ui.mode_select">mode_select</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots" href="#neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots">place_cell_plots</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.restore_start_button" href="#neurochat.nc_ui.NeuroChaT_Ui.restore_start_button">restore_start_button</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui">retranslate_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.save_log" href="#neurochat.nc_ui.NeuroChaT_Ui.save_log">save_log</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.save_session" href="#neurochat.nc_ui.NeuroChaT_Ui.save_session">save_session</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi" href="#neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi">selectGraphicFormatUi</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_all" href="#neurochat.nc_ui.NeuroChaT_Ui.select_all">select_all</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui">select_analysis_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui">select_cell_type_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan" href="#neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan">set_lfp_chan</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_parameters" href="#neurochat.nc_ui.NeuroChaT_Ui.set_parameters">set_parameters</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_unit_no" href="#neurochat.nc_ui.NeuroChaT_Ui.set_unit_no">set_unit_no</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.setup_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.setup_ui">setup_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.start" href="#neurochat.nc_ui.NeuroChaT_Ui.start">start</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.tutorial" href="#neurochat.nc_ui.NeuroChaT_Ui.tutorial">tutorial</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems" href="#neurochat.nc_ui.NeuroChaT_Ui.unit_getitems">unit_getitems</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.update_log" href="#neurochat.nc_ui.NeuroChaT_Ui.update_log">update_log</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.verify_units" href="#neurochat.nc_ui.NeuroChaT_Ui.verify_units">verify_units</a></code></li>
-<li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.view_help" href="#neurochat.nc_ui.NeuroChaT_Ui.view_help">view_help</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="neurochat.nc_ui.ParamBoxLayout" href="#neurochat.nc_ui.ParamBoxLayout">ParamBoxLayout</a></code></h4>
-<ul class="">
-<li><code><a title="neurochat.nc_ui.ParamBoxLayout.addRow" href="#neurochat.nc_ui.ParamBoxLayout.addRow">addRow</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="neurochat.nc_ui.UiParameters" href="#neurochat.nc_ui.UiParameters">UiParameters</a></code></h4>
-<ul class="">
-<li><code><a title="neurochat.nc_ui.UiParameters.ang_vel_page" href="#neurochat.nc_ui.UiParameters.ang_vel_page">ang_vel_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.behaviour_ui" href="#neurochat.nc_ui.UiParameters.behaviour_ui">behaviour_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.border_page" href="#neurochat.nc_ui.UiParameters.border_page">border_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.burst_page" href="#neurochat.nc_ui.UiParameters.burst_page">burst_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.change_stack_page" href="#neurochat.nc_ui.UiParameters.change_stack_page">change_stack_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.gradient_page" href="#neurochat.nc_ui.UiParameters.gradient_page">gradient_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.grid_page" href="#neurochat.nc_ui.UiParameters.grid_page">grid_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.hd_rate_page" href="#neurochat.nc_ui.UiParameters.hd_rate_page">hd_rate_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.hd_shuffle_page" href="#neurochat.nc_ui.UiParameters.hd_shuffle_page">hd_shuffle_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.hd_time_lapse_page" href="#neurochat.nc_ui.UiParameters.hd_time_lapse_page">hd_time_lapse_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.hd_time_shift_page" href="#neurochat.nc_ui.UiParameters.hd_time_shift_page">hd_time_shift_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.inter_depend_page" href="#neurochat.nc_ui.UiParameters.inter_depend_page">inter_depend_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.isi_corr_page" href="#neurochat.nc_ui.UiParameters.isi_corr_page">isi_corr_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.isi_page" href="#neurochat.nc_ui.UiParameters.isi_page">isi_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.lfp_spectrum_page" href="#neurochat.nc_ui.UiParameters.lfp_spectrum_page">lfp_spectrum_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.lfp_spike_causality_page" href="#neurochat.nc_ui.UiParameters.lfp_spike_causality_page">lfp_spike_causality_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.loc_rate_page" href="#neurochat.nc_ui.UiParameters.loc_rate_page">loc_rate_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.loc_shuffle_page" href="#neurochat.nc_ui.UiParameters.loc_shuffle_page">loc_shuffle_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.loc_time_lapse_page" href="#neurochat.nc_ui.UiParameters.loc_time_lapse_page">loc_time_lapse_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.loc_time_shift_page" href="#neurochat.nc_ui.UiParameters.loc_time_shift_page">loc_time_shift_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.multiple_regresison_page" href="#neurochat.nc_ui.UiParameters.multiple_regresison_page">multiple_regresison_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.phase_lock_page" href="#neurochat.nc_ui.UiParameters.phase_lock_page">phase_lock_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.set_loc_rate_filter" href="#neurochat.nc_ui.UiParameters.set_loc_rate_filter">set_loc_rate_filter</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.set_spat_corr_filter" href="#neurochat.nc_ui.UiParameters.set_spat_corr_filter">set_spat_corr_filter</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.setup_ui" href="#neurochat.nc_ui.UiParameters.setup_ui">setup_ui</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.spatial_corr_page" href="#neurochat.nc_ui.UiParameters.spatial_corr_page">spatial_corr_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.speed_page" href="#neurochat.nc_ui.UiParameters.speed_page">speed_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.spike_phase_page" href="#neurochat.nc_ui.UiParameters.spike_phase_page">spike_phase_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.theta_cell_page" href="#neurochat.nc_ui.UiParameters.theta_cell_page">theta_cell_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.theta_skip_cell_page" href="#neurochat.nc_ui.UiParameters.theta_skip_cell_page">theta_skip_cell_page</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiParameters.waveform_page" href="#neurochat.nc_ui.UiParameters.waveform_page">waveform_page</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="neurochat.nc_ui.UiResults" href="#neurochat.nc_ui.UiResults">UiResults</a></code></h4>
-<ul class="">
-<li><code><a title="neurochat.nc_ui.UiResults.set_data" href="#neurochat.nc_ui.UiResults.set_data">set_data</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiResults.set_default" href="#neurochat.nc_ui.UiResults.set_default">set_default</a></code></li>
-<li><code><a title="neurochat.nc_ui.UiResults.setup_ui" href="#neurochat.nc_ui.UiResults.setup_ui">setup_ui</a></code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</nav>
-</main>
-<footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
-</footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+                                </details>
+                            </dd>
+                        </dl>
+                    </dd>
+                </dl>
+            </section>
+        </article>
+        <nav id="sidebar">
+            <h1>Index</h1>
+            <div class="toc">
+                <ul></ul>
+            </div>
+            <ul id="index">
+                <li>
+                    <h3>Super-module</h3>
+                    <ul>
+                        <li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
+                    </ul>
+                </li>
+                <li>
+                    <h3><a href="#header-classes">Classes</a></h3>
+                    <ul>
+                        <li>
+                            <h4><code><a title="neurochat.nc_ui.NeuroChaT_Ui" href="#neurochat.nc_ui.NeuroChaT_Ui">NeuroChaT_Ui</a></code>
+                            </h4>
+                            <ul class="">
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.about_nc" href="#neurochat.nc_ui.NeuroChaT_Ui.about_nc">about_nc</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.accumulate_output" href="#neurochat.nc_ui.NeuroChaT_Ui.accumulate_output">accumulate_output</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.angle_calculation" href="#neurochat.nc_ui.NeuroChaT_Ui.angle_calculation">angle_calculation</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.behaviour_ui">behaviour_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.browse" href="#neurochat.nc_ui.NeuroChaT_Ui.browse">browse</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis" href="#neurochat.nc_ui.NeuroChaT_Ui.cell_type_analysis">cell_type_analysis</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cell_type_select" href="#neurochat.nc_ui.NeuroChaT_Ui.cell_type_select">cell_type_select</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.clear_log" href="#neurochat.nc_ui.NeuroChaT_Ui.clear_log">clear_log</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.closeEvent" href="#neurochat.nc_ui.NeuroChaT_Ui.closeEvent">closeEvent</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate" href="#neurochat.nc_ui.NeuroChaT_Ui.cluster_evaluate">cluster_evaluate</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.compare_units" href="#neurochat.nc_ui.NeuroChaT_Ui.compare_units">compare_units</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb" href="#neurochat.nc_ui.NeuroChaT_Ui.convert_to_nwb">convert_to_nwb</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.data_format_select" href="#neurochat.nc_ui.NeuroChaT_Ui.data_format_select">data_format_select</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.exit_nc" href="#neurochat.nc_ui.NeuroChaT_Ui.exit_nc">exit_nc</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info" href="#neurochat.nc_ui.NeuroChaT_Ui.export_graphic_info">export_graphic_info</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.export_results" href="#neurochat.nc_ui.NeuroChaT_Ui.export_results">export_results</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select" href="#neurochat.nc_ui.NeuroChaT_Ui.graphic_format_select">graphic_format_select</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems" href="#neurochat.nc_ui.NeuroChaT_Ui.lfp_chan_getitems">lfp_chan_getitems</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.load_session" href="#neurochat.nc_ui.NeuroChaT_Ui.load_session">load_session</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.menu_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.menu_ui">menu_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.merge_output" href="#neurochat.nc_ui.NeuroChaT_Ui.merge_output">merge_output</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.mode_select" href="#neurochat.nc_ui.NeuroChaT_Ui.mode_select">mode_select</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots" href="#neurochat.nc_ui.NeuroChaT_Ui.place_cell_plots">place_cell_plots</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.restore_start_button" href="#neurochat.nc_ui.NeuroChaT_Ui.restore_start_button">restore_start_button</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.retranslate_ui">retranslate_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.save_log" href="#neurochat.nc_ui.NeuroChaT_Ui.save_log">save_log</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.save_session" href="#neurochat.nc_ui.NeuroChaT_Ui.save_session">save_session</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi" href="#neurochat.nc_ui.NeuroChaT_Ui.selectGraphicFormatUi">selectGraphicFormatUi</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_all" href="#neurochat.nc_ui.NeuroChaT_Ui.select_all">select_all</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.select_analysis_ui">select_analysis_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.select_cell_type_ui">select_cell_type_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan" href="#neurochat.nc_ui.NeuroChaT_Ui.set_lfp_chan">set_lfp_chan</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_parameters" href="#neurochat.nc_ui.NeuroChaT_Ui.set_parameters">set_parameters</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.set_unit_no" href="#neurochat.nc_ui.NeuroChaT_Ui.set_unit_no">set_unit_no</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.setup_ui" href="#neurochat.nc_ui.NeuroChaT_Ui.setup_ui">setup_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.start" href="#neurochat.nc_ui.NeuroChaT_Ui.start">start</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.tutorial" href="#neurochat.nc_ui.NeuroChaT_Ui.tutorial">tutorial</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.unit_getitems" href="#neurochat.nc_ui.NeuroChaT_Ui.unit_getitems">unit_getitems</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.update_log" href="#neurochat.nc_ui.NeuroChaT_Ui.update_log">update_log</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.verify_units" href="#neurochat.nc_ui.NeuroChaT_Ui.verify_units">verify_units</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.NeuroChaT_Ui.view_help" href="#neurochat.nc_ui.NeuroChaT_Ui.view_help">view_help</a></code>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><code><a title="neurochat.nc_ui.ParamBoxLayout" href="#neurochat.nc_ui.ParamBoxLayout">ParamBoxLayout</a></code>
+                            </h4>
+                            <ul class="">
+                                <li><code><a title="neurochat.nc_ui.ParamBoxLayout.addRow" href="#neurochat.nc_ui.ParamBoxLayout.addRow">addRow</a></code>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><code><a title="neurochat.nc_ui.UiParameters" href="#neurochat.nc_ui.UiParameters">UiParameters</a></code>
+                            </h4>
+                            <ul class="">
+                                <li><code><a title="neurochat.nc_ui.UiParameters.ang_vel_page" href="#neurochat.nc_ui.UiParameters.ang_vel_page">ang_vel_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.behaviour_ui" href="#neurochat.nc_ui.UiParameters.behaviour_ui">behaviour_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.border_page" href="#neurochat.nc_ui.UiParameters.border_page">border_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.burst_page" href="#neurochat.nc_ui.UiParameters.burst_page">burst_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.change_stack_page" href="#neurochat.nc_ui.UiParameters.change_stack_page">change_stack_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.gradient_page" href="#neurochat.nc_ui.UiParameters.gradient_page">gradient_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.grid_page" href="#neurochat.nc_ui.UiParameters.grid_page">grid_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.hd_rate_page" href="#neurochat.nc_ui.UiParameters.hd_rate_page">hd_rate_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.hd_shuffle_page" href="#neurochat.nc_ui.UiParameters.hd_shuffle_page">hd_shuffle_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.hd_time_lapse_page" href="#neurochat.nc_ui.UiParameters.hd_time_lapse_page">hd_time_lapse_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.hd_time_shift_page" href="#neurochat.nc_ui.UiParameters.hd_time_shift_page">hd_time_shift_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.inter_depend_page" href="#neurochat.nc_ui.UiParameters.inter_depend_page">inter_depend_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.isi_corr_page" href="#neurochat.nc_ui.UiParameters.isi_corr_page">isi_corr_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.isi_page" href="#neurochat.nc_ui.UiParameters.isi_page">isi_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.lfp_spectrum_page" href="#neurochat.nc_ui.UiParameters.lfp_spectrum_page">lfp_spectrum_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.lfp_spike_causality_page" href="#neurochat.nc_ui.UiParameters.lfp_spike_causality_page">lfp_spike_causality_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.loc_rate_page" href="#neurochat.nc_ui.UiParameters.loc_rate_page">loc_rate_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.loc_shuffle_page" href="#neurochat.nc_ui.UiParameters.loc_shuffle_page">loc_shuffle_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.loc_time_lapse_page" href="#neurochat.nc_ui.UiParameters.loc_time_lapse_page">loc_time_lapse_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.loc_time_shift_page" href="#neurochat.nc_ui.UiParameters.loc_time_shift_page">loc_time_shift_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.multiple_regresison_page" href="#neurochat.nc_ui.UiParameters.multiple_regresison_page">multiple_regresison_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.phase_lock_page" href="#neurochat.nc_ui.UiParameters.phase_lock_page">phase_lock_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.set_loc_rate_filter" href="#neurochat.nc_ui.UiParameters.set_loc_rate_filter">set_loc_rate_filter</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.set_spat_corr_filter" href="#neurochat.nc_ui.UiParameters.set_spat_corr_filter">set_spat_corr_filter</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.setup_ui" href="#neurochat.nc_ui.UiParameters.setup_ui">setup_ui</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.spatial_corr_page" href="#neurochat.nc_ui.UiParameters.spatial_corr_page">spatial_corr_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.speed_page" href="#neurochat.nc_ui.UiParameters.speed_page">speed_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.spike_phase_page" href="#neurochat.nc_ui.UiParameters.spike_phase_page">spike_phase_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.theta_cell_page" href="#neurochat.nc_ui.UiParameters.theta_cell_page">theta_cell_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.theta_skip_cell_page" href="#neurochat.nc_ui.UiParameters.theta_skip_cell_page">theta_skip_cell_page</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiParameters.waveform_page" href="#neurochat.nc_ui.UiParameters.waveform_page">waveform_page</a></code>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><code><a title="neurochat.nc_ui.UiResults" href="#neurochat.nc_ui.UiResults">UiResults</a></code>
+                            </h4>
+                            <ul class="">
+                                <li><code><a title="neurochat.nc_ui.UiResults.set_data" href="#neurochat.nc_ui.UiResults.set_data">set_data</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiResults.set_default" href="#neurochat.nc_ui.UiResults.set_default">set_default</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_ui.UiResults.setup_ui" href="#neurochat.nc_ui.UiResults.setup_ui">setup_ui</a></code>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </main>
+    <footer id="footer">
+        <p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad()</script>
 </body>
+
 </html>

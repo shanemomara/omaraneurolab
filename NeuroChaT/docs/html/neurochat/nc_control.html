@@ -1,30 +1,474 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.3" />
-<title>neurochat.nc_control API documentation</title>
-<meta name="description" content="This module implements NeuroChaT Class for the NeuroChaT software …" />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
-<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <meta name="generator" content="pdoc 0.7.5" />
+    <title>neurochat.nc_control API documentation</title>
+    <meta name="description" content="This module implements NeuroChaT Class for the NeuroChaT software …" />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <style>
+        .flex {
+            display: flex !important
+        }
+
+        body {
+            line-height: 1.5em
+        }
+
+        #content {
+            padding: 20px
+        }
+
+        #sidebar {
+            padding: 30px;
+            overflow: hidden
+        }
+
+        .http-server-breadcrumbs {
+            font-size: 130%;
+            margin: 0 0 15px 0
+        }
+
+        #footer {
+            font-size: .75em;
+            padding: 5px 30px;
+            border-top: 1px solid #ddd;
+            text-align: right
+        }
+
+        #footer p {
+            margin: 0 0 0 1em;
+            display: inline-block
+        }
+
+        #footer p:last-child {
+            margin-right: 30px
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-weight: 300
+        }
+
+        h1 {
+            font-size: 2.5em;
+            line-height: 1.1em
+        }
+
+        h2 {
+            font-size: 1.75em;
+            margin: 1em 0 .50em 0
+        }
+
+        h3 {
+            font-size: 1.4em;
+            margin: 25px 0 10px 0
+        }
+
+        h4 {
+            margin: 0;
+            font-size: 105%
+        }
+
+        a {
+            color: #058;
+            text-decoration: none;
+            transition: color .3s ease-in-out
+        }
+
+        a:hover {
+            color: #e82
+        }
+
+        .title code {
+            font-weight: bold
+        }
+
+        h2[id^="header-"] {
+            margin-top: 2em
+        }
+
+        .ident {
+            color: #900
+        }
+
+        pre code {
+            background: #f8f8f8;
+            font-size: .8em;
+            line-height: 1.4em
+        }
+
+        code {
+            background: #f2f2f1;
+            padding: 1px 4px;
+            overflow-wrap: break-word
+        }
+
+        h1 code {
+            background: transparent
+        }
+
+        pre {
+            background: #f8f8f8;
+            border: 0;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            margin: 1em 0;
+            padding: 1ex
+        }
+
+        #http-server-module-list {
+            display: flex;
+            flex-flow: column
+        }
+
+        #http-server-module-list div {
+            display: flex
+        }
+
+        #http-server-module-list dt {
+            min-width: 10%
+        }
+
+        #http-server-module-list p {
+            margin-top: 0
+        }
+
+        .toc ul,
+        #index {
+            list-style-type: none;
+            margin: 0;
+            padding: 0
+        }
+
+        #index code {
+            background: transparent
+        }
+
+        #index h3 {
+            border-bottom: 1px solid #ddd
+        }
+
+        #index ul {
+            padding: 0
+        }
+
+        #index h4 {
+            font-weight: bold
+        }
+
+        #index h4+ul {
+            margin-bottom: .6em
+        }
+
+        @media (min-width:200ex) {
+            #index .two-column {
+                column-count: 2
+            }
+        }
+
+        @media (min-width:300ex) {
+            #index .two-column {
+                column-count: 3
+            }
+        }
+
+        dl {
+            margin-bottom: 2em
+        }
+
+        dl dl:last-child {
+            margin-bottom: 4em
+        }
+
+        dd {
+            margin: 0 0 1em 3em
+        }
+
+        #header-classes+dl>dd {
+            margin-bottom: 3em
+        }
+
+        dd dd {
+            margin-left: 2em
+        }
+
+        dd p {
+            margin: 10px 0
+        }
+
+        .name {
+            background: #eee;
+            font-weight: bold;
+            font-size: .85em;
+            padding: 5px 10px;
+            display: inline-block;
+            min-width: 40%
+        }
+
+        .name:hover {
+            background: #e0e0e0
+        }
+
+        .name>span:first-child {
+            white-space: nowrap
+        }
+
+        .name.class>span:nth-child(2) {
+            margin-left: .4em
+        }
+
+        .inherited {
+            color: #999;
+            border-left: 5px solid #eee;
+            padding-left: 1em
+        }
+
+        .inheritance em {
+            font-style: normal;
+            font-weight: bold
+        }
+
+        .desc h2 {
+            font-weight: 400;
+            font-size: 1.25em
+        }
+
+        .desc h3 {
+            font-size: 1em
+        }
+
+        .desc dt code {
+            background: inherit
+        }
+
+        .source summary,
+        .git-link-div {
+            color: #666;
+            text-align: right;
+            font-weight: 400;
+            font-size: .8em;
+            text-transform: uppercase
+        }
+
+        .source summary>* {
+            white-space: nowrap;
+            cursor: pointer
+        }
+
+        .git-link {
+            color: inherit;
+            margin-left: 1em
+        }
+
+        .source pre {
+            max-height: 500px;
+            overflow: auto;
+            margin: 0
+        }
+
+        .source pre code {
+            font-size: 12px;
+            overflow: visible
+        }
+
+        .hlist {
+            list-style: none
+        }
+
+        .hlist li {
+            display: inline
+        }
+
+        .hlist li:after {
+            content: ',\2002'
+        }
+
+        .hlist li:last-child:after {
+            content: none
+        }
+
+        .hlist .hlist {
+            display: inline;
+            padding-left: 1em
+        }
+
+        img {
+            max-width: 100%
+        }
+
+        .admonition {
+            padding: .1em .5em;
+            margin-bottom: 1em
+        }
+
+        .admonition-title {
+            font-weight: bold
+        }
+
+        .admonition.note,
+        .admonition.info,
+        .admonition.important {
+            background: #aef
+        }
+
+        .admonition.todo,
+        .admonition.versionadded,
+        .admonition.tip,
+        .admonition.hint {
+            background: #dfd
+        }
+
+        .admonition.warning,
+        .admonition.versionchanged,
+        .admonition.deprecated {
+            background: #fd4
+        }
+
+        .admonition.error,
+        .admonition.danger,
+        .admonition.caution {
+            background: lightpink
+        }
+    </style>
+    <style media="screen and (min-width: 700px)">
+        @media screen and (min-width:700px) {
+            #sidebar {
+                width: 30%
+            }
+
+            #content {
+                width: 70%;
+                max-width: 100ch;
+                padding: 3em 4em;
+                border-left: 1px solid #ddd
+            }
+
+            pre code {
+                font-size: 1em
+            }
+
+            .item .name {
+                font-size: 1em
+            }
+
+            main {
+                display: flex;
+                flex-direction: row-reverse;
+                justify-content: flex-end
+            }
+
+            .toc ul ul,
+            #index ul {
+                padding-left: 1.5em
+            }
+
+            .toc>ul>li {
+                margin-top: .5em
+            }
+        }
+    </style>
+    <style media="print">
+        @media print {
+            #sidebar h1 {
+                page-break-before: always
+            }
+
+            .source {
+                display: none
+            }
+        }
+
+        @media print {
+            * {
+                background: transparent !important;
+                color: #000 !important;
+                box-shadow: none !important;
+                text-shadow: none !important
+            }
+
+            a[href]:after {
+                content: " ("attr(href) ")";
+                font-size: 90%
+            }
+
+            a[href][title]:after {
+                content: none
+            }
+
+            abbr[title]:after {
+                content: " ("attr(title) ")"
+            }
+
+            .ir a:after,
+            a[href^="javascript:"]:after,
+            a[href^="#"]:after {
+                content: ""
+            }
+
+            pre,
+            blockquote {
+                border: 1px solid #999;
+                page-break-inside: avoid
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            tr,
+            img {
+                page-break-inside: avoid
+            }
+
+            img {
+                max-width: 100% !important
+            }
+
+            @page {
+                margin: 0.5cm
+            }
+
+            p,
+            h2,
+            h3 {
+                orphans: 3;
+                widows: 3
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid
+            }
+        }
+    </style>
 </head>
+
 <body>
-<main>
-<article id="content">
-<header>
-<h1 class="title">Module <code>neurochat.nc_control</code></h1>
-</header>
-<section id="section-intro">
-<p>This module implements NeuroChaT Class for the NeuroChaT software</p>
-<p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python"># -*- coding: utf-8 -*-
+    <main>
+        <article id="content">
+            <header>
+                <h1 class="title">Module <code>neurochat.nc_control</code></h1>
+            </header>
+            <section id="section-intro">
+                <p>This module implements NeuroChaT Class for the NeuroChaT software</p>
+                <p>@author: Md Nurul Islam; islammn at tcd dot ie</p>
+                <details class="source">
+                    <summary>
+                        <span>Expand source code</span>
+                    </summary>
+                    <pre><code class="python"># -*- coding: utf-8 -*-
 &#34;&#34;&#34;
 This module implements NeuroChaT Class for the NeuroChaT software
 
@@ -1515,40 +1959,44 @@ class NeuroChaT(QtCore.QThread):
         except Exception as ex:
             log_exception(ex, &#34;In walking a directory for place cell summaries&#34;)
         return </code></pre>
-</details>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="neurochat.nc_control.NeuroChaT"><code class="flex name class">
+                </details>
+            </section>
+            <section>
+            </section>
+            <section>
+            </section>
+            <section>
+            </section>
+            <section>
+                <h2 class="section-title" id="header-classes">Classes</h2>
+                <dl>
+                    <dt id="neurochat.nc_control.NeuroChaT"><code class="flex name class">
 <span>class <span class="ident">NeuroChaT</span></span>
-<span>(</span><span>config=<neurochat.nc_config.Configuration object at 0x000002E25E4DAFC8>, data=<neurochat.nc_data.NData object at 0x000002E25E4DA3C8>, parent=None)</span>
+<span>(</span><span>config=&lt;neurochat.nc_config.Configuration object&gt;, data=&lt;neurochat.nc_data.NData object&gt;, parent=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>The NeuroChaT object is the controller object in NeuroChaT and works as the
-backend to the NeuroChaT graphical user interface. It reads data, parameter
-and analysis specifications from the Configuration class and executes accordingly.
-It also interafces the GUI to the rest of the NeuroChaT elements.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>ndata</code></strong> :&ensp;<code>NData</code></dt>
-<dd>NData oject</dd>
-<dt><strong><code>config</code></strong> :&ensp;<code>Configuration</code></dt>
-<dd>Configuration object</dd>
-<dt><strong><code>log</code></strong> :&ensp;<code>NLog</code></dt>
-<dd>Central logger object</dd>
-<dt><strong><code>hdf</code></strong> :&ensp;<code>Nhdf</code></dt>
-<dd>A Nhdf object</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class NeuroChaT(QtCore.QThread):
+                    <dd>
+                        <section class="desc">
+                            <p>The NeuroChaT object is the controller object in NeuroChaT and works as the
+                                backend to the NeuroChaT graphical user interface. It reads data, parameter
+                                and analysis specifications from the Configuration class and executes accordingly.
+                                It also interafces the GUI to the rest of the NeuroChaT elements.</p>
+                            <h2 id="attributes">Attributes</h2>
+                            <dl>
+                                <dt><strong><code>ndata</code></strong> :&ensp;<code>NData</code></dt>
+                                <dd>NData oject</dd>
+                                <dt><strong><code>config</code></strong> :&ensp;<code>Configuration</code></dt>
+                                <dd>Configuration object</dd>
+                                <dt><strong><code>log</code></strong> :&ensp;<code>NLog</code></dt>
+                                <dd>Central logger object</dd>
+                                <dt><strong><code>hdf</code></strong> :&ensp;<code>Nhdf</code></dt>
+                                <dd>A Nhdf object</dd>
+                            </dl>
+                        </section>
+                        <details class="source">
+                            <summary>
+                                <span>Expand source code</span>
+                            </summary>
+                            <pre><code class="python">class NeuroChaT(QtCore.QThread):
     &#34;&#34;&#34;
     The NeuroChaT object is the controller object in NeuroChaT and works as the
     backend to the NeuroChaT graphical user interface. It reads data, parameter
@@ -3007,35 +3455,40 @@ It also interafces the GUI to the rest of the NeuroChaT elements.</p>
         except Exception as ex:
             log_exception(ex, &#34;In walking a directory for place cell summaries&#34;)
         return </code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>PyQt5.QtCore.QThread</li>
-<li>PyQt5.QtCore.QObject</li>
-<li>sip.wrapper</li>
-<li>sip.simplewrapper</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="neurochat.nc_control.NeuroChaT.angle_calculation"><code class="name flex">
+                        </details>
+                        <h3>Ancestors</h3>
+                        <ul class="hlist">
+                            <li>PyQt5.QtCore.QThread</li>
+                            <li>PyQt5.QtCore.QObject</li>
+                            <li>sip.wrapper</li>
+                            <li>sip.simplewrapper</li>
+                        </ul>
+                        <h3>Methods</h3>
+                        <dl>
+                            <dt id="neurochat.nc_control.NeuroChaT.angle_calculation"><code class="name flex">
 <span>def <span class="ident">angle_calculation</span></span>(<span>self, excel_file=None, should_plot=True)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Takes a list of unit specifications and finds the angle between the place field centroids
-The results of the analysis are written back to the input Excel file.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the excel file that contains data specifications</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def angle_calculation(self, excel_file=None, should_plot=True):
+                            <dd>
+                                <section class="desc">
+                                    <p>Takes a list of unit specifications and finds the angle between the place field
+                                        centroids
+                                        The results of the analysis are written back to the input Excel file.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the excel file that contains data specifications</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def angle_calculation(self, excel_file=None, should_plot=True):
     &#34;&#34;&#34;
     Takes a list of unit specifications and finds the angle between the place field centroids
     The results of the analysis are written back to the input Excel file.
@@ -3126,26 +3579,30 @@ The results of the analysis are written back to the input Excel file.</p>
             + &#34; {}&#34;.format(output_file))
 
     logging.info(&#39;Angle calculation completed! Value was {}&#39;.format(angle))</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.close_fig"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.close_fig"><code class="name flex">
 <span>def <span class="ident">close_fig</span></span>(<span>self, fig)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Closes a matplotlib.fiure.Figure() object after saving it to the output PDF.
-A a tuple or list of such figures are provided, each of them saved and closed
-accordingly.</p>
-<h2 id="parameters">Parameters</h2>
-<p>fig
-matplotlib.fiure.Figure() or a list or tuple of them.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def close_fig(self, fig):
+                            <dd>
+                                <section class="desc">
+                                    <p>Closes a matplotlib.fiure.Figure() object after saving it to the output PDF.
+                                        A a tuple or list of such figures are provided, each of them saved and closed
+                                        accordingly.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <p>fig
+                                        matplotlib.fiure.Figure() or a list or tuple of them.</p>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def close_fig(self, fig):
     &#34;&#34;&#34;
     Closes a matplotlib.fiure.Figure() object after saving it to the output PDF.
     A a tuple or list of such figures are provided, each of them saved and closed
@@ -3182,26 +3639,30 @@ matplotlib.fiure.Figure() or a list or tuple of them.</p>
         plt.close(fig)
     else:
         logging.error(&#39;Invalid matplotlib.figure instance&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.close_hdf_file"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.close_hdf_file"><code class="name flex">
 <span>def <span class="ident">close_hdf_file</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Closes the HDF5 file object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def close_hdf_file(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Closes the HDF5 file object.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def close_hdf_file(self):
     &#34;&#34;&#34;
     Closes the HDF5 file object.
     
@@ -3216,26 +3677,30 @@ matplotlib.fiure.Figure() or a list or tuple of them.</p>
     &#34;&#34;&#34;
     
     self.hdf.close()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.close_pdf"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.close_pdf"><code class="name flex">
 <span>def <span class="ident">close_pdf</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>closes the PDF file object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def close_pdf(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>closes the PDF file object.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def close_pdf(self):
     &#34;&#34;&#34;
     closes the PDF file object.
     
@@ -3254,27 +3719,31 @@ matplotlib.fiure.Figure() or a list or tuple of them.</p>
         logging.info(&#39;Output graphics saved to &#39;+ self._pdf_file)
     else:
         logging.warning(&#39;No PDF file for graphic output!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.cluster_evaluate"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.cluster_evaluate"><code class="name flex">
 <span>def <span class="ident">cluster_evaluate</span></span>(<span>self, excel_file=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Takes a list of unit specifications and evaluates the quality of the clustering.
-The results of the analysis are written back to the input Excel file.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the excel file that contains data specifications</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def cluster_evaluate(self, excel_file=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Takes a list of unit specifications and evaluates the quality of the clustering.
+                                        The results of the analysis are written back to the input Excel file.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the excel file that contains data specifications</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def cluster_evaluate(self, excel_file=None):
     &#34;&#34;&#34;
     Takes a list of unit specifications and evaluates the quality of the clustering.
     The results of the analysis are written back to the input Excel file.
@@ -3325,27 +3794,31 @@ The results of the analysis are written back to the input Excel file.</p>
         logging.info(&#39;Cluster evaluation completed!&#39;)
     else:
         logging.error(&#39;Excel  file does not exist!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.cluster_similarity"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.cluster_similarity"><code class="name flex">
 <span>def <span class="ident">cluster_similarity</span></span>(<span>self, excel_file=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Takes a list of specifications for pairwise comparison of units. The results
-are written back to the input Excel file.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the excel file that contains unit specifications</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def cluster_similarity(self, excel_file=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Takes a list of specifications for pairwise comparison of units. The results
+                                        are written back to the input Excel file.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the excel file that contains unit specifications</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def cluster_similarity(self, excel_file=None):
     &#34;&#34;&#34;
     Takes a list of specifications for pairwise comparison of units. The results
     are written back to the input Excel file.
@@ -3404,27 +3877,32 @@ are written back to the input Excel file.</p>
         logging.info(&#39;Cluster similarity analysis completed!&#39;)
     else:
         logging.error(&#39;Excel  file does not exist!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.convert_to_nwb"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.convert_to_nwb"><code class="name flex">
 <span>def <span class="ident">convert_to_nwb</span></span>(<span>self, excel_file=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Takes a list of datasets in Excel file and converts them into NWB file format. This
-method currently supports Axona and Neuralynx data formats.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the excel file that contains data specifications</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def convert_to_nwb(self, excel_file=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Takes a list of datasets in Excel file and converts them into NWB file format.
+                                        This
+                                        method currently supports Axona and Neuralynx data formats.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the excel file that contains data specifications</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def convert_to_nwb(self, excel_file=None):
     &#34;&#34;&#34;
     Takes a list of datasets in Excel file and converts them into NWB file format. This 
     method currently supports Axona and Neuralynx data formats.
@@ -3484,28 +3962,32 @@ method currently supports Axona and Neuralynx data formats.</p>
     name = &#39;NWB_list_&#39; + words[-1]
     export_info.to_excel(os.path.join(os.sep.join(words[:-1]), name))
     logging.info(&#39;Conversion process completed!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.execute"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.execute"><code class="name flex">
 <span>def <span class="ident">execute</span></span>(<span>self, name=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Checks the selection of each analyses, and executes if they are selected.
-It also exports the plot data from individual analyses to the hdf file and
-figures to the graphics file that are set in the mode() method.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the unit or the unique unit ID</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def execute(self, name=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Checks the selection of each analyses, and executes if they are selected.
+                                        It also exports the plot data from individual analyses to the hdf file and
+                                        figures to the graphics file that are set in the mode() method.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the unit or the unique unit ID</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def execute(self, name=None):
     &#34;&#34;&#34;
     Checks the selection of each analyses, and executes if they are selected.
     It also exports the plot data from individual analyses to the hdf file and 
@@ -4033,26 +4515,30 @@ figures to the graphics file that are set in the mode() method.</p>
 
         if self.get_analysis(&#39;lfp_spike_causality&#39;):
             logging.warning(&#39;Unit-LFP analysis has not been implemented yet!&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.exist_hdf_path"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.exist_hdf_path"><code class="name flex">
 <span>def <span class="ident">exist_hdf_path</span></span>(<span>self, path='')</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Check and returns if an HDF5 file path exists</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
-<dd>path to HDF5 file group</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>exists</code></strong> :&ensp;<code>bool</code></dt>
-<dd>True if the path exists</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def exist_hdf_path(self, path=&#39;&#39;):
+                            <dd>
+                                <section class="desc">
+                                    <p>Check and returns if an HDF5 file path exists</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>path to HDF5 file group</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><strong><code>exists</code></strong> :&ensp;<code>bool</code></dt>
+                                        <dd>True if the path exists</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def exist_hdf_path(self, path=&#39;&#39;):
     &#34;&#34;&#34;
     Check and returns if an HDF5 file path exists
     
@@ -4072,32 +4558,36 @@ figures to the graphics file that are set in the mode() method.</p>
     if path in self.hdf.f:
         exists = True
     return exists</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.finished"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.finished"><code class="name flex">
 <span>def <span class="ident">finished</span></span>(<span>...)</span>
 </code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.get_configuration"><code class="name flex">
+                            <dd>
+                                <section class="desc"></section>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.get_configuration"><code class="name flex">
 <span>def <span class="ident">get_configuration</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the Configuration() object from this class.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>Configuration</code></dt>
-<dd>NeuroChaT's config attribute</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_configuration(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the Configuration() object from this class.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>Configuration</code></dt>
+                                        <dd>NeuroChaT's config attribute</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def get_configuration(self):
     &#34;&#34;&#34;
     Returns the Configuration() object from this class.
     
@@ -4113,26 +4603,30 @@ figures to the graphics file that are set in the mode() method.</p>
     &#34;&#34;&#34;
     
     return self.config</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.get_hdf_groups"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.get_hdf_groups"><code class="name flex">
 <span>def <span class="ident">get_hdf_groups</span></span>(<span>self, path='')</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the names of groups or datasets in a path </p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
-<dd>path to HDF5 file group</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code></dt>
-<dd>Names of the groups or datasets in the path</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_hdf_groups(self, path=&#39;&#39;):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the names of groups or datasets in a path </p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>path to HDF5 file group</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>list</code></dt>
+                                        <dd>Names of the groups or datasets in the path</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def get_hdf_groups(self, path=&#39;&#39;):
     &#34;&#34;&#34;
     Returns the names of groups or datasets in a path 
     
@@ -4149,26 +4643,30 @@ figures to the graphics file that are set in the mode() method.</p>
     &#34;&#34;&#34;
     
     return self.hdf.get_groups_in_path(path=path)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.get_neuro_data"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.get_neuro_data"><code class="name flex">
 <span>def <span class="ident">get_neuro_data</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the NData() object from this class.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>NData</code></dt>
-<dd>NeuroChaT's ndata attribute</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_neuro_data(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the NData() object from this class.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>NData</code></dt>
+                                        <dd>NeuroChaT's ndata attribute</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def get_neuro_data(self):
     &#34;&#34;&#34;
     Returns the NData() object from this class.
     
@@ -4183,28 +4681,34 @@ figures to the graphics file that are set in the mode() method.</p>
 
     &#34;&#34;&#34;
     return self.ndata</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.get_output_files"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.get_output_files"><code class="name flex">
 <span>def <span class="ident">get_output_files</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns a DataFrame of output graphic files and HDF5 files after the completion of the analysis.
-Index are the unit IDs of the analysed units.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>op_files</code></strong> :&ensp;<code>pandas.DataFrame</code></dt>
-<dd>Column 1 contains the name of the output graphic files. Column 2 gives the
-the name of the NWB files</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_output_files(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns a DataFrame of output graphic files and HDF5 files after the completion
+                                        of the analysis.
+                                        Index are the unit IDs of the analysed units.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><strong><code>op_files</code></strong> :&ensp;<code>pandas.DataFrame</code>
+                                        </dt>
+                                        <dd>Column 1 contains the name of the output graphic files. Column 2 gives the
+                                            the name of the NWB files</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def get_output_files(self):
     &#34;&#34;&#34;
     Returns a DataFrame of output graphic files and HDF5 files after the completion of the analysis.
     Index are the unit IDs of the analysed units.
@@ -4228,26 +4732,30 @@ the name of the NWB files</dd>
     op_files = op_files[[&#39;Graphics Files&#39;, &#39;NWB Files&#39;]]
 
     return op_files</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.get_results"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.get_results"><code class="name flex">
 <span>def <span class="ident">get_results</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Returns the parametric results of the analyses.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>results</code></strong> :&ensp;<code>OrderedDict</code></dt>
-<dd>Parametric results of the analysis</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_results(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Returns the parametric results of the analyses.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><strong><code>results</code></strong> :&ensp;<code>OrderedDict</code></dt>
+                                        <dd>Parametric results of the analysis</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def get_results(self):
     &#34;&#34;&#34;
     Returns the parametric results of the analyses.
     
@@ -4272,29 +4780,33 @@ the name of the NWB files</dd>
             ex, &#34;Error in getting results&#34;)
     
     return results</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.mode"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.mode"><code class="name flex">
 <span>def <span class="ident">mode</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Reads the specifications and analyzes data according to the mode that is set
-in the Configuration file. This is the principle method in NeuroChaT that
-sets the input and output data files and calls the execute() method for
-running the analyses after it sets the data and filenames to NData() object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def mode(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Reads the specifications and analyzes data according to the mode that is set
+                                        in the Configuration file. This is the principle method in NeuroChaT that
+                                        sets the input and output data files and calls the execute() method for
+                                        running the analyses after it sets the data and filenames to NData() object.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def mode(self):
     &#34;&#34;&#34;
     Reads the specifications and analyzes data according to the mode that is set
     in the Configuration file. This is the principle method in NeuroChaT that
@@ -4420,26 +4932,30 @@ running the analyses after it sets the data and filenames to NData() object.</p>
     self.cellid = info[&#39;cellid&#39;]
     self.nwb_files = info[&#39;nwb&#39;]
     self.graphic_files = info[&#39;graphics&#39;]</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.open_hdf_file"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.open_hdf_file"><code class="name flex">
 <span>def <span class="ident">open_hdf_file</span></span>(<span>self, filename=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets the filename and opens the file object for the HDF5 file.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
-<dd>Filename of the HDF5 object</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def open_hdf_file(self, filename=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets the filename and opens the file object for the HDF5 file.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Filename of the HDF5 object</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def open_hdf_file(self, filename=None):
     &#34;&#34;&#34;
     Sets the filename and opens the file object for the HDF5 file.
     
@@ -4457,26 +4973,30 @@ running the analyses after it sets the data and filenames to NData() object.</p>
         filename = self.config.get_nwb_file()
         
     self.hdf.set_filename(filename=filename)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.open_pdf"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.open_pdf"><code class="name flex">
 <span>def <span class="ident">open_pdf</span></span>(<span>self, filename=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Opens the PDF file object using PdfPages from matplotlib.backends.backend_pdf</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
-<dd>Filename of the PDF output</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def open_pdf(self, filename=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Opens the PDF file object using PdfPages from matplotlib.backends.backend_pdf</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Filename of the PDF output</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def open_pdf(self, filename=None):
     &#34;&#34;&#34;
     Opens the PDF file object using PdfPages from matplotlib.backends.backend_pdf
     
@@ -4511,24 +5031,28 @@ running the analyses after it sets the data and filenames to NData() object.</p>
             logging.error(&#39;Cannot create PDF, file path is invalid&#39;)
     else:
         logging.error(&#39;No valid PDf file is specified&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.place_cell_plots"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.place_cell_plots"><code class="name flex">
 <span>def <span class="ident">place_cell_plots</span></span>(<span>self, directory, dpi=400)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Plot png images of place cell figures, looping over a directory.</p>
-<p>Currently only works for axona files, but can be extended.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>The directory to get files from.</dd>
-<dt><strong><code>dpi</code></strong> :&ensp;<code>int</code></dt>
-<dd>The desired dpi of the pngs.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def place_cell_plots(self, directory, dpi=400):
+                            <dd>
+                                <section class="desc">
+                                    <p>Plot png images of place cell figures, looping over a directory.</p>
+                                    <p>Currently only works for axona files, but can be extended.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>dir</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>The directory to get files from.</dd>
+                                        <dt><strong><code>dpi</code></strong> :&ensp;<code>int</code></dt>
+                                        <dd>The desired dpi of the pngs.</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def place_cell_plots(self, directory, dpi=400):
     &#34;&#34;&#34;
     Plot png images of place cell figures, looping over a directory.
 
@@ -4552,29 +5076,33 @@ running the analyses after it sets the data and filenames to NData() object.</p>
     except Exception as ex:
         log_exception(ex, &#34;In walking a directory for place cell summaries&#34;)
     return </code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.plot_data_to_hdf"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.plot_data_to_hdf"><code class="name flex">
 <span>def <span class="ident">plot_data_to_hdf</span></span>(<span>self, name=None, graph_data=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Stores plot data to the HDF5 file in the '/analysis/' path</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
-<dd>Unit ID which is also the name of the group in the
-'/analysis/' path</dd>
-<dt><strong><code>graph_data</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary of data that are plotted</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def plot_data_to_hdf(self, name=None, graph_data=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Stores plot data to the HDF5 file in the '/analysis/' path</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Unit ID which is also the name of the group in the
+                                            '/analysis/' path</dd>
+                                        <dt><strong><code>graph_data</code></strong> :&ensp;<code>dict</code></dt>
+                                        <dd>Dictionary of data that are plotted</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def plot_data_to_hdf(self, name=None, graph_data=None):
     &#34;&#34;&#34;
     Stores plot data to the HDF5 file in the &#39;/analysis/&#39; path
     
@@ -4593,27 +5121,31 @@ running the analyses after it sets the data and filenames to NData() object.</p>
     
     self.hdf.save_dict_recursive(path=&#39;/analysis/&#39;, \
          name=name, data=graph_data)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.reset"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.reset"><code class="name flex">
 <span>def <span class="ident">reset</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Reset NeuroChaT's internal attributes and prepares it for another set of
-analysis or new session.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def reset(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>Reset NeuroChaT's internal attributes and prepares it for another set of
+                                        analysis or new session.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def reset(self):
     &#34;&#34;&#34;
     Reset NeuroChaT&#39;s internal attributes and prepares it for another set of
     analysis or new session.
@@ -4639,27 +5171,31 @@ analysis or new session.</p>
     if not self.get_graphic_format():
         self.set_graphic_format(&#39;PDF&#39;)
     nc_plot.set_backend(self.get_graphic_format())</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.run"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.run"><code class="name flex">
 <span>def <span class="ident">run</span></span>(<span>self)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>After calling start(), the NeuroChaT thread calls this function. It
-verifies the input specifications and calls the mode() method.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>None</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def run(self):
+                            <dd>
+                                <section class="desc">
+                                    <p>After calling start(), the NeuroChaT thread calls this function. It
+                                        verifies the input specifications and calls the mode() method.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>None</code></strong></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def run(self):
     &#34;&#34;&#34;
     After calling start(), the NeuroChaT thread calls this function. It
     verifies the input specifications and calls the mode() method.
@@ -4719,26 +5255,30 @@ verifies the input specifications and calls the mode() method.</p>
         self.ndata.set_data_format(self.get_data_format())
         self.mode()
     self.finished.emit()</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.set_configuration"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.set_configuration"><code class="name flex">
 <span>def <span class="ident">set_configuration</span></span>(<span>self, config)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets a new Configuration() object or its subclass object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>config</code></strong> :&ensp;<code>Configuration</code></dt>
-<dd>Object of Configuration class or its subclass.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_configuration(self, config):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets a new Configuration() object or its subclass object.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>config</code></strong> :&ensp;<code>Configuration</code></dt>
+                                        <dd>Object of Configuration class or its subclass.</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_configuration(self, config):
     &#34;&#34;&#34;
     Sets a new Configuration() object or its subclass object.
     
@@ -4759,26 +5299,30 @@ verifies the input specifications and calls the mode() method.</p>
         self.config = config
     else:
         logging.warning(&#39;Inappropriate Configuration object or class&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.set_neuro_data"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.set_neuro_data"><code class="name flex">
 <span>def <span class="ident">set_neuro_data</span></span>(<span>self, ndata)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Sets a new NData() object or its subclass object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>ndata</code></strong> :&ensp;<code>NData</code></dt>
-<dd>Object of NData class or its subclass.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_neuro_data(self, ndata):
+                            <dd>
+                                <section class="desc">
+                                    <p>Sets a new NData() object or its subclass object.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>ndata</code></strong> :&ensp;<code>NData</code></dt>
+                                        <dd>Object of NData class or its subclass.</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def set_neuro_data(self, ndata):
     &#34;&#34;&#34;
     Sets a new NData() object or its subclass object.
     
@@ -4799,26 +5343,30 @@ verifies the input specifications and calls the mode() method.</p>
         self.ndata = ndata
     else:
         logging.warning(&#39;Inappropriate NeuroData object or class&#39;)</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.update_results"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.update_results"><code class="name flex">
 <span>def <span class="ident">update_results</span></span>(<span>self, _results)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Updates the results with new analysis results.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>_results</code></strong> :&ensp;<code>OrderedDict</code></dt>
-<dd>Dictionary of the new results</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def update_results(self, _results):
+                            <dd>
+                                <section class="desc">
+                                    <p>Updates the results with new analysis results.</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>_results</code></strong> :&ensp;<code>OrderedDict</code></dt>
+                                        <dd>Dictionary of the new results</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def update_results(self, _results):
     &#34;&#34;&#34;
     Updates the results with new analysis results.
     
@@ -4834,28 +5382,32 @@ verifies the input specifications and calls the mode() method.</p>
     &#34;&#34;&#34;
     
     self.results.append(_results.copy()) # without copy, list contains a reference to the original dictionary, and old results are replaced by the new one</code></pre>
-</details>
-</dd>
-<dt id="neurochat.nc_control.NeuroChaT.verify_units"><code class="name flex">
+                                </details>
+                            </dd>
+                            <dt id="neurochat.nc_control.NeuroChaT.verify_units"><code class="name flex">
 <span>def <span class="ident">verify_units</span></span>(<span>self, excel_file=None)</span>
 </code></dt>
-<dd>
-<section class="desc"><p>Takes a list of datasets and verify the specifications of the units.
-The verification tool is useful for prescreening of units before the
-batch-mode analysis using 'Listed Units' mode of NeuroChaT</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>Name of the excel file that contains data specifications</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>None</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def verify_units(self, excel_file=None):
+                            <dd>
+                                <section class="desc">
+                                    <p>Takes a list of datasets and verify the specifications of the units.
+                                        The verification tool is useful for prescreening of units before the
+                                        batch-mode analysis using 'Listed Units' mode of NeuroChaT</p>
+                                    <h2 id="parameters">Parameters</h2>
+                                    <dl>
+                                        <dt><strong><code>excel_file</code></strong> :&ensp;<code>str</code></dt>
+                                        <dd>Name of the excel file that contains data specifications</dd>
+                                    </dl>
+                                    <h2 id="returns">Returns</h2>
+                                    <dl>
+                                        <dt><code>None</code></dt>
+                                        <dd>&nbsp;</dd>
+                                    </dl>
+                                </section>
+                                <details class="source">
+                                    <summary>
+                                        <span>Expand source code</span>
+                                    </summary>
+                                    <pre><code class="python">def verify_units(self, excel_file=None):
     &#34;&#34;&#34;
     Takes a list of datasets and verify the specifications of the units.
     The verification tool is useful for prescreening of units before the 
@@ -4906,66 +5458,96 @@ batch-mode analysis using 'Listed Units' mode of NeuroChaT</p>
         logging.info(&#39;Verification process completed!&#39;)
     else:
         logging.error(&#39;Excel  file does not exist!&#39;)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-</dl>
-</section>
-</article>
-<nav id="sidebar">
-<h1>Index</h1>
-<div class="toc">
-<ul></ul>
-</div>
-<ul id="index">
-<li><h3>Super-module</h3>
-<ul>
-<li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="neurochat.nc_control.NeuroChaT" href="#neurochat.nc_control.NeuroChaT">NeuroChaT</a></code></h4>
-<ul class="two-column">
-<li><code><a title="neurochat.nc_control.NeuroChaT.angle_calculation" href="#neurochat.nc_control.NeuroChaT.angle_calculation">angle_calculation</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.close_fig" href="#neurochat.nc_control.NeuroChaT.close_fig">close_fig</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.close_hdf_file" href="#neurochat.nc_control.NeuroChaT.close_hdf_file">close_hdf_file</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.close_pdf" href="#neurochat.nc_control.NeuroChaT.close_pdf">close_pdf</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.cluster_evaluate" href="#neurochat.nc_control.NeuroChaT.cluster_evaluate">cluster_evaluate</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.cluster_similarity" href="#neurochat.nc_control.NeuroChaT.cluster_similarity">cluster_similarity</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.convert_to_nwb" href="#neurochat.nc_control.NeuroChaT.convert_to_nwb">convert_to_nwb</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.execute" href="#neurochat.nc_control.NeuroChaT.execute">execute</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.exist_hdf_path" href="#neurochat.nc_control.NeuroChaT.exist_hdf_path">exist_hdf_path</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.finished" href="#neurochat.nc_control.NeuroChaT.finished">finished</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.get_configuration" href="#neurochat.nc_control.NeuroChaT.get_configuration">get_configuration</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.get_hdf_groups" href="#neurochat.nc_control.NeuroChaT.get_hdf_groups">get_hdf_groups</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.get_neuro_data" href="#neurochat.nc_control.NeuroChaT.get_neuro_data">get_neuro_data</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.get_output_files" href="#neurochat.nc_control.NeuroChaT.get_output_files">get_output_files</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.get_results" href="#neurochat.nc_control.NeuroChaT.get_results">get_results</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.mode" href="#neurochat.nc_control.NeuroChaT.mode">mode</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.open_hdf_file" href="#neurochat.nc_control.NeuroChaT.open_hdf_file">open_hdf_file</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.open_pdf" href="#neurochat.nc_control.NeuroChaT.open_pdf">open_pdf</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.place_cell_plots" href="#neurochat.nc_control.NeuroChaT.place_cell_plots">place_cell_plots</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.plot_data_to_hdf" href="#neurochat.nc_control.NeuroChaT.plot_data_to_hdf">plot_data_to_hdf</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.reset" href="#neurochat.nc_control.NeuroChaT.reset">reset</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.run" href="#neurochat.nc_control.NeuroChaT.run">run</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.set_configuration" href="#neurochat.nc_control.NeuroChaT.set_configuration">set_configuration</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.set_neuro_data" href="#neurochat.nc_control.NeuroChaT.set_neuro_data">set_neuro_data</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.update_results" href="#neurochat.nc_control.NeuroChaT.update_results">update_results</a></code></li>
-<li><code><a title="neurochat.nc_control.NeuroChaT.verify_units" href="#neurochat.nc_control.NeuroChaT.verify_units">verify_units</a></code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</nav>
-</main>
-<footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
-</footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+                                </details>
+                            </dd>
+                        </dl>
+                    </dd>
+                </dl>
+            </section>
+        </article>
+        <nav id="sidebar">
+            <h1>Index</h1>
+            <div class="toc">
+                <ul></ul>
+            </div>
+            <ul id="index">
+                <li>
+                    <h3>Super-module</h3>
+                    <ul>
+                        <li><code><a title="neurochat" href="index.html">neurochat</a></code></li>
+                    </ul>
+                </li>
+                <li>
+                    <h3><a href="#header-classes">Classes</a></h3>
+                    <ul>
+                        <li>
+                            <h4><code><a title="neurochat.nc_control.NeuroChaT" href="#neurochat.nc_control.NeuroChaT">NeuroChaT</a></code>
+                            </h4>
+                            <ul class="two-column">
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.angle_calculation" href="#neurochat.nc_control.NeuroChaT.angle_calculation">angle_calculation</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.close_fig" href="#neurochat.nc_control.NeuroChaT.close_fig">close_fig</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.close_hdf_file" href="#neurochat.nc_control.NeuroChaT.close_hdf_file">close_hdf_file</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.close_pdf" href="#neurochat.nc_control.NeuroChaT.close_pdf">close_pdf</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.cluster_evaluate" href="#neurochat.nc_control.NeuroChaT.cluster_evaluate">cluster_evaluate</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.cluster_similarity" href="#neurochat.nc_control.NeuroChaT.cluster_similarity">cluster_similarity</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.convert_to_nwb" href="#neurochat.nc_control.NeuroChaT.convert_to_nwb">convert_to_nwb</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.execute" href="#neurochat.nc_control.NeuroChaT.execute">execute</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.exist_hdf_path" href="#neurochat.nc_control.NeuroChaT.exist_hdf_path">exist_hdf_path</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.finished" href="#neurochat.nc_control.NeuroChaT.finished">finished</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.get_configuration" href="#neurochat.nc_control.NeuroChaT.get_configuration">get_configuration</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.get_hdf_groups" href="#neurochat.nc_control.NeuroChaT.get_hdf_groups">get_hdf_groups</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.get_neuro_data" href="#neurochat.nc_control.NeuroChaT.get_neuro_data">get_neuro_data</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.get_output_files" href="#neurochat.nc_control.NeuroChaT.get_output_files">get_output_files</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.get_results" href="#neurochat.nc_control.NeuroChaT.get_results">get_results</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.mode" href="#neurochat.nc_control.NeuroChaT.mode">mode</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.open_hdf_file" href="#neurochat.nc_control.NeuroChaT.open_hdf_file">open_hdf_file</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.open_pdf" href="#neurochat.nc_control.NeuroChaT.open_pdf">open_pdf</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.place_cell_plots" href="#neurochat.nc_control.NeuroChaT.place_cell_plots">place_cell_plots</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.plot_data_to_hdf" href="#neurochat.nc_control.NeuroChaT.plot_data_to_hdf">plot_data_to_hdf</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.reset" href="#neurochat.nc_control.NeuroChaT.reset">reset</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.run" href="#neurochat.nc_control.NeuroChaT.run">run</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.set_configuration" href="#neurochat.nc_control.NeuroChaT.set_configuration">set_configuration</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.set_neuro_data" href="#neurochat.nc_control.NeuroChaT.set_neuro_data">set_neuro_data</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.update_results" href="#neurochat.nc_control.NeuroChaT.update_results">update_results</a></code>
+                                </li>
+                                <li><code><a title="neurochat.nc_control.NeuroChaT.verify_units" href="#neurochat.nc_control.NeuroChaT.verify_units">verify_units</a></code>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </main>
+    <footer id="footer">
+        <p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad()</script>
 </body>
+
 </html>
