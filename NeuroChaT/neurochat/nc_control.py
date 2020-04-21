@@ -1033,8 +1033,8 @@ class NeuroChaT(QtCore.QThread):
 
         """
         
-        exists= False
-        if path in self.f:
+        exists = False
+        if path in self.hdf.f:
             exists = True
             return exists
         
