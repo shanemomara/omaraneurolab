@@ -7,4 +7,4 @@ The Github repository for software from Shane O'Mara's neuroscience research lab
 Software projects are listed as subdirectories of this main lab repository with individual README files in those subdirectories.
 
 - [**NeuroChaT**](https://github.com/shanemomara/NeuroChaT): A neuron characterisation toolbox written in python with over twenty thousand lines of code.
-- [**ATNx_Downsampling**](https://github.com/shanemomara/omaraneurolab/tree/master/NeuroChaT): A supporting downsampling method for the work performed in Bethany Frost's paper.
+- [**ATNx_Downsampling**](https://github.com/seankmartin/omaraneurolab/tree/master/ATNx_Downsampling): A supporting downsampling method for the work performed in Bethany Frost's paper.
