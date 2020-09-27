@@ -116,9 +116,9 @@ if __name__ == "__main__":
 
     res = main(
         num_ctrl_records,
-        num_ctrl_success,
+        num_ctrl_spatial_records,
         num_lesion_records,
-        num_lesion_success,
+        num_lesion_spatial_records,
         bayes_ctrl_prob=0.2,
     )
     print(res)
