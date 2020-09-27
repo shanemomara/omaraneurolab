@@ -1,8 +1,12 @@
 """Do stats related to the ATNx cell counts."""
 
+import os
+
 from scipy.special import comb
+import numpy as np
 
 from mpmath import quad
+from skm_pyutils.py_config import read_python
 
 
 def C(n, r):
@@ -91,6 +95,35 @@ def uniform_prior(p1, p2):
     return 1
 
 
+def parse_numbers(file_location):
+    """Parse the data stored in python."""
+    # (animal, date, num_spatial, num_non, include)
+    data = read_python(file_location)
+    control = data.get("control", [])
+    lesion = data.get("lesion", [])
+
+    # num_ctrl_records, num_ctrl_spatial_records, num_ctrl_non_spatial_records, total_ctrl_spatial, total_ctrl_non_spatial
+    arr = np.zeros(shape=(2, 5), dtype=np.int32)
+
+    for i, arr_data in enumerate([control, lesion]):
+        for val in arr_data:
+            if val[-1]:
+                arr[i, 0] += 1
+                arr[i, 3] += val[2]
+                arr[i, 4] += val[3]
+                if val[2] > 0:
+                    arr[i, 1] += 1
+                if val[3] > 0:
+                    arr[i, 2] += 1
+
+    return data, arr
+
+
+def chi_squared(data):
+    """See https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chisquare.html."""
+    pass
+
+
 def main(
     num_ctrl_records,
     num_ctrl_success,
@@ -107,8 +140,14 @@ def main(
     )
     bb_result = bb.do_integration(0, bayes_ctrl_prob, 0, 1.0) / bb.pe
 
+    return bb_result
+
 
 if __name__ == "__main__":
+    here = os.path.abspath(os.path.dirname(__file__))
+    data_loc = os.path.join(here, "cell_stats.py")
+    data = parse_numbers(data_loc)
+    print(data)
     num_ctrl_records = 44
     num_ctrl_spatial_records = 4
     num_lesion_records = 37
