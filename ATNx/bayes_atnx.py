@@ -146,12 +146,9 @@ def chi_squared(data):
     f_exp[1, 0] = A * D / T
     f_exp[1, 1] = B * D / T
 
-    print(f_obs)
-    print(f_exp)
-    print(C, D, A, B, T)
     result = chisquare(f_obs, f_exp, ddof=dof_change, axis=None)
 
-    return result
+    return result, f_obs, f_exp
 
 
 def main(
