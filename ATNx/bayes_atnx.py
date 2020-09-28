@@ -5,9 +5,9 @@ import os
 from scipy.special import comb
 from scipy.stats import chisquare
 from scipy.stats import chi2_contingency
+from scipy.integrate import dblquad
 import numpy as np
 
-from mpmath import quad
 from skm_pyutils.py_config import read_python
 
 
@@ -79,7 +79,7 @@ class binomial_bayes(object):
         """Prior of p1 being prob success control, p2 prob success non."""
         return self.prior_fn(p1, p2)
 
-    def integrand(self, p1, p2):
+    def integrand(self, p2, p1):
         """Prior times likelihood."""
         return self.likelihood(p1, p2) * self.prior(p1, p2)
 
@@ -89,7 +89,15 @@ class binomial_bayes(object):
 
     def do_integration(self, lower1, upper1, lower2, upper2):
         """Integrate the integrand over the given rectangle [l1, u1], [l2, u2]."""
-        return quad(self.integrand, [lower1, upper1], [lower2, upper2])
+        return dblquad(
+            self.integrand, lower1, upper1, lambda x: lower2, lambda x: upper2
+        )[0]
+
+    def do_integration_tri(self, lower1, upper1, percent):
+        """Integrate the integrand over the given rectangle [l1, u1], [l2, u2]."""
+        return dblquad(
+            self.integrand, lower1, upper1, lambda x: 0, lambda x: percent * x
+        )[0]
 
     def __str__(self):
         """Return this object as a string."""
@@ -188,7 +196,7 @@ def bayes_stats(
         uniform_prior,
     )
     # print(bb)
-    bb_result = bb.do_integration(0, 1.0, 0, bayes_les_prob) / bb.pe
+    bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob) / bb.pe
 
     return bb_result
 
@@ -219,7 +227,7 @@ def main():
         num_ctrl_spatial_records,
         num_lesion_records,
         num_lesion_spatial_records,
-        bayes_les_prob=0.13,
+        bayes_les_prob=0.15,
     )
     result_dict = {}
     result_dict["chi_spat"] = chi_result_spat
