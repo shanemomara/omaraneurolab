@@ -5,6 +5,7 @@ import os
 from scipy.special import comb
 from scipy.stats import chisquare
 from scipy.stats import chi2_contingency
+from scipy.stats import fisher_exact
 from scipy.integrate import dblquad
 import numpy as np
 
@@ -213,8 +214,8 @@ def main():
     data_loc = os.path.join(here, "cell_stats.py")
     data, arr = parse_numbers(data_loc)
     f_obs = get_contingency(arr)
-    chi_result_spat = chi2_contingency(f_obs[0])
-    chi_result_ns = chi2_contingency(f_obs[1])
+    chi_result_spat = fisher_exact(f_obs[0])
+    chi_result_ns = fisher_exact(f_obs[1])
     result_prob = prob_ns(arr[1, 0], arr[0, 1] / arr[0, 0], arr[0, 1])
 
     num_ctrl_records = arr[0, 0]
@@ -227,7 +228,7 @@ def main():
         num_ctrl_spatial_records,
         num_lesion_records,
         num_lesion_spatial_records,
-        bayes_les_prob=0.15,
+        bayes_les_prob=0.20,
     )
     result_dict = {}
     result_dict["chi_spat"] = chi_result_spat

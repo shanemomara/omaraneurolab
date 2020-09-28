@@ -1,1 +1,4 @@
 skm_pyutils
+quadpy
+numpy
+scipy
