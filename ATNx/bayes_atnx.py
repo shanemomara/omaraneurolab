@@ -3,6 +3,7 @@
 import os
 
 from scipy.special import comb
+from scipy.stats import chisquare
 import numpy as np
 
 from mpmath import quad
@@ -102,7 +103,7 @@ def parse_numbers(file_location):
     control = data.get("control", [])
     lesion = data.get("lesion", [])
 
-    # num_ctrl_records, num_ctrl_spatial_records, num_ctrl_non_spatial_records, total_ctrl_spatial, total_ctrl_non_spatial
+    # num_records, num_spatial_records, num_non_spatial_records, total_spatial, total_non_spatial
     arr = np.zeros(shape=(2, 5), dtype=np.int32)
 
     for i, arr_data in enumerate([control, lesion]):
@@ -118,10 +119,39 @@ def parse_numbers(file_location):
 
     return data, arr
 
+def get_contingency(data):
+    f_obs = np.zeros(shape=(2, 2), dtype=np.int32)
+    f_obs[0, 0] = data[0, 1]
+    f_obs[1, 0] = data[0, 0] - data[0, 1]
+    f_obs[0, 1] = data[1, 1]
+    f_obs[1, 1] = data[1, 0] - data[1, 1]
+
+    return f_obs
 
 def chi_squared(data):
     """See https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chisquare.html."""
-    pass
+    f_obs = data
+
+    # Contingency table stats
+    A, B = np.sum(data, axis=0)
+    C, D = np.sum(data, axis=1)
+    T = np.sum(f_obs.flatten())
+
+    # The data comes from a ravelled [2, 2] contingency table
+    dof_change = 1
+
+    f_exp = np.zeros(shape=data.shape, dtype=np.float32)
+    f_exp[0, 0] = A * C / T
+    f_exp[0, 1] = B * C / T
+    f_exp[1, 0] = A * D / T
+    f_exp[1, 1] = B * D / T
+
+    print(f_obs)
+    print(f_exp)
+    print(C, D, A, B, T)
+    result = chisquare(f_obs, f_exp, ddof=dof_change, axis=None)
+
+    return result
 
 
 def main(
@@ -147,7 +177,10 @@ if __name__ == "__main__":
     here = os.path.abspath(os.path.dirname(__file__))
     data_loc = os.path.join(here, "cell_stats.py")
     data = parse_numbers(data_loc)
-    print(data)
+    f_obs = get_contingency(data[1])
+    chi_result = chi_squared(f_obs)
+    print(chi_result)
+
     num_ctrl_records = 44
     num_ctrl_spatial_records = 4
     num_lesion_records = 37
