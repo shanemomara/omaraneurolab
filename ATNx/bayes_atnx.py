@@ -214,6 +214,9 @@ def main():
     data_loc = os.path.join(here, "cell_stats.py")
     data, arr = parse_numbers(data_loc)
     f_obs = get_contingency(arr)
+    # Note Barnard's exact test from R at
+    # https://cran.r-project.org/web/packages/Barnard/
+    # Gives similar results (p value wise)
     chi_result_spat = fisher_exact(f_obs[0])
     chi_result_ns = fisher_exact(f_obs[1])
     result_prob = prob_ns(arr[1, 0], arr[0, 1] / arr[0, 0], arr[0, 1])
@@ -228,7 +231,7 @@ def main():
         num_ctrl_spatial_records,
         num_lesion_records,
         num_lesion_spatial_records,
-        bayes_les_prob=0.20,
+        bayes_les_prob=0.2,
     )
     result_dict = {}
     result_dict["chi_spat"] = chi_result_spat
