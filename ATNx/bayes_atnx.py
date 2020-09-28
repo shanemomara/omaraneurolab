@@ -4,6 +4,7 @@ import os
 
 from scipy.special import comb
 from scipy.stats import chisquare
+from scipy.stats import chi2_contingency
 import numpy as np
 
 from mpmath import quad
@@ -90,6 +91,12 @@ class binomial_bayes(object):
         """Integrate the integrand over the given rectangle [l1, u1], [l2, u2]."""
         return quad(self.integrand, [lower1, upper1], [lower2, upper2])
 
+    def __str__(self):
+        """Return this object as a string."""
+        return "CTRL {}, SUCC {}, LES {}, SUCC {}".format(
+            self.a1, self.a2, self.b1, self.b2
+        )
+
 
 def uniform_prior(p1, p2):
     """Return 1."""
@@ -119,17 +126,32 @@ def parse_numbers(file_location):
 
     return data, arr
 
+
 def get_contingency(data):
     f_obs = np.zeros(shape=(2, 2), dtype=np.int32)
     f_obs[0, 0] = data[0, 1]
     f_obs[1, 0] = data[0, 0] - data[0, 1]
     f_obs[0, 1] = data[1, 1]
     f_obs[1, 1] = data[1, 0] - data[1, 1]
+    f_obs_spat = f_obs
 
-    return f_obs
+    f_obs = np.zeros(shape=(2, 2), dtype=np.int32)
+    f_obs[0, 0] = data[0, 2]
+    f_obs[1, 0] = data[0, 0] - data[0, 2]
+    f_obs[0, 1] = data[1, 2]
+    f_obs[1, 1] = data[1, 0] - data[1, 2]
+    f_obs_ns = f_obs
+
+    return f_obs_spat, f_obs_ns
+
 
 def chi_squared(data):
-    """See https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chisquare.html."""
+    """
+    This was used to check chi2_contingency manually.
+    
+    See https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chisquare.html.
+    
+    """
     f_obs = data
 
     # Contingency table stats
@@ -151,43 +173,62 @@ def chi_squared(data):
     return result, f_obs, f_exp
 
 
-def main(
+def bayes_stats(
     num_ctrl_records,
     num_ctrl_success,
     num_lesion_records,
     num_lesion_success,
-    bayes_ctrl_prob=0.2,
+    bayes_les_prob=0.2,
 ):
     bb = binomial_bayes(
         num_ctrl_records,
+        num_ctrl_success,
         num_lesion_records,
-        num_ctrl_spatial_records,
-        num_lesion_spatial_records,
+        num_lesion_success,
         uniform_prior,
     )
-    bb_result = bb.do_integration(0, bayes_ctrl_prob, 0, 1.0) / bb.pe
+    # print(bb)
+    bb_result = bb.do_integration(0, 1.0, 0, bayes_les_prob) / bb.pe
 
     return bb_result
 
 
-if __name__ == "__main__":
+def prob_ns(total_samples, s_prob, spat_samples):
+    print(s_prob)
+    a1 = (1 - s_prob) ** total_samples
+    a2 = binomial(total_samples, spat_samples, s_prob)
+    return (a1, a2)
+
+
+def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_loc = os.path.join(here, "cell_stats.py")
-    data = parse_numbers(data_loc)
-    f_obs = get_contingency(data[1])
-    chi_result = chi_squared(f_obs)
-    print(chi_result)
+    data, arr = parse_numbers(data_loc)
+    f_obs = get_contingency(arr)
+    chi_result_spat = chi2_contingency(f_obs[0])
+    chi_result_ns = chi2_contingency(f_obs[1])
+    result_prob = prob_ns(arr[1, 0], arr[0, 1] / arr[0, 0], arr[0, 1])
 
-    num_ctrl_records = 44
-    num_ctrl_spatial_records = 4
-    num_lesion_records = 37
-    num_lesion_spatial_records = 0
+    num_ctrl_records = arr[0, 0]
+    num_ctrl_spatial_records = arr[0, 1]
+    num_lesion_records = arr[1, 0]
+    num_lesion_spatial_records = arr[1, 1]
 
-    res = main(
+    res = bayes_stats(
         num_ctrl_records,
         num_ctrl_spatial_records,
         num_lesion_records,
         num_lesion_spatial_records,
-        bayes_ctrl_prob=0.2,
+        bayes_les_prob=0.13,
     )
-    print(res)
+    result_dict = {}
+    result_dict["chi_spat"] = chi_result_spat
+    result_dict["chi_ns"] = chi_result_ns
+    result_dict["bayes"] = res
+    result_dict["prob"] = result_prob
+
+    return result_dict
+
+
+if __name__ == "__main__":
+    print(main())
