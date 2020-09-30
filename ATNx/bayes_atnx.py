@@ -9,6 +9,7 @@ from scipy.stats import fisher_exact
 from scipy.integrate import dblquad
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 from skm_pyutils.py_config import read_python
 
@@ -111,17 +112,18 @@ class binomial_bayes(object):
             bin_res = binomial(self.a1, self.b1, val)
             sum_val += bin_res
             res[i] = bin_res
-        ax.plot(samples, res, label="control", c="k")
+        ax.plot(samples, res, label="control", c="k", linestyle="--")
         sum_val = 0
         for i, val in enumerate(samples):
             bin_res = binomial(self.a2, self.b2, val)
             sum_val += bin_res
             res[i] = bin_res
-        ax.plot(samples, res, label="lesion", c="k", linestyle="--")
+        ax.plot(samples, res, label="lesion", c="k", linestyle=":")
         ax.set_xlabel("Probability of spatial recording")
-        ax.set_ylabel("Posterior probability")
+        ax.set_ylabel("Posterior distribution")
         plt.legend()
 
+        sns.despine()
         fig.savefig("2d.pdf", dpi=400)
 
     def plot_integrand(self, srate=100, percent=1.0):
@@ -137,14 +139,20 @@ class binomial_bayes(object):
         fig = plt.figure()
         ax = fig.gca(projection="3d")
         surf = ax.plot_trisurf(
-            samples_x, samples_y, samples_z, cmap="viridis", linewidth=0.2
+            samples_x,
+            samples_y,
+            samples_z,
+            color="k",
+            linewidth=0.2,
+            # edgecolor="k"
         )
-        fig.colorbar(surf, shrink=0.5, aspect=5)
-        # ax.view_init(30, 45)
+        ax.view_init(30, 45)
 
         ax.set_xlabel("Probability of control spatial")
         ax.set_ylabel("Probability of lesion spatial")
-        ax.set_zlabel("Joint posterior probability")
+        ax.set_zlabel("Joint posterior distribution")
+
+        plt.gca().invert_xaxis()
 
         fig.savefig("3d.pdf", dpi=400)
 
@@ -155,15 +163,16 @@ class binomial_bayes(object):
                 res = self.integrand(y, x)
                 samples_z[j, i] = res
         surf = ax.contour(
-            samples, samples, samples_z.reshape(srate, srate), cmap="viridis"
+            samples, samples, samples_z.reshape(srate, srate), cmap="gray"
         )
-        fig.colorbar(surf, shrink=0.5, aspect=5)
+        # fig.colorbar(surf, shrink=0.5, aspect=5)
 
         ax.plot(samples, samples * percent, c="k", linestyle="--")
 
         ax.set_xlabel("Probability of control")
         ax.set_ylabel("Probability of lesion")
 
+        sns.despine()
         fig.savefig("contour.pdf", dpi=400)
 
     def __str__(self):
@@ -279,6 +288,23 @@ def prob_ns(total_samples, s_prob, spat_samples):
     return (a1, a2)
 
 
+def plot_bin_pdf(total_samples, p_succ):
+    samples = list(range(0, total_samples + 1))
+    results = [binomial(total_samples, s, p_succ) for s in samples]
+
+    fig, ax = plt.subplots()
+    ax.plot(samples, results, "ko", ms=2.5)
+    y_vals_min = [0 for _ in samples]
+    y_vals_max = results
+    colors = ["k" for _ in samples]
+    ax.vlines(samples, y_vals_min, y_vals_max, colors=colors)
+    ax.set_ylabel("Probability of occurrence")
+    ax.set_xlabel("Number of recordings with no spatial units")
+
+    sns.despine()
+    fig.savefig("pdf.pdf", dpi=400)
+
+
 def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_loc = os.path.join(here, "cell_stats.py")
@@ -295,7 +321,8 @@ def main():
     num_ctrl_spatial_records = arr[0, 1]
     num_lesion_records = arr[1, 0]
     num_lesion_spatial_records = arr[1, 1]
-    
+    sns.set_style("ticks")
+
     res = []
     for val in np.linspace(0.1, 1.0, num=10):
         bayes_les_prob = val
@@ -317,9 +344,11 @@ def main():
         num_lesion_records,
         num_lesion_spatial_records,
         bayes_les_prob=0.2,
-        srate=100,
+        srate=50,
         plot=True,
     )
+
+    plot_bin_pdf(num_ctrl_records, num_ctrl_spatial_records / num_ctrl_records)
 
     result_dict = {}
     result_dict["chi_spat"] = chi_result_spat
