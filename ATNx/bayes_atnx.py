@@ -122,7 +122,7 @@ class binomial_bayes(object):
         ax.set_ylabel("Posterior probability")
         plt.legend()
 
-        fig.savefig("2d.png", dpi=400)
+        fig.savefig("2d.pdf", dpi=400)
 
     def plot_integrand(self, srate=100, percent=1.0):
         samples = np.linspace(0, 1, srate)
@@ -146,7 +146,7 @@ class binomial_bayes(object):
         ax.set_ylabel("Probability of lesion spatial")
         ax.set_zlabel("Joint posterior probability")
 
-        fig.savefig("3d.png", dpi=400)
+        fig.savefig("3d.pdf", dpi=400)
 
         fig, ax = plt.subplots()
         samples_z = np.zeros(shape=(srate, srate))
@@ -164,7 +164,7 @@ class binomial_bayes(object):
         ax.set_xlabel("Probability of control")
         ax.set_ylabel("Probability of lesion")
 
-        fig.savefig("contour.png", dpi=400)
+        fig.savefig("contour.pdf", dpi=400)
 
     def __str__(self):
         """Return this object as a string."""
@@ -255,6 +255,7 @@ def bayes_stats(
     num_lesion_success,
     bayes_les_prob=0.2,
     srate=30,
+    plot=True,
 ):
     bb = binomial_bayes(
         num_ctrl_records,
@@ -264,8 +265,10 @@ def bayes_stats(
         uniform_prior,
     )
     bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob) / bb.pe
-    bb.plot_integrand(srate, bayes_les_prob)
-    bb.plot_posterior(srate)
+
+    if plot:
+        bb.plot_integrand(srate, bayes_les_prob)
+        bb.plot_posterior(srate)
 
     return bb_result
 
@@ -292,14 +295,30 @@ def main():
     num_ctrl_spatial_records = arr[0, 1]
     num_lesion_records = arr[1, 0]
     num_lesion_spatial_records = arr[1, 1]
+    
+    res = []
+    for val in np.linspace(0.1, 1.0, num=10):
+        bayes_les_prob = val
 
-    res = bayes_stats(
+        res_stat = bayes_stats(
+            num_ctrl_records,
+            num_ctrl_spatial_records,
+            num_lesion_records,
+            num_lesion_spatial_records,
+            bayes_les_prob=bayes_les_prob,
+            srate=100,
+            plot=False,
+        )
+        res.append((bayes_les_prob, res_stat))
+
+    bayes_stats(
         num_ctrl_records,
         num_ctrl_spatial_records,
         num_lesion_records,
         num_lesion_spatial_records,
         bayes_les_prob=0.2,
         srate=100,
+        plot=True,
     )
 
     result_dict = {}
