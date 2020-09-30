@@ -117,7 +117,9 @@ class binomial_bayes(object):
             bin_res = binomial(self.a2, self.b2, val)
             sum_val += bin_res
             res[i] = bin_res
-        ax.plot(samples, res, label="lesion", c="r")
+        ax.plot(samples, res, label="lesion", c="k", linestyle="--")
+        ax.set_xlabel("Probability of spatial recording")
+        ax.set_ylabel("Posterior probability")
         plt.legend()
 
         fig.savefig("2d.png", dpi=400)
@@ -140,9 +142,9 @@ class binomial_bayes(object):
         fig.colorbar(surf, shrink=0.5, aspect=5)
         # ax.view_init(30, 45)
 
-        ax.set_xlabel("Probability of control")
-        ax.set_ylabel("Probability of lesion")
-        ax.set_zlabel("Likelihood by prior")
+        ax.set_xlabel("Probability of control spatial")
+        ax.set_ylabel("Probability of lesion spatial")
+        ax.set_zlabel("Joint posterior probability")
 
         fig.savefig("3d.png", dpi=400)
 
@@ -297,7 +299,7 @@ def main():
         num_lesion_records,
         num_lesion_spatial_records,
         bayes_les_prob=0.2,
-        srate=300
+        srate=100,
     )
 
     result_dict = {}
