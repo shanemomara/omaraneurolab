@@ -111,14 +111,12 @@ class binomial_bayes(object):
             bin_res = binomial(self.a1, self.b1, val)
             sum_val += bin_res
             res[i] = bin_res
-        print("SUM", self.a1, self.b1, sum_val)
         ax.plot(samples, res, label="control", c="k")
         sum_val = 0
         for i, val in enumerate(samples):
             bin_res = binomial(self.a2, self.b2, val)
             sum_val += bin_res
             res[i] = bin_res
-        print("SUM", self.a2, self.b2, sum_val)
         ax.plot(samples, res, label="lesion", c="r")
         plt.legend()
 
@@ -245,9 +243,7 @@ def bayes_stats(
         num_lesion_success,
         uniform_prior,
     )
-    print(bb)
-    print(bb.pe)
-    bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob)
+    bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob) / bb.pe
     bb.plot_integrand(srate)
     bb.plot_posterior(srate)
 
