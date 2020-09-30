@@ -96,7 +96,7 @@ class binomial_bayes(object):
         )[0]
 
     def do_integration_tri(self, lower1, upper1, percent):
-        """Integrate the integrand over the given rectangle [l1, u1], [l2, u2]."""
+        """Integrate the integrand over the given triangle [l1, 0], [u1,0], [u1, percent]."""
         return dblquad(
             self.integrand, lower1, upper1, lambda x: 0, lambda x: percent * x
         )[0]
@@ -122,7 +122,7 @@ class binomial_bayes(object):
 
         fig.savefig("2d.png", dpi=400)
 
-    def plot_integrand(self, srate=100):
+    def plot_integrand(self, srate=100, percent=1.0):
         samples = np.linspace(0, 1, srate)
         samples_x = np.tile(samples, srate)
         samples_y = np.repeat(samples, srate)
@@ -145,6 +145,24 @@ class binomial_bayes(object):
         ax.set_zlabel("Likelihood by prior")
 
         fig.savefig("3d.png", dpi=400)
+
+        fig, ax = plt.subplots()
+        samples_z = np.zeros(shape=(srate, srate))
+        for i, x in enumerate(samples):
+            for j, y in enumerate(samples):
+                res = self.integrand(y, x)
+                samples_z[j, i] = res
+        surf = ax.contour(
+            samples, samples, samples_z.reshape(srate, srate), cmap="viridis"
+        )
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+
+        ax.plot(samples, samples * percent, c="k", linestyle="--")
+
+        ax.set_xlabel("Probability of control")
+        ax.set_ylabel("Probability of lesion")
+
+        fig.savefig("contour.png", dpi=400)
 
     def __str__(self):
         """Return this object as a string."""
@@ -244,7 +262,7 @@ def bayes_stats(
         uniform_prior,
     )
     bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob) / bb.pe
-    bb.plot_integrand(srate)
+    bb.plot_integrand(srate, bayes_les_prob)
     bb.plot_posterior(srate)
 
     return bb_result
@@ -279,6 +297,7 @@ def main():
         num_lesion_records,
         num_lesion_spatial_records,
         bayes_les_prob=0.2,
+        srate=300
     )
 
     result_dict = {}
