@@ -239,8 +239,11 @@ def main():
     result_dict["bayes"] = res
     result_dict["prob"] = result_prob
 
-    return result_dict
+    return result_dict, f_obs[0], f_obs[1]
 
 
 if __name__ == "__main__":
-    print(main())
+    result = main()
+    print(result[0])
+    print(result[1])
+    print(result[2])
