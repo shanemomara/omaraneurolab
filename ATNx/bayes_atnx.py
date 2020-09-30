@@ -165,12 +165,12 @@ class binomial_bayes(object):
         surf = ax.contour(
             samples, samples, samples_z.reshape(srate, srate), cmap="gray"
         )
-        # fig.colorbar(surf, shrink=0.5, aspect=5)
+        fig.colorbar(surf, shrink=0.5, aspect=5)
 
         ax.plot(samples, samples * percent, c="k", linestyle="--")
 
-        ax.set_xlabel("Probability of control")
-        ax.set_ylabel("Probability of lesion")
+        ax.set_xlabel("Probability of control spatial")
+        ax.set_ylabel("Probability of lesion spatial")
 
         sns.despine()
         fig.savefig("contour.pdf", dpi=400)
