@@ -7,6 +7,7 @@ from scipy.stats import chisquare
 from scipy.stats import chi2_contingency
 from scipy.stats import fisher_exact
 from scipy.integrate import dblquad
+import matplotlib.pyplot as plt
 import numpy as np
 
 from skm_pyutils.py_config import read_python
@@ -47,7 +48,7 @@ class binomial_bayes(object):
 
     """
 
-    def __init__(self, a1, a2, b1, b2, prior_fn):
+    def __init__(self, a1, b1, a2, b2, prior_fn):
         """
         Initialise the stats object
 
@@ -55,9 +56,9 @@ class binomial_bayes(object):
         ----------
         a1 : float
             The total samples drawn from control population.
-        a2 : float
-            The total successes drawn from control population.
         b1 : float
+            The total successes drawn from control population.
+        a1 : float
             The total samples drawn from non-control population.
         b2 : float
             The total successes drawn from non-control population.
@@ -66,8 +67,8 @@ class binomial_bayes(object):
         
         """
         self.a1 = a1
-        self.a2 = a2
         self.b1 = b1
+        self.a2 = a2
         self.b2 = b2
         self.prior_fn = prior_fn
         self.pe = self.prob_evidence()
@@ -99,6 +100,53 @@ class binomial_bayes(object):
         return dblquad(
             self.integrand, lower1, upper1, lambda x: 0, lambda x: percent * x
         )[0]
+
+    def plot_posterior(self, srate=100):
+        samples = np.linspace(0, 1, srate)
+        res = np.zeros(shape=(srate,))
+        fig, ax = plt.subplots()
+
+        sum_val = 0
+        for i, val in enumerate(samples):
+            bin_res = binomial(self.a1, self.b1, val)
+            sum_val += bin_res
+            res[i] = bin_res
+        print("SUM", self.a1, self.b1, sum_val)
+        ax.plot(samples, res, label="control", c="k")
+        sum_val = 0
+        for i, val in enumerate(samples):
+            bin_res = binomial(self.a2, self.b2, val)
+            sum_val += bin_res
+            res[i] = bin_res
+        print("SUM", self.a2, self.b2, sum_val)
+        ax.plot(samples, res, label="lesion", c="r")
+        plt.legend()
+
+        fig.savefig("2d.png", dpi=400)
+
+    def plot_integrand(self, srate=100):
+        samples = np.linspace(0, 1, srate)
+        samples_x = np.tile(samples, srate)
+        samples_y = np.repeat(samples, srate)
+        samples_z = np.zeros(shape=(srate * srate))
+
+        for i, (x, y) in enumerate(zip(samples_x, samples_y)):
+            res = self.integrand(y, x)
+            samples_z[i] = res
+
+        fig = plt.figure()
+        ax = fig.gca(projection="3d")
+        surf = ax.plot_trisurf(
+            samples_x, samples_y, samples_z, cmap="viridis", linewidth=0.2
+        )
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+        # ax.view_init(30, 45)
+
+        ax.set_xlabel("Probability of control")
+        ax.set_ylabel("Probability of lesion")
+        ax.set_zlabel("Likelihood by prior")
+
+        fig.savefig("3d.png", dpi=400)
 
     def __str__(self):
         """Return this object as a string."""
@@ -188,6 +236,7 @@ def bayes_stats(
     num_lesion_records,
     num_lesion_success,
     bayes_les_prob=0.2,
+    srate=30,
 ):
     bb = binomial_bayes(
         num_ctrl_records,
@@ -196,14 +245,16 @@ def bayes_stats(
         num_lesion_success,
         uniform_prior,
     )
-    # print(bb)
-    bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob) / bb.pe
+    print(bb)
+    print(bb.pe)
+    bb_result = bb.do_integration_tri(0, 1.0, bayes_les_prob)
+    bb.plot_integrand(srate)
+    bb.plot_posterior(srate)
 
     return bb_result
 
 
 def prob_ns(total_samples, s_prob, spat_samples):
-    print(s_prob)
     a1 = (1 - s_prob) ** total_samples
     a2 = binomial(total_samples, spat_samples, s_prob)
     return (a1, a2)
@@ -233,6 +284,7 @@ def main():
         num_lesion_spatial_records,
         bayes_les_prob=0.2,
     )
+
     result_dict = {}
     result_dict["chi_spat"] = chi_result_spat
     result_dict["chi_ns"] = chi_result_ns
